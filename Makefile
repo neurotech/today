@@ -43,10 +43,6 @@ clean:
 	docker image rm -f castle-backend && \
 	docker image rm -f castle-frontend
 
-# ┬ 
-# ┴    
-        
-
 help:
 	@clear
 	@echo "$$CASTLE_BANNER"
