@@ -1,8 +1,6 @@
-import json
 from fastapi import FastAPI
 
-# from fastapi.staticfiles import StaticFiles
-from urllib import request, error
+from fastapi.staticfiles import StaticFiles
 from helpers import get_advice
 
 app = FastAPI()
@@ -13,4 +11,4 @@ async def advice():
     return get_advice()
 
 
-# app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")

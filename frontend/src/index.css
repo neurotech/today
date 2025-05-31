@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@theme {
+	--color-emerald-1000: oklch(0.131 0.051 172.552);
+}
