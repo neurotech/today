@@ -1,0 +1,25 @@
+services:
+  backend:
+    # Build the image from the Dockerfile in the current directory
+    build: ./backend
+
+    # Host the FastAPI application on port 7777
+    ports:
+      - "7777:7777"
+
+    develop:
+      # Create a `watch` configuration to update the app
+      # https://docs.docker.com/compose/file-watch/#compose-watch-versus-bind-mounts
+      watch:
+        # Sync the working directory with the `/backend` directory in the container
+        - action: sync
+          path: ./backend
+          target: /backend
+          # Exclude the project virtual environment — it could be for a
+          # different platform in the container
+          ignore:
+            - .venv/
+
+        # Rebuild the image if dependencies change by checking uv.lock
+        - action: rebuild
+          path: ./uv.lock
