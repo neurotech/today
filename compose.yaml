@@ -1,8 +1,49 @@
+volumes:
+  static:
+
 services:
-  backend:
-    build: ./backend
+  frontend:
+    container_name: castle-frontend
+
+    volumes:
+    - static:/frontend/dist
+
     ports:
-      - "7777:7777"
+      - "7001:7001"
+
+    env_file:
+      - ./frontend/.env
+
+    restart: always
+
+    build:
+      context: ./frontend
+
+    develop:
+      watch:
+        # Sync the working directory with the `/frontend` directory in the container
+        - action: sync
+          path: ./frontend
+          target: /frontend
+          ignore:
+            - node_modules/
+
+        # Rebuild the image if dependencies change by watching package-lock.json
+        - action: rebuild
+          path: ./package-lock.json
+
+  backend:
+    container_name: castle-backend
+    volumes:
+      - static:/backend/dist
+
+    ports:
+      - "7000:7000"
+
+    restart: always
+
+    build:
+      context: ./backend
 
     develop:
       watch:
