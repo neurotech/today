@@ -1,0 +1,57 @@
+import asyncio
+from fastapi import FastAPI
+
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+
+from properties import get_property
+from poe import get_poe_currency
+from tasks import start_schedule
+from advice import get_advice
+from db.db import initialise_database
+
+scheduler = start_schedule()
+
+app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:7100",
+    "http://slab:7100",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# initialise_database()
+
+
+@app.get("/api/advice")
+async def advice():
+    return get_advice()
+
+
+@app.get("/api/poe")
+async def poe(league: str, currency: str):
+    return get_poe_currency(league, currency)
+
+
+@app.get("/api/property", response_class=FileResponse)
+async def property(address: str):
+    result = await get_property(address)
+    return result
+
+
+app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")
+
+
+async def lifespan(_):
+    yield
+    scheduler.shutdown()
