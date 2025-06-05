@@ -173,5 +173,17 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Database
+backend/database/*.db
+
+# Images
+backend/images/**/*.jpg
+backend/images/**/*.png
+backend/images/**/*.gif
+backend/images/**/*.webm
+
+# Scenes
+backend/scenes/*.json
+
 # Frontend
 frontend/node_modules
