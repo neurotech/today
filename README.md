@@ -11,3 +11,7 @@
 
 * PoE 1 Currency Prices via `https://poe.ninja/api/data/currencyoverview?league=$LEAGUE_NAME&type=Currency`
 * Domain property listing monitoring - take screenshot and crop - https://www.askpython.com/python/examples/crop-an-image-in-python
+
+## Credits
+
+* Cursor from [Zachtronics'](https://www.zachtronics.com/) [Opus Magnum](https://www.zachtronics.com/opus-magnum/)
