@@ -7,6 +7,7 @@ import { TabBar, type TabID } from "./features/Tabs/TabBar";
 import { HomeTab } from "./features/Tabs/HomeTab";
 import { ConfigTab } from "./features/Tabs/ConfigTab/ConfigTab";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { ReadingTab } from "./features/Tabs/ReadingTab";
 
 type DateAndTime = {
 	date: string;
@@ -57,11 +58,7 @@ export const Castle = () => {
 
 			{activeTab === "home-tab" && <HomeTab />}
 
-			{activeTab === "reading-tab" && (
-				<main className="relative flex flex-col flex-1 overflow-y-auto px-2">
-					<section>Reading</section>
-				</main>
-			)}
+			{activeTab === "reading-tab" && <ReadingTab />}
 
 			{activeTab === "tools-tab" && (
 				<main className="relative flex flex-col flex-1 overflow-y-auto px-2">
