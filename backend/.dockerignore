@@ -1,5 +1,15 @@
 .venv
 __pycache__
+database/*.db
 Dockerfile
 
 *.md
+
+# Images
+images/**/*.jpg
+images/**/*.png
+images/**/*.gif
+images/**/*.webm
+
+# Scenes
+scenes/*.json

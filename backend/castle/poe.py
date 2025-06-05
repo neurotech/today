@@ -64,8 +64,6 @@ def get_poe_currency(
     buy = currency_line["receive"]["value"]
     sell = 1 / currency_line["pay"]["value"]
 
-    print(currency_line)
-
     return {
         "chaos_orb": chaos_orb,
         "currency_detail": currency_detail,

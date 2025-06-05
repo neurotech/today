@@ -21,39 +21,39 @@ services:
 
     develop:
       watch:
-        # Sync the working directory with the `/frontend` directory in the container
         - action: sync
           path: ./frontend
           target: /frontend
           ignore:
             - node_modules/
 
-        # Rebuild the image if dependencies change by watching package-lock.json
         - action: rebuild
           path: ./package-lock.json
 
   backend:
     container_name: castle-backend
+    restart: always
     volumes:
       - static:/backend/dist
-
+      - ./backend/database:/backend/database
+      - ./backend/images:/backend/images
+      - ./backend/scenes:/backend/scenes
     ports:
       - "7000:7000"
-
-    restart: always
 
     build:
       context: ./backend
 
     develop:
       watch:
-        # Sync the working directory with the `/backend` directory in the container
         - action: sync+restart
           path: ./backend
           target: /backend
           ignore:
             - .venv/
+            - database/
+            - images/
+            - scenes/
 
-        # Rebuild the image if dependencies change by watching uv.lock
         - action: rebuild
           path: ./uv.lock
