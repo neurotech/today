@@ -26,13 +26,20 @@ export const Properties = () => {
 							<div key={address.slug} className="flex flex-col justify-center">
 								<Button
 									label={address.label}
-									onClick={() => setActiveImage(address.id)}
+									onClick={() => {
+										console.log(activeImage);
+										if (activeImage === address.id) {
+											setActiveImage("");
+										} else {
+											setActiveImage(address.id);
+										}
+									}}
 								/>
 								{activeImage === address.id && (
 									<img
 										src={getPropertyURL(address.slug)}
 										alt={address.label}
-										className="object-cover object-center w-fit h-60 self-center"
+										className="object-cover object-center w-fit h-60 self-center animate-fade-in"
 									/>
 								)}
 							</div>

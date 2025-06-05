@@ -5,6 +5,16 @@
 	--font-display: "Hanken Grotesk", "sans-serif";
 	--color-emerald-1000: oklch(0.131 0.051 172.552);
 
+	--animate-fade-in: fade-in 700ms ease-in-out 1;
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
 	--color-velvet-50: #f0f0fd;
 	--color-velvet-100: #e5e5fa;
 	--color-velvet-200: #cfcff6;
