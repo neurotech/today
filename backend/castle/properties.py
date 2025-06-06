@@ -45,7 +45,7 @@ async def get_screenshot(url: str, image_path: str):
         browser = await p.chromium.launch()
         page = await browser.new_page()
 
-        with open(image_path, "w") as fp:
+        with open(image_path, "w"):
             pass
 
         await page.goto(url)
@@ -54,7 +54,7 @@ async def get_screenshot(url: str, image_path: str):
         await (
             page.locator("xpath=//section")
             .filter(has=child)
-            .screenshot(path=image_path, omit_background=True, type="png")
+            .screenshot(path=image_path, type="png")
         )
 
         await browser.close()
