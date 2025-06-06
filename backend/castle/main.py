@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
+from github import get_github_trending
 from scenes import get_scene, hydrate
 from properties import get_property
 from poe import get_poe_currency
@@ -55,6 +56,12 @@ async def property(address: str):
 @app.get("/api/scene")
 async def scene(name: str):
     result = await get_scene(name)
+    return result
+
+
+@app.get("/api/github")
+async def github():
+    result = await get_github_trending()
     return result
 
 

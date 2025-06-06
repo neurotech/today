@@ -1,3 +1,4 @@
+import { GitHub } from "../GitHub/GitHub";
 import { LivingWorlds } from "../LivingWorlds/LivingWorlds";
 import { PathOfExile } from "../PathOfExile/PathOfExile";
 import { Properties } from "../Properties/Properties";
@@ -10,7 +11,9 @@ export const HomeTab = () => {
 					<LivingWorlds />
 				</section>
 
-				<section className="flex flex-col gap-2">{"TODO"}</section>
+				<section className="flex flex-col gap-2">
+					<GitHub />
+				</section>
 
 				<section className="flex flex-col gap-2">
 					<Properties />
