@@ -55,11 +55,17 @@ export const Properties = () => {
 
 					<div className="flex border-emerald-900/50 bg-emerald-950/10 border-1 rounded-sm p-1 flex-1 justify-center items-center min-h-[250px]">
 						{activeAddress ? (
-							<img
-								src={getPropertyURL(activeAddress.slug)}
-								alt={activeAddress.label}
-								className="object-cover object-center w-fit h-60 self-center animate-fade-in"
-							/>
+							<a
+								href={getPropertyURL(activeAddress.slug)}
+								target="_blank"
+								rel="noreferrer"
+							>
+								<img
+									src={getPropertyURL(activeAddress.slug)}
+									alt={activeAddress.label}
+									className="object-none object-center w-fit h-60 self-center animate-fade-in invert saturate-0"
+								/>
+							</a>
 						) : (
 							<aside>Select a property.</aside>
 						)}
