@@ -10,11 +10,11 @@ export const HomeTab = () => {
 					<LivingWorlds />
 				</section>
 
+				<section className="flex flex-col gap-2">{"TODO"}</section>
+
 				<section className="flex flex-col gap-2">
 					<Properties />
 				</section>
-
-				<section className="flex flex-col gap-2">{"TODO"}</section>
 
 				<section className="flex flex-col gap-2">
 					<PathOfExile />

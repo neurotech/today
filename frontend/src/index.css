@@ -1,6 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
+.connector {
+	shape-rendering: geometricprecision;
+	transition: stroke 0.25s;
+	stroke-miterlimit: 10;
+	stroke-width: 1;
+}
+
+.connector-active {
+	stroke-dashoffset: 100;
+	stroke-dasharray: 2;
+	animation: flow 10s linear 0s forwards infinite;
+}
+
+.connector-inactive {
+	stroke-dashoffset: 0;
+	stroke-dasharray: 555;
+	animation: none;
+}
+
 @theme {
 	--font-display: "Hanken Grotesk", "sans-serif";
 	--color-emerald-1000: oklch(0.131 0.051 172.552);
@@ -12,6 +31,18 @@
 		}
 		to {
 			opacity: 1;
+		}
+	}
+
+	/* stroke-dashoffset: ${(props) => (props.active ? 100 : 0)};
+  stroke-dasharray: ${(props) => (props.active ? 5 : 555)}; */
+
+	@keyframes flow {
+		from {
+			stroke-dashoffset: 100;
+		}
+		to {
+			stroke-dashoffset: 0;
 		}
 	}
 
