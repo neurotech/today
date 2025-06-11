@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 .connector {
@@ -40,9 +39,7 @@
 
 @theme {
 	--font-display: "Hanken Grotesk", "sans-serif";
---font-logo: "EB Garamond", "serif";
-
-	--color-emerald-1000: oklch(0.131 0.051 172.552);
+	--font-logo: "EB Garamond", "serif";
 
 	--animate-fade-in: fade-in 700ms ease-in-out 1;
 	@keyframes fade-in {
@@ -63,16 +60,17 @@
 		}
 	}
 
-	--color-velvet-50: #f0f0fd;
-	--color-velvet-100: #e5e5fa;
-	--color-velvet-200: #cfcff6;
-	--color-velvet-300: #b4b2ef;
-	--color-velvet-400: #9b92e7;
-	--color-velvet-500: #8a78dc;
-	--color-velvet-600: #7a5dce;
-	--color-velvet-700: #694db5;
-	--color-velvet-800: #564192;
-	--color-velvet-900: #483a75;
-	--color-velvet-950: #221b36;
-	--color-velvet-1000: #221b36;
+	--color-velvet-50: #f0f5fd;
+	--color-velvet-100: #e4ecfb;
+	--color-velvet-200: #cddbf8;
+	--color-velvet-300: #afc3f2;
+	--color-velvet-400: #8fa2ea;
+	--color-velvet-500: #7483e0;
+	--color-velvet-600: #5b63d3;
+	--color-velvet-700: #494eb9;
+	--color-velvet-800: #3d4296;
+	--color-velvet-900: #383e77;
+	--color-velvet-950: #212345;
+	--color-velvet-1000: #111223;
+	--color-velvet-1100: #0b0c14;
 }
