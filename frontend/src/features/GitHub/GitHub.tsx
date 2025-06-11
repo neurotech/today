@@ -3,6 +3,7 @@ import { Panel } from "../../components/Panel";
 import { useGitHub } from "../../hooks/useGitHub";
 import { useState } from "react";
 import { Button } from "../../components/Button";
+import { HorizontalRule } from "../../components/HorizontalRule";
 
 export const GitHub = () => {
 	const [showMore, setShowMore] = useState(false);
@@ -27,7 +28,7 @@ export const GitHub = () => {
 							rel="noreferrer"
 							className="border-1 border-emerald-950 rounded-sm hover:bg-black/35"
 						>
-							<section className="flex flex-col gap-0.5 p-2">
+							<section className="flex flex-col gap-1.5 p-2">
 								<header className="flex justify-between gap-4 leading-none">
 									<h1 className="text-md font-bold text-emerald-400">
 										{d.repo_name}
@@ -39,13 +40,12 @@ export const GitHub = () => {
 										<StarIcon className="size-5 ml-2" />
 									</div>
 								</header>
-								<main className="flex justify-between gap-4">
+								<HorizontalRule />
+								<main className="grid grid-cols-[1fr_120px] gap-1">
 									<h2 className="text-sm text-emerald-800">{d.description}</h2>
-									{d.language && (
-										<div className="bg-emerald-950 text-emerald-300 border-1 border-transparent rounded-xs text-xs px-1 py-0.5 self-end">
-											{d.language}
-										</div>
-									)}
+									<div className="bg-emerald-950 text-emerald-300 border-1 border-transparent rounded-xs text-xs px-1 py-0.5 text-center w-fit self-end justify-self-end">
+										{d.language || "None"}
+									</div>
 								</main>
 							</section>
 						</a>

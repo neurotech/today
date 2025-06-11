@@ -20,6 +20,24 @@
 	animation: none;
 }
 
+@keyframes wobble {
+	from {
+		transform: translate3d(-0px, -1px, 0);
+	}
+	to {
+		transform: translate3d(0px, 1px, 0);
+	}
+}
+
+.wobble {
+	display: inline-block;
+	animation-name: wobble;
+	animation-duration: 500ms;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-timing-function: ease-in-out;
+}
+
 @theme {
 	--font-display: "Hanken Grotesk", "sans-serif";
 	--color-emerald-1000: oklch(0.131 0.051 172.552);
@@ -33,9 +51,6 @@
 			opacity: 1;
 		}
 	}
-
-	/* stroke-dashoffset: ${(props) => (props.active ? 100 : 0)};
-  stroke-dasharray: ${(props) => (props.active ? 5 : 555)}; */
 
 	@keyframes flow {
 		from {

@@ -6,6 +6,7 @@ import {
 	type Address,
 } from "../../hooks/useAddressesConfig";
 import { Connector } from "../../components/Connector";
+import { Loading } from "../../components/Loading";
 
 const urlPrefix =
 	import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";
@@ -18,6 +19,7 @@ export const Properties = () => {
 	const [addresses] = useState<Address[]>(getAddresses());
 	const [activeImage, setActiveImage] = useState<string>("");
 	const [activeAddress, setActiveAddress] = useState<Address>();
+	const [loading, setLoading] = useState<boolean>(false);
 
 	return (
 		<Panel
@@ -34,7 +36,7 @@ export const Properties = () => {
 									<Button
 										label={address.label}
 										onClick={() => {
-											console.log(activeImage);
+											setLoading(true);
 											if (activeImage === address.id) {
 												setActiveImage("");
 												setActiveAddress(undefined);
@@ -60,10 +62,13 @@ export const Properties = () => {
 								target="_blank"
 								rel="noreferrer"
 							>
+								{loading && <Loading />}
 								<img
 									src={getPropertyURL(activeAddress.slug)}
 									alt={activeAddress.label}
 									className="object-none object-center w-fit h-60 self-center animate-fade-in invert saturate-0"
+									style={{ display: `${loading ? "none" : "block"}` }}
+									onLoad={() => setLoading((p) => !p)}
 								/>
 							</a>
 						) : (

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { HorizontalRule } from "./HorizontalRule";
+import { Loading } from "./Loading";
 interface PanelProps {
 	content: ReactNode;
 	loading?: boolean;
@@ -36,8 +37,8 @@ export const Panel = ({
 				</>
 			)}
 			{loading && (
-				<h3 className="flex flex-col justify-center self-center min-h-20 select-none animate-pulse">
-					Loading...
+				<h3 className="flex flex-col justify-center self-center min-h-20 select-none">
+					<Loading />
 				</h3>
 			)}
 			{error && <h3>Error: {error}</h3>}
