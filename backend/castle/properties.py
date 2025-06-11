@@ -54,7 +54,8 @@ async def get_screenshot(url: str, image_path: str):
         await (
             page.locator("xpath=//section")
             .filter(has=child)
-            .screenshot(path=image_path, type="png")
+            .locator("ul li")
+            .first.screenshot(path=image_path, type="png")
         )
 
         await browser.close()
