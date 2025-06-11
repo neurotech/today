@@ -42,12 +42,14 @@ export const Castle = () => {
 	return (
 		<div
 			role="document"
-			className="font-display flex flex-col h-screen py-2 gap-2 bg-emerald-1000 text-emerald-600 selection:bg-emerald-300 selection:text-emerald-900"
+			className="font-display flex flex-col h-screen bg-velvet-1100 text-velvet-600 selection:bg-velvet-300 selection:text-velvet-900"
 		>
-			<header className="flex flex-row justify-between items-center font-bold px-2">
-				<h1 className="font-extrabold select-none">Castle</h1>
+			<header className="flex flex-row justify-between items-center font-bold p-2 bg-velvet-1000">
+				<h1 className="text-velvet-500 text-shadow-black/30 text-shadow-2xs font-logo text-2xl font-normal select-none tracking-tighter">
+					Castle
+				</h1>
 				<TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
-				<h1 className="text-emerald-500 tabular-nums">
+				<h1 className="text-velvet-500 tabular-nums">
 					{dateAndTime?.date}
 					<Separator />
 					{dateAndTime?.time}
@@ -56,24 +58,18 @@ export const Castle = () => {
 
 			<HorizontalRule />
 
-			{activeTab === "home-tab" && <HomeTab />}
+			<main className="relative flex flex-col flex-1 overflow-y-auto p-2">
+				{activeTab === "home-tab" && <HomeTab />}
 
-			{activeTab === "reading-tab" && <ReadingTab />}
+				{activeTab === "reading-tab" && <ReadingTab />}
 
-			{activeTab === "tools-tab" && (
-				<main className="relative flex flex-col flex-1 overflow-y-auto px-2">
-					<section>Tools</section>
-				</main>
-			)}
+				{activeTab === "tools-tab" && <section>Tools</section>}
 
-			{activeTab === "config-tab" && (
-				<main className="relative flex flex-col flex-1 overflow-y-auto px-2">
-					<ConfigTab />
-				</main>
-			)}
+				{activeTab === "config-tab" && <ConfigTab />}
+			</main>
 
 			<HorizontalRule />
-			<footer className="flex flex-row justify-between items-center px-2 py-1 leading-none">
+			<footer className="flex flex-row justify-between items-center px-2 py-3 bg-velvet-1000 leading-none">
 				<ZenOfPython />
 			</footer>
 		</div>

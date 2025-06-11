@@ -1,3 +1,3 @@
 export const Separator = () => (
-	<span className="text-emerald-950">&#12539;</span>
+	<span className="text-velvet-950 leading-none">&#12539;</span>
 );

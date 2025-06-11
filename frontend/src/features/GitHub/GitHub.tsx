@@ -14,6 +14,7 @@ export const GitHub = () => {
 			heading="GitHub Trending"
 			headingRight={
 				<Button
+					compressed
 					label={showMore ? "Show Less" : "Show More"}
 					onClick={() => setShowMore(!showMore)}
 				/>
@@ -26,30 +27,35 @@ export const GitHub = () => {
 							href={d.url}
 							target="_blank"
 							rel="noreferrer"
-							className="border-1 border-emerald-950 rounded-sm hover:bg-black/35"
+							className="border-1 rounded-sm border-velvet-900/60 hover:border-velvet-900/85 bg-velvet-950/50 hover:bg-velvet-1100/20 transition-colors"
 						>
 							<section className="flex flex-col gap-1.5 p-2">
 								<header className="flex justify-between gap-4 leading-none">
-									<h1 className="text-md font-bold text-emerald-400">
+									<h1 className="text-md font-bold text-velvet-400">
 										{d.repo_name}
-										<span className="text-emerald-700"> by </span>
+										<span className="text-velvet-900 font-normal"> by </span>
 										{d.repo_owner}
 									</h1>
-									<div className="text-sm font-mono flex items-center">
+									<div className="text-sm font-mono flex items-center text-velvet-600">
 										{d.stars}
-										<StarIcon className="size-5 ml-2" />
+										<StarIcon className="size-5 ml-1.5 text-velvet-800" />
 									</div>
 								</header>
 								<HorizontalRule />
 								<main className="grid grid-cols-[1fr_120px] gap-1">
-									<h2 className="text-sm text-emerald-800">{d.description}</h2>
-									<div className="bg-emerald-950 text-emerald-300 border-1 border-transparent rounded-xs text-xs px-1 py-0.5 text-center w-fit self-end justify-self-end">
+									<h2 className="text-sm text-velvet-500">{d.description}</h2>
+									<div className="bg-velvet-900/80 text-velvet-300 border-1 border-transparent rounded-xs text-xs px-1 py-0.5 text-center font-bold w-fit self-end justify-self-end">
 										{d.language || "None"}
 									</div>
 								</main>
 							</section>
 						</a>
 					))}
+					{data && !showMore && (
+						<div className="text-xs italic text-center leading-none select-none text-velvet-900">
+							and <span>{data.slice(5).length}</span> more...
+						</div>
+					)}
 				</div>
 			}
 			loading={loading}

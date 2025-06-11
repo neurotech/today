@@ -25,12 +25,14 @@ export const Panel = ({
 }: PanelProps) => {
 	return (
 		<section
-			className={`${fillWidthStyles[fillWidth.toString()]} flex flex-col border-1 rounded-sm border-emerald-900/30 bg-emerald-950/25 text-emerald-600`}
+			className={`${fillWidthStyles[fillWidth.toString()]} flex flex-col border-1 rounded-sm border-velvet-950 bg-velvet-1000`}
 		>
 			{heading && (
 				<>
 					<header className="flex flex-row justify-between items-center p-1">
-						<h2 className="font-bold select-none text-md px-1">{heading}</h2>
+						<h2 className="text-velvet-500 font-bold select-none text-md px-1">
+							{heading}
+						</h2>
 						{headingRight}
 					</header>
 					<HorizontalRule />

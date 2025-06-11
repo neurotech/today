@@ -36,10 +36,10 @@ export const CurrencyChip = ({
 
 	return (
 		<div className="flex flex-col select-none">
-			<div className={"border-emerald-950 inline-flex"}>
+			<div className={"inline-flex"}>
 				<div
 					className={
-						"bg-emerald-950 text-emerald-400 flex justify-center items-center gap-2 px-2 py-0.5 font-semibold rounded-l-sm min-w-20"
+						"bg-velvet-950 text-velvet-400 flex justify-center items-center gap-2 px-2 py-0.5 font-semibold rounded-l-sm min-w-20"
 					}
 				>
 					{variant === "buy" ? "Buy" : "Sell"}
@@ -51,7 +51,7 @@ export const CurrencyChip = ({
 				</div>
 				<div
 					className={
-						"bg-emerald-950/50 text-emerald-400 flex flex-1 justify-center px-2 py-0.5 font-semibold tabular-nums gap-2 cursor-help"
+						"bg-velvet-900 text-velvet-300 flex flex-1 justify-center px-2 py-0.5 font-semibold tabular-nums gap-2 cursor-help"
 					}
 					onClick={() => setShowBreakdown((prev) => !prev)}
 					onKeyDown={() => setShowBreakdown((prev) => !prev)}
@@ -68,18 +68,18 @@ export const CurrencyChip = ({
 					}}
 					type="button"
 					className={
-						"bg-emerald-950 text-emerald-400 hover:bg-emerald-900 hover:text-emerald-200 flex justify-center items-center px-2 py-0.5 font-semibold cursor-pointer rounded-r-sm min-w-10"
+						"bg-velvet-950 text-velvet-300 hover:bg-velvet-1000 hover:text-velvet-200 flex justify-center items-center px-2 py-0.5 font-semibold cursor-pointer rounded-r-sm min-w-10"
 					}
 				>
 					{recentlyCopied ? (
-						<ClipboardDocumentCheckIcon className="size-4 text-emerald-200" />
+						<ClipboardDocumentCheckIcon className="size-4 text-velvet-50" />
 					) : (
 						<ClipboardDocumentListIcon className="size-4" />
 					)}
 				</button>
 			</div>
 			{showBreakdown && (
-				<div className="flex flex-col flex-wrap gap-0.5 text-sm font-mono bg-emerald-1000 text-emerald-400/80 rounded-b-sm border-t-0 border-1 border-black/30 mx-0.5">
+				<div className="flex flex-col flex-wrap gap-0.5 text-sm font-mono bg-velvet-950/30 text-velvet-400 rounded-b-sm border-t-0 border-1 border-black/30 mx-0.5">
 					{Array.from({ length: 9 }, (_, i) => i + 1).map((i) => {
 						const percentage = pricePer * (i / 10);
 						const total = (price + percentage).toFixed(2);
@@ -88,7 +88,7 @@ export const CurrencyChip = ({
 							<button
 								type="button"
 								key={`${variant}-breakdown-${i}`}
-								className="flex flex-row justify-between items-center leading-6 hover:text-emerald-200 hover:bg-emerald-950/30 active:text-white transition-colors cursor-pointer tabular-nums"
+								className="flex flex-row justify-between items-center leading-6 hover:text-velvet-200 hover:bg-velvet-900/40 active:text-white transition-colors cursor-pointer tabular-nums"
 								onClick={() => {
 									navigator.clipboard.writeText(
 										`${total} ${currencyName}${plural(price)}`,
@@ -111,7 +111,7 @@ export const CurrencyChip = ({
 								</div>
 								<div
 									key={`${variant}-copy-${i}`}
-									className="flex justify-center px-2 py-0.5 text-emerald-950 min-w-10"
+									className="flex justify-center px-2 py-0.5 text-velvet-900 min-w-10"
 								>
 									-
 								</div>

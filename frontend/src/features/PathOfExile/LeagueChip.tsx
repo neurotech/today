@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "../../components/Button";
 
 type LeagueChipProps = {
 	league: string;
@@ -23,13 +24,11 @@ export const LeagueChip = ({
 
 	return (
 		<div className="relative inline-block text-left">
-			<button
-				type="button"
+			<Button
+				label={league}
 				onClick={() => setOpen((prev) => !prev)}
-				className="flex items-center gap-2 px-2 py-0.5 font-semibold text-emerald-300/90 hover:text-emerald-200 cursor-pointer bg-emerald-950 hover:bg-emerald-900 transition-colors rounded-xs select-none"
-			>
-				<span className="text-sm">{league}</span>
-			</button>
+				compressed
+			/>
 
 			{open && (
 				<div
@@ -42,7 +41,7 @@ export const LeagueChip = ({
 						{leagues.map((league, i) => (
 							<div
 								key={league.toLowerCase()}
-								className="block px-4 py-2 text-sm text-white hover:text-emerald-400 transition-colors cursor-pointer"
+								className="block px-3 py-2 text-sm text-white hover:text-velvet-500 transition-colors cursor-pointer"
 								role="menuitem"
 								tabIndex={-1}
 								id={`menu-item-${i}`}

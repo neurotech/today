@@ -14,6 +14,7 @@ export const HackerNews = () => {
 			heading="Hacker News"
 			headingRight={
 				<Button
+					compressed
 					label={showMore ? "Show Less" : "Show More"}
 					onClick={() => setShowMore(!showMore)}
 				/>
@@ -27,12 +28,12 @@ export const HackerNews = () => {
 									href={s.url ?? `https://news.ycombinator.com/item?id=${s.id}`}
 									target="_blank"
 									rel="noopener noreferrer"
-									className="text-emerald-400 hover:text-emerald-100 transition-colors"
+									className="text-velvet-400 hover:text-velvet-200 transition-colors"
 								>
 									{s.title}
 								</a>
 							</h3>
-							<h4 className="text-sm text-emerald-800">
+							<h4 className="text-sm text-velvet-800">
 								{formatDistanceToNowStrict(new Date(s.time * 1000), {
 									addSuffix: true,
 								})}
@@ -47,6 +48,11 @@ export const HackerNews = () => {
 							</h4>
 						</div>
 					))}
+					{stories && !showMore && (
+						<div className="text-xs italic text-center leading-none select-none text-velvet-900">
+							and <span>{stories.slice(5).length}</span> more...
+						</div>
+					)}
 				</div>
 			}
 			loading={loading}

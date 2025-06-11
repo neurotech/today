@@ -9,7 +9,7 @@ export const LivingWorlds = () => {
 					height={480}
 					src={"./living-worlds/index.html"}
 					title="living-worlds"
-					className="border-1 rounded-xs border-emerald-950"
+					className="border-1 rounded-xs border-velvet-900/70"
 				/>
 			}
 		/>

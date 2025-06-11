@@ -3,6 +3,7 @@ import { Button } from "../../../../components/Button";
 import { EMPTY_ADDRESS, type Address } from "./AddressTile";
 import { useAddressesConfig } from "../../../../hooks/useAddressesConfig";
 import { v4 } from "uuid";
+import { Textbox } from "../../../../components/Textbox";
 
 type AddNewAddressProps = {
 	refreshAddresses: () => void;
@@ -13,23 +14,21 @@ export const AddNewAddress = ({ refreshAddresses }: AddNewAddressProps) => {
 	const { addAddress } = useAddressesConfig();
 
 	return (
-		<div className="">
-			<input
-				type="text"
+		<div className="flex flex-row gap-2 justify-between">
+			<Textbox
 				placeholder="Label"
-				value={newAddress.label}
-				onChange={(e) =>
+				inputValue={newAddress.label}
+				onChangeHandler={(e) =>
 					setNewAddress({
 						...newAddress,
 						label: e.currentTarget.value,
 					})
 				}
 			/>
-			<input
-				type="text"
+			<Textbox
 				placeholder="Slug"
-				value={newAddress.slug}
-				onChange={(e) =>
+				inputValue={newAddress.slug}
+				onChangeHandler={(e) =>
 					setNewAddress({
 						...newAddress,
 						slug: e.currentTarget.value,

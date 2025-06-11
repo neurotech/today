@@ -37,7 +37,7 @@ export const ZenOfPython = () => {
 	}, [quoteIndex]);
 
 	return (
-		<section className="flex gap-2">
+		<section className="flex gap-2 text-velvet-900">
 			🐍
 			<AnimatePresence mode="wait">
 				<motion.div

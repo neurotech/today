@@ -3,6 +3,7 @@ import { Button } from "../../../../components/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { v4 } from "uuid";
 import { useAddressesConfig } from "../../../../hooks/useAddressesConfig";
+import { Textbox } from "../../../../components/Textbox";
 
 export type Address = {
 	id: string;
@@ -35,15 +36,14 @@ export const AddressTile = ({
 
 	return (
 		<section className="flex flex-row">
-			<div className="flex flex-row gap-2 w-full">
+			<div className="flex flex-row gap-2 w-full min-h-9">
 				<div className="flex flex-1">
-					<div className="bg-emerald-900 text-emerald-100 min-w-20 justify-center flex items-center py-1 px-2 text-sm rounded-l-xs border-l-1 border-l-transparent">
+					<div className="bg-velvet-950 text-velvet-100 min-w-30 max-w-30 justify-center flex items-center p-1 text-sm rounded-l-xs border-l-1 border-l-transparent">
 						{editing ? (
-							<input
-								type="text"
+							<Textbox
 								placeholder="Label"
-								value={updatedAddress.label}
-								onChange={(e) =>
+								inputValue={updatedAddress.label}
+								onChangeHandler={(e) =>
 									setUpdatedAddress({
 										label: e.currentTarget.value,
 										id: updatedAddress.id,
@@ -55,13 +55,12 @@ export const AddressTile = ({
 							address.label
 						)}
 					</div>
-					<div className="bg-emerald-950 text-emerald-300 flex-1 justify-center flex items-center px-1.5 text-xs font-mono self-stretch content-center rounded-r-xs border-r-1 border-r-transparent">
+					<div className="bg-velvet-900/60 text-velvet-300 flex-1 justify-center flex items-center px-1 text-xs font-mono self-stretch content-center rounded-r-xs border-r-1 border-r-transparent">
 						{editing ? (
-							<input
-								type="text"
+							<Textbox
 								placeholder="Slug"
-								value={updatedAddress.slug}
-								onChange={(e) =>
+								inputValue={updatedAddress.slug}
+								onChangeHandler={(e) =>
 									setUpdatedAddress({
 										slug: e.currentTarget.value,
 										id: updatedAddress.id,
@@ -74,37 +73,40 @@ export const AddressTile = ({
 						)}
 					</div>
 				</div>
-				{editing ? (
-					<div>
-						<Button
-							minWidth="min-w-10"
-							label={"Cancel"}
-							onClick={() => toggleEdit()}
-						/>
-						<Button
-							minWidth="min-w-10"
-							label={"Save"}
-							onClick={() => {
-								updateAddress(updatedAddress);
-								if (refreshAddresses) refreshAddresses();
-								toggleEdit();
-							}}
-						/>
-					</div>
-				) : (
-					<>
-						<Button
-							minWidth="min-w-10"
-							label={<PencilSquareIcon className="size-4" />}
-							onClick={toggleEdit}
-						/>
-						<Button
-							minWidth="min-w-10"
-							label={<TrashIcon className="size-4" />}
-							onClick={() => handleRemoveAddress(address)}
-						/>
-					</>
-				)}
+
+				<div className="flex flex-row gap-2">
+					{editing ? (
+						<>
+							<Button
+								minWidth="min-w-14"
+								label={"Cancel"}
+								onClick={() => toggleEdit()}
+							/>
+							<Button
+								minWidth="min-w-14"
+								label={"Save"}
+								onClick={() => {
+									updateAddress(updatedAddress);
+									if (refreshAddresses) refreshAddresses();
+									toggleEdit();
+								}}
+							/>
+						</>
+					) : (
+						<>
+							<Button
+								minWidth="min-w-14"
+								label={<PencilSquareIcon className="size-4" />}
+								onClick={toggleEdit}
+							/>
+							<Button
+								minWidth="min-w-14"
+								label={<TrashIcon className="size-4" />}
+								onClick={() => handleRemoveAddress(address)}
+							/>
+						</>
+					)}
+				</div>
 			</div>
 		</section>
 	);

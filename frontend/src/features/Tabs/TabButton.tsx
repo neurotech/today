@@ -8,9 +8,8 @@ type TabButtonProps = {
 };
 
 const activeStyles: Record<string, string> = {
-	true: "border-emerald-700 bg-emerald-950/80 text-emerald-200",
-	false:
-		"saturate-50 hover:saturate-100 border-emerald-900/60 hover:border-emerald-700 bg-emerald-950/50 text-emerald-500 hover:text-emerald-200",
+	true: "bg-velvet-700 text-velvet-50",
+	false: "bg-velvet-950/70 text-velvet-500 hover:text-velvet-100",
 };
 
 const positionStyles: Record<TabPosition, string> = {
@@ -30,7 +29,7 @@ export const TabButton = ({
 			type="button"
 			role="tab"
 			onClick={onClick}
-			className={`${activeStyles[isActive.toString()]} ${positionStyles[tabPosition]} flex justify-center items-center cursor-pointer text-sm transition-colors px-2 py-1 border-1`}
+			className={`${activeStyles[isActive.toString()]} ${positionStyles[tabPosition]} flex justify-center items-center cursor-pointer text-sm transition-colors px-2 py-1.5 border-1 border-transparent`}
 		>
 			{label}
 		</button>

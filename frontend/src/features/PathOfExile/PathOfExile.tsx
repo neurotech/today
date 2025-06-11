@@ -7,8 +7,8 @@ import { Button } from "../../components/Button";
 import { ArrowPathIcon } from "@heroicons/react/16/solid";
 
 const loadingStyles: Record<string, string> = {
-	true: "animate-spin text-emerald-500",
-	false: "text-emerald-400 hover:text-emerald-300",
+	true: "animate-spin text-velvet-500",
+	false: "text-velvet-400 hover:text-velvet-300",
 };
 
 export const PathOfExile = () => {
@@ -30,7 +30,7 @@ export const PathOfExile = () => {
 					<Button
 						label={
 							<ArrowPathIcon
-								className={`${loadingStyles[loading.toString()]} size-3.5`}
+								className={`${loadingStyles[loading.toString()]} fill-velvet-300 size-3.5`}
 							/>
 						}
 						onClick={() => getCurrencyData()}
@@ -63,13 +63,13 @@ export const PathOfExile = () => {
 								if (e.button === 1) setQuantity(1);
 							}}
 						>
-							<div className="flex flex-row items-center justify-center gap-2 font-semibold select-none tabular-nums text-lg text-emerald-400 hover:text-emerald-300">
+							<div className="flex flex-row items-center justify-center gap-2 font-semibold select-none tabular-nums text-lg text-velvet-400 hover:text-velvet-300">
 								<div>
 									{Array.from({ length: 4 - quantity.toString().length }).map(
 										() => {
 											zeroKey = zeroKey + 1;
 											return (
-												<span key={zeroKey} className="text-emerald-950">
+												<span key={zeroKey} className="text-velvet-950">
 													0
 												</span>
 											);
@@ -77,7 +77,7 @@ export const PathOfExile = () => {
 									)}
 									<span>{quantity}</span>
 								</div>
-								<span className="text-emerald-800">&times;</span>
+								<span className="text-velvet-800">&times;</span>
 								{data.currency_detail.name}
 								<img
 									src={data.currency_detail.icon}

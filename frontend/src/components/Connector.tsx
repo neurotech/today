@@ -5,8 +5,8 @@ type ConnectorProps = {
 };
 
 const activeStyles: Record<string, string> = {
-	true: "connector-active stroke-emerald-500",
-	false: "connector-inactive stroke-emerald-900/50",
+	true: "connector-active stroke-velvet-200",
+	false: "connector-inactive stroke-velvet-900",
 };
 
 export const Connector = ({
