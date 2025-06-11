@@ -8,12 +8,8 @@ FrameCount.visible = false;
 function getRandomSceneIndex(currentSceneIndex, totalScenes) {
 	let randomSceneIndex = Math.floor(Math.random() * totalScenes);
 
-	console.log({ currentSceneIndex, randomSceneIndex });
-
 	while (randomSceneIndex === currentSceneIndex) {
-		console.warn("randomSceneIndex matches currentSceneIndex! Rerolling...");
 		randomSceneIndex = Math.floor(Math.random() * totalScenes);
-		console.log("randomSceneIndex is now:", randomSceneIndex);
 	}
 
 	return randomSceneIndex;
