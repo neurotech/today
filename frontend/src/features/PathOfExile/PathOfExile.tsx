@@ -30,7 +30,7 @@ export const PathOfExile = () => {
 					<Button
 						label={
 							<ArrowPathIcon
-								className={`${loadingStyles[loading.toString()]} fill-velvet-300 size-3.5`}
+								className={`${loadingStyles[loading.toString()]} fill-velvet-300 size-3`}
 							/>
 						}
 						onClick={() => getCurrencyData()}
