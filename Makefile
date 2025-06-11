@@ -1,4 +1,4 @@
-.PHONY: all start dev clean help
+.PHONY: all frontend start dev clean help
 
 COLOUR_GREEN=\033[0;32m
 COLOUR_RED=\033[0;31m
@@ -25,6 +25,12 @@ export CASTLE_BANNER
 
 all: help
 
+frontend:
+	clear && \
+	cd frontend && \
+	echo "$$CASTLE_BANNER" && \
+	pnpm run dev
+
 start:
 	@make clean && \
 	clear && \
@@ -46,9 +52,10 @@ clean:
 help:
 	@clear
 	@echo "$$CASTLE_BANNER"
-	@echo "   $(COLOUR_WHITE)┌─$(COLOUR_GRAY)────────────$(COLOUR_WHITE)┬$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┐$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_GREEN)start$(COLOUR_END)  $(COLOUR_GRAY)│$(COLOUR_END)  $(COLOUR_YELLOW)Start in $(COLOUR_RED)DAEMON$(COLOUR_YELLOW) mode.$(COLOUR_END)                     $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)dev$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END)  $(COLOUR_YELLOW)Start in $(COLOUR_RED)ATTACHED$(COLOUR_YELLOW) mode.$(COLOUR_END)                   $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)clean$(COLOUR_END)  $(COLOUR_GRAY)│$(COLOUR_END)  $(COLOUR_YELLOW)Stop and remove the containers and images.$(COLOUR_END)$(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_WHITE)└─$(COLOUR_GRAY)────────────$(COLOUR_WHITE)┴$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┘$(COLOUR_END)"
+	@echo "   $(COLOUR_WHITE)┌─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┬$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┐$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_PURPLE)frontend$(COLOUR_END) $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start $(COLOUR_RED)vite$(COLOUR_YELLOW) in $(COLOUR_PURPLE)development$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_GREEN)start$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start in $(COLOUR_RED)DAEMON$(COLOUR_YELLOW) mode.$(COLOUR_END)                      $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)dev$(COLOUR_END)      $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start in $(COLOUR_RED)ATTACHED$(COLOUR_YELLOW) mode.$(COLOUR_END)                    $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)clean$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop and remove the containers and images.$(COLOUR_END) $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_WHITE)└─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┴$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┘$(COLOUR_END)"
 	@echo ""
