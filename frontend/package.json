@@ -29,7 +29,8 @@
 	"pnpm": {
 		"onlyBuiltDependencies": [
 			"@biomejs/biome",
-			"@tailwindcss/oxide"
+			"@tailwindcss/oxide",
+			"esbuild"
 		]
 	}
 }
