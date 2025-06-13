@@ -8,6 +8,7 @@ interface PanelProps {
 	heading?: string;
 	headingRight?: ReactNode;
 	fillWidth?: boolean;
+	footer?: string | ReactNode;
 }
 
 const fillWidthStyles: Record<string, string> = {
@@ -22,6 +23,7 @@ export const Panel = ({
 	heading,
 	headingRight,
 	fillWidth = false,
+	footer,
 }: PanelProps) => {
 	return (
 		<section
@@ -39,12 +41,13 @@ export const Panel = ({
 				</>
 			)}
 			{loading && (
-				<h3 className="flex flex-col justify-center self-center min-h-20 select-none">
+				<h3 className="flex flex-col justify-center self-center min-h-50 select-none">
 					<Loading />
 				</h3>
 			)}
 			{error && <h3>Error: {error}</h3>}
 			{!loading && !error && <div className="flex flex-col p-2">{content}</div>}
+			{footer}
 		</section>
 	);
 };

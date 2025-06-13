@@ -13,6 +13,8 @@ export const GitHub = () => {
 	return (
 		<Panel
 			heading="GitHub Trending"
+			loading={loading}
+			error={error}
 			headingRight={
 				<section className="flex flex-row items-center gap-1">
 					<RefreshButton onClick={getGitHubTrending} loading={loading} />
@@ -55,15 +57,19 @@ export const GitHub = () => {
 							</section>
 						</a>
 					))}
-					{data && !showMore && (
-						<div className="text-xs italic text-center leading-none select-none text-velvet-900">
-							and <span>{data.slice(5).length}</span> more...
-						</div>
-					)}
 				</div>
 			}
-			loading={loading}
-			error={error}
+			footer={
+				data &&
+				!showMore && (
+					<>
+						<HorizontalRule />
+						<div className="text-xs italic text-center leading-none select-none text-velvet-900 py-2">
+							and <span>{data.slice(5).length}</span> more...
+						</div>
+					</>
+				)
+			}
 		/>
 	);
 };
