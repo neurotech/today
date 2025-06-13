@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+.connector {
+	shape-rendering: geometricprecision;
+	transition: stroke 0.25s;
+	stroke-miterlimit: 10;
+	stroke-width: 1;
+}
+
+.connector-active {
+	stroke-dashoffset: 100;
+	stroke-dasharray: 2;
+	animation: flow 10s linear 0s forwards infinite;
+}
+
+.connector-inactive {
+	stroke-dashoffset: 0;
+	stroke-dasharray: 555;
+	animation: none;
+}
+
+@keyframes wobble {
+	from {
+		transform: translate3d(-0px, -1px, 0);
+	}
+	to {
+		transform: translate3d(0px, 1px, 0);
+	}
+}
+
+.wobble {
+	display: inline-block;
+	animation-name: wobble;
+	animation-duration: 500ms;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+	animation-timing-function: ease-in-out;
+}
+
+@theme {
+	--font-display: "Hanken Grotesk", "sans-serif";
+	--font-logo: "EB Garamond", "serif";
+
+	--animate-fade-in: fade-in 700ms ease-in-out 1;
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	@keyframes flow {
+		from {
+			stroke-dashoffset: 100;
+		}
+		to {
+			stroke-dashoffset: 0;
+		}
+	}
+
+	--color-velvet-50: #f0f5fd;
+	--color-velvet-100: #e4ecfb;
+	--color-velvet-200: #cddbf8;
+	--color-velvet-300: #afc3f2;
+	--color-velvet-400: #8fa2ea;
+	--color-velvet-500: #7483e0;
+	--color-velvet-600: #5b63d3;
+	--color-velvet-700: #494eb9;
+	--color-velvet-800: #3d4296;
+	--color-velvet-900: #383e77;
+	--color-velvet-950: #212345;
+	--color-velvet-1000: #111223;
+	--color-velvet-1100: #0b0c14;
+}

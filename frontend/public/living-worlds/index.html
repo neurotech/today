@@ -1,0 +1,60 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Canvas Cycle: True 8-bit Color Cycling with HTML5</title>
+    <meta name="generator" content="TextMate http://macromates.com/">
+    <meta name="author" content="Joseph Huckaby">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <!-- Date: 2010-07-17 -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
+        rel="stylesheet">
+
+    <script type="text/javascript" src="./oop.js"></script>
+    <script type="text/javascript" src="./tools.js"></script>
+    <script type="text/javascript" src="./cookie.js"></script>
+    <script type="text/javascript" src="./palette.js"></script>
+    <script type="text/javascript" src="./bitmap.js"></script>
+    <script type="text/javascript" src="./scenes.js"></script>
+    <script type="text/javascript" src="./tween.js"></script>
+    <script type="text/javascript" src="./framecount.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+</head>
+
+<body>
+    <div id="living-worlds-container" onclick="CC.randomScene()">
+        <canvas id="mycanvas" width="640" height="480"></canvas>
+        <div id="living-worlds-overlay-container">
+            <div id="living-worlds-overlay" style="display: none;">
+                <div id="living-worlds-quote"></div>
+                <hr id="living-worlds-horizontal-rule" />
+                <div id="living-worlds-scene-detail"></div>
+            </div>
+        </div>
+    </div>
+
+    <script language="JavaScript">
+        if (document.addEventListener) {
+            // Good browsers
+            document.addEventListener("DOMContentLoaded", function () {
+                document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+                CC.init();
+            }, false);
+
+            // Just in case
+            window.addEventListener("load", function () {
+                window.removeEventListener("load", arguments.callee, false);
+                CC.init();
+            }, false);
+        }
+    </script>
+
+</body>
+
+</html>

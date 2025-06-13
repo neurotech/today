@@ -1,0 +1,59 @@
+volumes:
+  static:
+
+services:
+  frontend:
+    container_name: castle-frontend
+
+    volumes:
+    - static:/frontend/dist
+
+    ports:
+      - "7001:7001"
+
+    env_file:
+      - ./frontend/.env
+
+    restart: always
+
+    build:
+      context: ./frontend
+
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /frontend
+          ignore:
+            - node_modules/
+
+        - action: rebuild
+          path: ./package-lock.json
+
+  backend:
+    container_name: castle-backend
+    restart: always
+    volumes:
+      - static:/backend/dist
+      - ./backend/database:/backend/database
+      - ./backend/images:/backend/images
+      - ./backend/scenes:/backend/scenes
+    ports:
+      - "7000:7000"
+
+    build:
+      context: ./backend
+
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./backend
+          target: /backend
+          ignore:
+            - .venv/
+            - database/
+            - images/
+            - scenes/
+
+        - action: rebuild
+          path: ./uv.lock
