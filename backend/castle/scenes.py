@@ -37,10 +37,10 @@ def count_files(directory: str):
 
 
 async def hydrate():
-    scene_path = "./scenes"
+    scene_path = "/backend/scenes"
     file_count = count_files(scene_path)
 
-    if file_count == 1:
+    if file_count <= 1:
         print(f"{scene_path} is empty, beginning scene hydration.")
 
         for url in scene_urls:
@@ -63,7 +63,7 @@ async def hydrate():
 
 
 async def get_scene(scene: str):
-    scene_file = open(f"./scenes/{scene}.json", "r")
+    scene_file = open(f"/backend/scenes/{scene}.json", "r")
     final = scene_file.read()
     scene_file.close()
 

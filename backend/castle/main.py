@@ -104,34 +104,6 @@ async def delete_property(key: str, id: int):
     return result
 
 
-# # Configuration - Properties
-# @app.get("/api/config/properties")
-# async def get_properties():
-#     result = await get("properties")
-#     return result
-
-
-# @app.delete("/api/config/properties/{id}")
-# async def delete_property(id: int):
-#     await delete(id)
-#     result = await get("properties")
-#     return result
-
-
-# # Configuration - Birthdays
-# @app.get("/api/config/birthdays")
-# async def get_birthdays():
-#     result = await get("birthdays")
-#     return result
-
-
-# @app.delete("/api/config/birthdays/{id}")
-# async def delete_config(id: int):
-#     await delete(id)
-#     result = await get("birthdays")
-#     return result
-
-
 app.mount("/", StaticFiles(directory="dist", html=True), name="frontend")
 
 

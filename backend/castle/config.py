@@ -1,12 +1,12 @@
 import json
-from typing import Dict
+from typing import Dict, Literal
 from pydantic import BaseModel, Field
 from db.db import get_connection_and_cursor
 
 
 class ConfigValue(BaseModel):
     id: int = Field(default=0)
-    key: str
+    key: Literal["properties", "birthdays"]
     value: Dict
 
 
