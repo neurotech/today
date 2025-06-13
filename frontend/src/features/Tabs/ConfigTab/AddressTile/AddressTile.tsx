@@ -38,7 +38,7 @@ export const AddressTile = ({
 		<section className="flex flex-row">
 			<div className="flex flex-row gap-2 w-full min-h-9">
 				<div className="flex flex-1">
-					<div className="bg-velvet-950 text-velvet-100 min-w-30 max-w-30 justify-center flex items-center p-1 text-sm rounded-l-xs border-l-1 border-l-transparent">
+					<div className="bg-velvet-950 text-velvet-100 min-w-30 max-w-30 justify-center flex items-center p-1 text-xs font-mono rounded-l-xs border-l-1 border-l-transparent">
 						{editing ? (
 							<Textbox
 								placeholder="Label"
