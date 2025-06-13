@@ -2,13 +2,14 @@ import { StarIcon } from "@heroicons/react/24/outline";
 import { Panel } from "../../components/Panel";
 import { useGitHub } from "../../hooks/useGitHub";
 import { useState } from "react";
-import { Button } from "../../components/Buttons/Button";
 import { HorizontalRule } from "../../components/HorizontalRule";
 import { RefreshButton } from "../../components/Buttons/RefreshButton";
+import { MoreLessButton } from "../../components/Buttons/MoreLessButton";
 
 export const GitHub = () => {
 	const [showMore, setShowMore] = useState(false);
 	const { data, loading, error, getGitHubTrending } = useGitHub();
+	const showFooter = data && data.length > 5;
 
 	return (
 		<Panel
@@ -16,14 +17,7 @@ export const GitHub = () => {
 			loading={loading}
 			error={error}
 			headingRight={
-				<section className="flex flex-row items-center gap-1">
-					<RefreshButton onClick={getGitHubTrending} loading={loading} />
-					<Button
-						compressed
-						label={showMore ? "Show Less" : "Show More"}
-						onClick={() => setShowMore(!showMore)}
-					/>
-				</section>
+				<RefreshButton onClick={getGitHubTrending} loading={loading} />
 			}
 			content={
 				<div className="flex flex-col gap-2">
@@ -60,13 +54,14 @@ export const GitHub = () => {
 				</div>
 			}
 			footer={
-				data &&
-				!showMore && (
+				showFooter && (
 					<>
 						<HorizontalRule />
-						<div className="text-xs italic text-center leading-none select-none text-velvet-900 py-2">
-							and <span>{data.slice(5).length}</span> more...
-						</div>
+						<MoreLessButton
+							showMore={showMore}
+							itemCount={data.slice(5).length}
+							onClick={() => setShowMore((p) => !p)}
+						/>
 					</>
 				)
 			}
