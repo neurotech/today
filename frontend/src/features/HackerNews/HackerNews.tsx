@@ -2,17 +2,20 @@ import { useState } from "react";
 import { useHackerNews } from "../../hooks/useHackerNews";
 import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { Panel } from "../../components/Panel";
-import { Separator } from "../../components/Separator";
 import { Button } from "../../components/Buttons/Button";
 import { RefreshButton } from "../../components/Buttons/RefreshButton";
+import { ReadingTile } from "../../components/ReadingTile";
+import { HorizontalRule } from "../../components/HorizontalRule";
 
 export const HackerNews = () => {
-	const [showMore, setShowMore] = useState(true);
+	const [showMore, setShowMore] = useState(false);
 	const { stories, loading, error, getStories } = useHackerNews();
 
 	return (
 		<Panel
 			heading="Hacker News"
+			loading={loading}
+			error={error}
 			headingRight={
 				<section className="flex flex-row items-center gap-1">
 					<RefreshButton onClick={getStories} loading={loading} />
@@ -26,42 +29,30 @@ export const HackerNews = () => {
 			}
 			content={
 				<div className="flex flex-col gap-2">
-					{stories.slice(0, showMore ? 10 : 5).map((s) => (
-						<div key={s.id}>
-							<h3 className="text-md font-bold">
-								<a
-									href={s.url ?? `https://news.ycombinator.com/item?id=${s.id}`}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-velvet-400 hover:text-velvet-200 transition-colors"
-								>
-									{s.title}
-								</a>
-							</h3>
-							<h4 className="text-sm text-velvet-800">
-								{formatDistanceToNowStrict(new Date(s.time * 1000), {
-									addSuffix: true,
-								})}
-								<Separator />
-								{s.score} points
-								<Separator />
-								{
-									new URL(
-										s.url ?? `https://news.ycombinator.com/item?id=${s.id}`,
-									).hostname
-								}
-							</h4>
-						</div>
+					{stories.slice(0, showMore ? 10 : 7).map((s) => (
+						<ReadingTile
+							key={s.id}
+							url={s.url ?? `https://news.ycombinator.com/item?id=${s.id}`}
+							title={s.title}
+							score={s.score}
+							time={formatDistanceToNowStrict(new Date(s.time * 1000), {
+								addSuffix: true,
+							})}
+						/>
 					))}
-					{stories && !showMore && (
-						<div className="text-xs italic text-center leading-none select-none text-velvet-900">
-							and <span>{stories.slice(5).length}</span> more...
-						</div>
-					)}
 				</div>
 			}
-			loading={loading}
-			error={error}
+			footer={
+				stories &&
+				!showMore && (
+					<>
+						<HorizontalRule />
+						<div className="text-xs italic text-center leading-none select-none text-velvet-900 py-2">
+							and <span>{stories.slice(7).length}</span> more...
+						</div>
+					</>
+				)
+			}
 		/>
 	);
 };
