@@ -24,7 +24,12 @@ export const Properties = () => {
 		getConfig("properties");
 	}, []);
 
-	const { data: addresses, loading, error, getConfig } = useConfig<Address>();
+	const {
+		data: addresses,
+		loading,
+		error,
+		getConfig,
+	} = useConfig<Address, Address[]>();
 
 	return (
 		<Panel

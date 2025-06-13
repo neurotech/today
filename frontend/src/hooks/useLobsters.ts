@@ -20,7 +20,10 @@ type LobstersData = {
 };
 
 export const useLobsters = () => {
-	const { data, loading, error, getURL } = useFetch<LobstersData[]>();
+	const { data, loading, error, getURL } = useFetch<
+		LobstersData,
+		LobstersData[]
+	>();
 
 	useEffect(() => {
 		getLobsters();

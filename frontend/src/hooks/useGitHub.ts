@@ -12,7 +12,10 @@ type GitHubDetail = {
 };
 
 export const useGitHub = () => {
-	const { data, loading, error, getURL } = useFetch<GitHubDetail[]>();
+	const { data, loading, error, getURL } = useFetch<
+		GitHubDetail,
+		GitHubDetail[]
+	>();
 
 	useEffect(() => {
 		getGitHubTrending();

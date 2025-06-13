@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-export const useFetch = <T>() => {
-	const [data, setData] = useState<T[] | null>(null);
+export const useFetch = <T, K>() => {
+	const [data, setData] = useState<K | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 

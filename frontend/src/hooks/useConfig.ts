@@ -12,9 +12,9 @@ export type Address = {
 	};
 };
 
-export const useConfig = <T>() => {
+export const useConfig = <T, K>() => {
 	const { data, loading, error, postURL, getURL, patchURL, deleteURL } =
-		useFetch<T>();
+		useFetch<T, K>();
 
 	const createConfig = async (configValue: T) =>
 		await postURL(`${getUrlPrefix()}api/config`, configValue);

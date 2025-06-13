@@ -22,7 +22,10 @@ type PathOfExileData = {
 };
 
 export const usePathOfExile = ({ currency, league }: UsePathOfExileProps) => {
-	const { data, loading, error, getURL } = useFetch<PathOfExileData>();
+	const { data, loading, error, getURL } = useFetch<
+		PathOfExileData,
+		PathOfExileData
+	>();
 
 	useEffect(() => {
 		getCurrencyData();

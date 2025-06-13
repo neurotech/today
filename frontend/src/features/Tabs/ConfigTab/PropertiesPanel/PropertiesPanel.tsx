@@ -18,7 +18,7 @@ export const PropertiesPanel = () => {
 		getConfig,
 		updateConfig,
 		deleteConfig,
-	} = useConfig<Address>();
+	} = useConfig<Address, Address[]>();
 
 	const handleNewAddress = (address: Address) => {
 		createConfig(address);
