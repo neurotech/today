@@ -1,0 +1,7 @@
+-- DROP TABLE IF EXISTS config;
+CREATE TABLE
+  IF NOT EXISTS config (
+    id INTEGER PRIMARY KEY,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL
+  );

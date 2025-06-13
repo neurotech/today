@@ -10,15 +10,10 @@ def get_connection_and_cursor() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
 
 
 def initialise_database():
-    (connection, cursor) = get_connection_and_cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS movie(title, year, score)")
-    cursor.execute("INSERT INTO movie VALUES('The Matrix', 1999, 8.7)")
-    connection.commit()
-    connection.close()
+    with open("/backend/castle/db/schema.sql", "r") as file:
+        schema_sql = file.read()
 
-
-def clean_database():
     (connection, cursor) = get_connection_and_cursor()
-    cursor.execute("DELETE FROM movie")
+    cursor.executescript(schema_sql)
     connection.commit()
     connection.close()
