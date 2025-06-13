@@ -7,12 +7,10 @@ import {
 } from "../../hooks/useAddressesConfig";
 import { Connector } from "../../components/Connector";
 import { Loading } from "../../components/Loading";
-
-const urlPrefix =
-	import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";
+import { getUrlPrefix } from "../../utils/getUrlPrefix";
 
 const getPropertyURL = (address: string) =>
-	`${urlPrefix}api/property?address=${encodeURIComponent(address)}`;
+	`${getUrlPrefix()}api/property?address=${encodeURIComponent(address)}`;
 
 const activeStyles: Record<string, string> = {
 	true: "border-velvet-600 bg-velvet-950",

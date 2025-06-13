@@ -3,14 +3,7 @@ import { Panel } from "../../components/Panel";
 import { usePathOfExile } from "../../hooks/usePathOfExile";
 import { CurrencyChip } from "./CurrencyChip";
 import { LeagueChip } from "./LeagueChip";
-import { Button } from "../../components/Buttons/Button";
-import { ArrowPathIcon } from "@heroicons/react/16/solid";
 import { RefreshButton } from "../../components/Buttons/RefreshButton";
-
-const loadingStyles: Record<string, string> = {
-	true: "animate-spin text-velvet-500",
-	false: "text-velvet-400 hover:text-velvet-300",
-};
 
 export const PathOfExile = () => {
 	const [league, setLeague] = useState<string>("Settlers");
