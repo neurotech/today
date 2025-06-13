@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
+from lobsters import get_lobsters
 from github import get_github_trending
 from scenes import get_scene, hydrate
 from properties import get_property
@@ -23,6 +24,8 @@ origins = [
     "http://localhost:7100",
     "http://slab:7000",
     "http://slab:7100",
+    "http://lvh.me:7000",
+    "http://lvh.me:7100",
 ]
 
 app.add_middleware(
@@ -62,6 +65,12 @@ async def scene(name: str):
 @app.get("/api/github")
 async def github():
     result = await get_github_trending()
+    return result
+
+
+@app.get("/api/lobsters")
+async def lobsters():
+    result = await get_lobsters()
     return result
 
 
