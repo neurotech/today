@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useFetch } from "./useFetch";
+import { getUrlPrefix } from "../utils/getUrlPrefix";
 
 type UsePathOfExileProps = {
 	currency: string;
@@ -20,9 +21,6 @@ type PathOfExileData = {
 	sell: number;
 };
 
-const urlPrefix =
-	import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";
-
 export const usePathOfExile = ({ currency, league }: UsePathOfExileProps) => {
 	const { data, loading, error, getURL } = useFetch<PathOfExileData>();
 
@@ -31,7 +29,7 @@ export const usePathOfExile = ({ currency, league }: UsePathOfExileProps) => {
 	}, []);
 
 	const getCurrencyData = async () =>
-		getURL(`${urlPrefix}api/poe?currency=${currency}&league=${league}`);
+		getURL(`${getUrlPrefix()}api/poe?currency=${currency}&league=${league}`);
 
 	return { data, loading, error, getCurrencyData };
 };

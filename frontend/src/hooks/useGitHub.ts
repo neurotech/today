@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFetch } from "./useFetch";
+import { getUrlPrefix } from "../utils/getUrlPrefix";
 
 type GitHubDetail = {
 	repo_name: string;
@@ -10,9 +11,6 @@ type GitHubDetail = {
 	url: string;
 };
 
-const urlPrefix =
-	import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";
-
 export const useGitHub = () => {
 	const { data, loading, error, getURL } = useFetch<GitHubDetail[]>();
 
@@ -20,7 +18,7 @@ export const useGitHub = () => {
 		getGitHubTrending();
 	}, []);
 
-	const getGitHubTrending = async () => getURL(`${urlPrefix}api/github`);
+	const getGitHubTrending = async () => getURL(`${getUrlPrefix()}api/github`);
 
 	return { data, loading, error, getGitHubTrending };
 };
