@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
-interface ButtonProps {
+export type ButtonProps = {
 	label: string | ReactNode;
 	onClick: () => void;
 	minWidth?: string;
 	disabled?: boolean;
 	compressed?: boolean;
-}
+};
 
 const compressedStyles: Record<string, string> = {
 	true: "p-[0px]",

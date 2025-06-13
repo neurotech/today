@@ -3,8 +3,9 @@ import { Panel } from "../../components/Panel";
 import { usePathOfExile } from "../../hooks/usePathOfExile";
 import { CurrencyChip } from "./CurrencyChip";
 import { LeagueChip } from "./LeagueChip";
-import { Button } from "../../components/Button";
+import { Button } from "../../components/Buttons/Button";
 import { ArrowPathIcon } from "@heroicons/react/16/solid";
+import { RefreshButton } from "../../components/Buttons/RefreshButton";
 
 const loadingStyles: Record<string, string> = {
 	true: "animate-spin text-velvet-500",
@@ -27,16 +28,7 @@ export const PathOfExile = () => {
 			heading={"PoE Currency"}
 			headingRight={
 				<section className="flex flex-row items-center gap-1">
-					<Button
-						label={
-							<ArrowPathIcon
-								className={`${loadingStyles[loading.toString()]} fill-velvet-300 size-3`}
-							/>
-						}
-						onClick={() => getCurrencyData()}
-						disabled={loading}
-						minWidth={"min-w-8"}
-					/>
+					<RefreshButton onClick={getCurrencyData} loading={loading} />
 					<LeagueChip
 						league={league}
 						setLeague={setLeague}

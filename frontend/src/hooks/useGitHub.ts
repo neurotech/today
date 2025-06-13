@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useFetch } from "./useFetch";
 
 type GitHubDetail = {
 	repo_name: string;
@@ -13,34 +14,13 @@ const urlPrefix =
 	import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";
 
 export const useGitHub = () => {
-	const [data, setData] = useState<GitHubDetail[] | null>();
-	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<string | null>(null);
+	const { data, loading, error, getURL } = useFetch<GitHubDetail[]>();
 
 	useEffect(() => {
-		getCurrencyData();
+		getGitHubTrending();
 	}, []);
 
-	const getCurrencyData = async () => {
-		setLoading(true);
+	const getGitHubTrending = async () => getURL(`${urlPrefix}api/github`);
 
-		fetch(`${urlPrefix}api/github`)
-			.then((response) => {
-				if (!response.ok) throw new Error("Network response was not ok");
-				return response.json();
-			})
-			.then((json) => {
-				setData(json);
-				setError(null);
-			})
-			.catch((err) => {
-				setError(err.message);
-				setData(null);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	};
-
-	return { data, loading, error, getCurrencyData };
+	return { data, loading, error, getGitHubTrending };
 };

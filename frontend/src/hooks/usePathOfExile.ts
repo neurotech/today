@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useFetch } from "./useFetch";
 
 type UsePathOfExileProps = {
 	currency: string;
@@ -23,38 +24,14 @@ const urlPrefix =
 	import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";
 
 export const usePathOfExile = ({ currency, league }: UsePathOfExileProps) => {
-	const [data, setData] = useState<PathOfExileData | null>(null);
-	const [loading, setLoading] = useState<boolean>(false);
-	const [error, setError] = useState<string | null>(null);
+	const { data, loading, error, getURL } = useFetch<PathOfExileData>();
 
 	useEffect(() => {
 		getCurrencyData();
 	}, []);
 
-	const url = `${urlPrefix}api/poe?currency=${currency}&league=${league}`;
-
-	const getCurrencyData = async () => {
-		setLoading(true);
-
-		fetch(url)
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				return response.json();
-			})
-			.then((json) => {
-				setData(json);
-				setError(null);
-			})
-			.catch((err) => {
-				setError(err.message);
-				setData(null);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	};
+	const getCurrencyData = async () =>
+		getURL(`${urlPrefix}api/poe?currency=${currency}&league=${league}`);
 
 	return { data, loading, error, getCurrencyData };
 };

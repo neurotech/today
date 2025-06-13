@@ -2,22 +2,26 @@ import { StarIcon } from "@heroicons/react/24/outline";
 import { Panel } from "../../components/Panel";
 import { useGitHub } from "../../hooks/useGitHub";
 import { useState } from "react";
-import { Button } from "../../components/Button";
+import { Button } from "../../components/Buttons/Button";
 import { HorizontalRule } from "../../components/HorizontalRule";
+import { RefreshButton } from "../../components/Buttons/RefreshButton";
 
 export const GitHub = () => {
 	const [showMore, setShowMore] = useState(false);
-	const { data, loading, error } = useGitHub();
+	const { data, loading, error, getGitHubTrending } = useGitHub();
 
 	return (
 		<Panel
 			heading="GitHub Trending"
 			headingRight={
-				<Button
-					compressed
-					label={showMore ? "Show Less" : "Show More"}
-					onClick={() => setShowMore(!showMore)}
-				/>
+				<section className="flex flex-row items-center gap-1">
+					<RefreshButton onClick={getGitHubTrending} loading={loading} />
+					<Button
+						compressed
+						label={showMore ? "Show Less" : "Show More"}
+						onClick={() => setShowMore(!showMore)}
+					/>
+				</section>
 			}
 			content={
 				<div className="flex flex-col gap-2">

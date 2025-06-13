@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../../../components/Button";
+import { Button } from "../../../../components/Buttons/Button";
 import { EMPTY_ADDRESS, type Address } from "./AddressTile";
 import { useAddressesConfig } from "../../../../hooks/useAddressesConfig";
 import { v4 } from "uuid";

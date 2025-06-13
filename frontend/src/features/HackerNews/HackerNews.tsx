@@ -3,21 +3,26 @@ import { useHackerNews } from "../../hooks/useHackerNews";
 import { formatDistanceToNowStrict } from "date-fns/formatDistanceToNowStrict";
 import { Panel } from "../../components/Panel";
 import { Separator } from "../../components/Separator";
-import { Button } from "../../components/Button";
+import { Button } from "../../components/Buttons/Button";
+import { RefreshButton } from "../../components/Buttons/RefreshButton";
 
 export const HackerNews = () => {
 	const [showMore, setShowMore] = useState(true);
-	const { stories, loading, error } = useHackerNews();
+	const { stories, loading, error, getStories } = useHackerNews();
 
 	return (
 		<Panel
 			heading="Hacker News"
 			headingRight={
-				<Button
-					compressed
-					label={showMore ? "Show Less" : "Show More"}
-					onClick={() => setShowMore(!showMore)}
-				/>
+				<section className="flex flex-row items-center gap-1">
+					<RefreshButton onClick={getStories} loading={loading} />
+					<Button
+						compressed
+						disabled={loading}
+						label={showMore ? "Show Less" : "Show More"}
+						onClick={() => setShowMore(!showMore)}
+					/>
+				</section>
 			}
 			content={
 				<div className="flex flex-col gap-2">
