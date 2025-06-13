@@ -1,37 +1,31 @@
 import { useState } from "react";
-import { Button } from "../../../../components/Buttons/Button";
+import { Button } from "../../../../../components/Buttons/Button";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/16/solid";
-import { v4 } from "uuid";
-import { useAddressesConfig } from "../../../../hooks/useAddressesConfig";
-import { Textbox } from "../../../../components/Textbox";
-
-export type Address = {
-	id: string;
-	label: string;
-	slug: string;
-};
+import { Textbox } from "../../../../../components/Textbox";
+import type { Address } from "../../../../../hooks/useConfig";
 
 type AddressTileProps = {
 	address: Address;
-	handleRemoveAddress: (address: Address) => void;
-	refreshAddresses?: () => void;
+	updateConfig: (address: Address) => void;
+	deleteConfig: (key: string, id: string) => void;
 };
 
 export const EMPTY_ADDRESS = () => ({
-	id: v4(),
-	label: "",
-	slug: "",
+	id: undefined,
+	key: "properties",
+	value: {
+		label: "",
+		slug: "",
+	},
 });
 
 export const AddressTile = ({
 	address,
-	handleRemoveAddress,
-	refreshAddresses,
+	updateConfig,
+	deleteConfig,
 }: AddressTileProps) => {
 	const [editing, setEditing] = useState<boolean>(false);
 	const [updatedAddress, setUpdatedAddress] = useState<Address>(address);
-	const { updateAddress } = useAddressesConfig();
-
 	const toggleEdit = () => setEditing((previous) => !previous);
 
 	return (
@@ -42,34 +36,38 @@ export const AddressTile = ({
 						{editing ? (
 							<Textbox
 								placeholder="Label"
-								inputValue={updatedAddress.label}
+								inputValue={updatedAddress.value.label}
 								onChangeHandler={(e) =>
-									setUpdatedAddress({
-										label: e.currentTarget.value,
-										id: updatedAddress.id,
-										slug: updatedAddress.slug,
-									})
+									setUpdatedAddress((p) => ({
+										...p,
+										value: {
+											...p.value,
+											label: e.target.value,
+										},
+									}))
 								}
 							/>
 						) : (
-							address.label
+							address.value.label
 						)}
 					</div>
 					<div className="bg-velvet-900/60 text-velvet-300 flex-1 justify-center flex items-center px-1 text-xs font-mono self-stretch content-center rounded-r-xs border-r-1 border-r-transparent">
 						{editing ? (
 							<Textbox
 								placeholder="Slug"
-								inputValue={updatedAddress.slug}
+								inputValue={updatedAddress.value.slug}
 								onChangeHandler={(e) =>
-									setUpdatedAddress({
-										slug: e.currentTarget.value,
-										id: updatedAddress.id,
-										label: updatedAddress.label,
-									})
+									setUpdatedAddress((p) => ({
+										...p,
+										value: {
+											...p.value,
+											slug: e.target.value,
+										},
+									}))
 								}
 							/>
 						) : (
-							address.slug
+							address.value.slug
 						)}
 					</div>
 				</div>
@@ -86,8 +84,7 @@ export const AddressTile = ({
 								minWidth="min-w-14"
 								label={"Save"}
 								onClick={() => {
-									updateAddress(updatedAddress);
-									if (refreshAddresses) refreshAddresses();
+									updateConfig(updatedAddress);
 									toggleEdit();
 								}}
 							/>
@@ -102,7 +99,9 @@ export const AddressTile = ({
 							<Button
 								minWidth="min-w-14"
 								label={<TrashIcon className="size-4" />}
-								onClick={() => handleRemoveAddress(address)}
+								onClick={() => {
+									if (address.id) deleteConfig("properties", address.id);
+								}}
 							/>
 						</>
 					)}

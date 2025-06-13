@@ -1,13 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../components/Buttons/Button";
 import { Panel } from "../../components/Panel";
-import {
-	useAddressesConfig,
-	type Address,
-} from "../../hooks/useAddressesConfig";
+
 import { Connector } from "../../components/Connector";
 import { Loading } from "../../components/Loading";
 import { getUrlPrefix } from "../../utils/getUrlPrefix";
+import { useConfig, type Address } from "../../hooks/useConfig";
 
 const getPropertyURL = (address: string) =>
 	`${getUrlPrefix()}api/property?address=${encodeURIComponent(address)}`;
@@ -18,33 +16,39 @@ const activeStyles: Record<string, string> = {
 };
 
 export const Properties = () => {
-	const { getAddresses } = useAddressesConfig();
-	const [addresses] = useState<Address[]>(getAddresses());
 	const [activeImage, setActiveImage] = useState<string>("");
 	const [activeAddress, setActiveAddress] = useState<Address>();
-	const [loading, setLoading] = useState<boolean>(false);
+	const [imageLoading, setImageLoading] = useState<boolean>(false);
+
+	useEffect(() => {
+		getConfig("properties");
+	}, []);
+
+	const { data: addresses, loading, error, getConfig } = useConfig<Address>();
 
 	return (
 		<Panel
+			loading={loading}
+			error={error}
 			heading="Properties"
 			content={
 				<section className="flex flex-row">
 					<div className="flex flex-col gap-2">
-						{addresses.map((address) => {
+						{addresses?.map((address) => {
 							return (
 								<div
-									key={address.slug}
+									key={address.value.slug}
 									className="flex flex-row justify-center items-center"
 								>
 									<Button
-										label={address.label}
+										label={address.value.label}
 										onClick={() => {
-											setLoading(true);
+											setImageLoading(true);
 											if (activeImage === address.id) {
 												setActiveImage("");
 												setActiveAddress(undefined);
 											} else {
-												setActiveImage(address.id);
+												setActiveImage(address.id || "");
 												setActiveAddress(address);
 											}
 										}}
@@ -63,17 +67,17 @@ export const Properties = () => {
 					>
 						{activeAddress ? (
 							<a
-								href={getPropertyURL(activeAddress.slug)}
+								href={getPropertyURL(activeAddress.value.slug)}
 								target="_blank"
 								rel="noreferrer"
 							>
-								{loading && <Loading />}
+								{imageLoading && <Loading />}
 								<img
-									src={getPropertyURL(activeAddress.slug)}
-									alt={activeAddress.label}
+									src={getPropertyURL(activeAddress.value.slug)}
+									alt={activeAddress.value.label}
 									className="object-cover object-left w-fit h-60 self-center invert saturate-0"
-									style={{ display: `${loading ? "none" : "block"}` }}
-									onLoad={() => setLoading((p) => !p)}
+									style={{ display: `${imageLoading ? "none" : "block"}` }}
+									onLoad={() => setImageLoading((p) => !p)}
 								/>
 							</a>
 						) : (
