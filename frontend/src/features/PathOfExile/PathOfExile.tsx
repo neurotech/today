@@ -6,7 +6,7 @@ import { LeagueChip } from "./LeagueChip";
 import { RefreshButton } from "../../components/Buttons/RefreshButton";
 
 export const PathOfExile = () => {
-	const [league, setLeague] = useState<string>("Settlers");
+	const [league, setLeague] = useState<string>("Mercenaries");
 	const currency = "Divine Orb";
 	const { data, loading, error, getCurrencyData } = usePathOfExile({
 		league,

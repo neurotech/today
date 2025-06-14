@@ -14,7 +14,7 @@ export const LeagueChip = ({
 }: LeagueChipProps) => {
 	const [open, setOpen] = useState<boolean>(false);
 
-	const leagues = ["Settlers", "Standard"];
+	const leagues = ["Mercenaries", "Standard"];
 
 	const handleLeagueChange = (newLeague: string) => {
 		setLeague(newLeague);
