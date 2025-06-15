@@ -8,7 +8,7 @@ type ReadingTileProps = {
 };
 
 export const ReadingTile = ({ url, title, score, time }: ReadingTileProps) => (
-	<div>
+	<div className="bg-velvet-600/10 border-velvet-600/20 border-1 rounded-sm px-2 py-1">
 		<h3 className="text-md font-extrabold">
 			<a
 				href={url}

@@ -27,7 +27,7 @@ export const Panel = ({
 }: PanelProps) => {
 	return (
 		<section
-			className={`${fillWidthStyles[fillWidth.toString()]} flex flex-col border-1 rounded-sm border-velvet-950 bg-velvet-1000`}
+			className={`${fillWidthStyles[fillWidth.toString()]} flex flex-col shadow-xs/55 border-1 rounded-sm border-velvet-950 bg-velvet-1000`}
 		>
 			{heading && (
 				<>
