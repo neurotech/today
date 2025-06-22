@@ -1,5 +1,3 @@
-import { Separator } from "./Separator";
-
 type ReadingTileProps = {
 	url: string;
 	title: string;
@@ -8,23 +6,16 @@ type ReadingTileProps = {
 };
 
 export const ReadingTile = ({ url, title, score, time }: ReadingTileProps) => (
-	<div className="bg-velvet-600/10 border-velvet-600/20 border-1 rounded-sm px-2 py-1">
-		<h3 className="text-md font-extrabold">
-			<a
-				href={url}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="text-velvet-400 hover:text-velvet-100 transition-colors"
-			>
-				{title}
-			</a>
-		</h3>
-		<h4 className="text-sm">
-			<span className="text-velvet-600 font-semibold">{time}</span>
-			<Separator />
-			<span className="text-velvet-700">{score} points</span>
-			<Separator />
-			<span className="text-velvet-800 italic">{new URL(url).hostname}</span>
-		</h4>
-	</div>
+	<a
+		href={url}
+		target="_blank"
+		rel="noopener noreferrer"
+		className="flex flex-row justify-between px-2 py-1 border-1 rounded-sm border-velvet-900/60 hover:border-velvet-900/85 bg-velvet-950/50 hover:bg-velvet-1100/20 transition-colors items-center"
+		title={`${score} points・${time}`}
+	>
+		<h1 className="text-md font-bold text-velvet-400">{title}</h1>
+		<aside className="text-sm text-velvet-800 italic min-w-45 text-right">
+			{new URL(url).hostname}
+		</aside>
+	</a>
 );

@@ -10,7 +10,7 @@ import { MoreLessButton } from "../../components/Buttons/MoreLessButton";
 export const HackerNews = () => {
 	const [showMore, setShowMore] = useState(false);
 	const { stories, loading, error, getStories } = useHackerNews();
-	const showFooter = stories && stories.slice(7).length > 0;
+	const showFooter = stories && stories.slice(10).length > 0;
 
 	return (
 		<Panel
@@ -20,7 +20,7 @@ export const HackerNews = () => {
 			headingRight={<RefreshButton onClick={getStories} loading={loading} />}
 			content={
 				<div className="flex flex-col gap-2">
-					{stories.slice(0, showMore ? 10 : 7).map((s) => (
+					{stories.map((s) => (
 						<ReadingTile
 							key={s.id}
 							url={s.url ?? `https://news.ycombinator.com/item?id=${s.id}`}
@@ -39,7 +39,7 @@ export const HackerNews = () => {
 						<HorizontalRule />
 						<MoreLessButton
 							showMore={showMore}
-							itemCount={stories.slice(7).length}
+							itemCount={stories.slice(10).length}
 							onClick={() => setShowMore((p) => !p)}
 						/>
 					</>

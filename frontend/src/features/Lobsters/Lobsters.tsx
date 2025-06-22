@@ -10,7 +10,7 @@ import { MoreLessButton } from "../../components/Buttons/MoreLessButton";
 export const Lobsters = () => {
 	const [showMore, setShowMore] = useState(false);
 	const { data, loading, error, getLobsters } = useLobsters();
-	const showFooter = data && data.slice(7).length > 0;
+	const showFooter = data && data.slice(16).length > 0;
 
 	return (
 		<Panel
@@ -20,7 +20,7 @@ export const Lobsters = () => {
 			headingRight={<RefreshButton onClick={getLobsters} loading={loading} />}
 			content={
 				<div className="flex flex-col gap-2">
-					{data?.slice(0, showMore ? data.length : 7).map((d) => (
+					{data?.slice(0, showMore ? data.length : 16).map((d) => (
 						<ReadingTile
 							key={d.short_id}
 							url={d.url === "" ? d.comments_url : d.url}
@@ -39,7 +39,7 @@ export const Lobsters = () => {
 						<HorizontalRule />
 						<MoreLessButton
 							showMore={showMore}
-							itemCount={data.slice(7).length}
+							itemCount={data.slice(16).length}
 							onClick={() => setShowMore((p) => !p)}
 						/>
 					</>
