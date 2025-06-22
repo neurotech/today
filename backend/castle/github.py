@@ -27,7 +27,10 @@ async def get_github_trending():
         repo_owner = repo_split[0]
         repo_name = repo_split[1]
 
-        description = row.find("p").text.strip()
+        description_element = row.find("p")
+        description = (
+            description_element.get_text(strip=True) if description_element else ""
+        )
         language_raw = row.find("span", itemprop="programmingLanguage")
         language = language_raw.text if language_raw else None
         stars = clean_string(row.find("svg", attrs={"aria-label": "star"}).parent.text)
