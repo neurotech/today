@@ -27,7 +27,7 @@ export const GitHub = () => {
 							href={d.url}
 							target="_blank"
 							rel="noreferrer"
-							className="border-1 rounded-sm border-velvet-900/60 hover:border-velvet-900/85 bg-velvet-950/50 hover:bg-velvet-1100/20 transition-colors"
+							className="border-1 rounded-sm border-velvet-900/60 hover:border-velvet-950/75 bg-velvet-950/50 hover:bg-velvet-1100/20 transition-colors"
 						>
 							<section className="flex flex-col gap-1.5 p-2">
 								<header className="flex justify-between gap-4 leading-none">
