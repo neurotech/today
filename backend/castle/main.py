@@ -85,7 +85,6 @@ async def create_config(value: ConfigValue):
 
 @app.patch("/api/config")
 async def update_config(value: ConfigValue):
-    print(value)
     await update(value)
     result = await get(value.key)
     return result
