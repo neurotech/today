@@ -1,8 +1,8 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
-import { Button } from "../../../../../components/Buttons/Button";
-import { Textbox } from "../../../../../components/Textbox";
-import type { Address } from "../../../../../hooks/useConfig";
+import { Button } from "../../../components/Buttons/Button";
+import { Textbox } from "../../../components/Textbox";
+import type { Address } from "../../../hooks/useConfig";
 
 type AddressTileProps = {
   address: Address;

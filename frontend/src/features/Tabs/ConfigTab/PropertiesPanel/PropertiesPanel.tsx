@@ -3,7 +3,7 @@ import { HorizontalRule } from "../../../../components/HorizontalRule";
 import { Panel } from "../../../../components/Panel";
 import { type Address, useConfig } from "../../../../hooks/useConfig";
 import { AddNewAddress } from "./AddressTile/AddNewAddress";
-import { AddressTile } from "./AddressTile/AddressTile";
+import { AddressTile } from "../AddressTile";
 
 export const PropertiesPanel = () => {
   const {
