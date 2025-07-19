@@ -152,14 +152,7 @@ const CanvasCycle = {
 		if (overlay)
 			overlay.innerHTML = `${title.replace(" - ", "<span> - </span>")} <span>[</span>${name}.json<span>]</span>`;
 
-		const quoteElement = document.getElementById("living-worlds-quote");
-		if (quoteElement) {
-			const data = await fetch("http://slab:7000/api/advice");
-			const json = await data.json();
-			quoteElement.textContent = json.advice;
-
-			setTimeout(() => this.showOverlay(), 800);
-		}
+		this.getAdvice();
 
 		CanvasCycle.processImage(parsed);
 	},
@@ -383,6 +376,17 @@ const CanvasCycle = {
 		if (overlay) {
 			overlay.style =
 				"animation-name: fade; animation-duration: 600ms; animation-iteration-count: 1;";
+		}
+	},
+	getAdvice: async () => {
+		const quoteElement = document.getElementById("living-worlds-quote");
+
+		if (quoteElement) {
+			const data = await fetch("http://slab:7000/api/advice");
+			const json = await data.json();
+			quoteElement.textContent = json.advice;
+
+			setTimeout(() => CanvasCycle.showOverlay(), 800);
 		}
 	},
 };
