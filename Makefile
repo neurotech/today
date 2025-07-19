@@ -1,4 +1,4 @@
-.PHONY: all frontend start dev clean help
+.PHONY: all frontend start restart dev clean help
 
 COLOUR_GREEN=\033[0;32m
 COLOUR_RED=\033[0;31m
@@ -28,6 +28,7 @@ all: help
 frontend:
 	clear && \
 	cd frontend && \
+	pnpm install && \
 	echo "$$CASTLE_BANNER" && \
 	pnpm run dev
 
@@ -36,6 +37,9 @@ start:
 	clear && \
 	echo "$$CASTLE_BANNER" && \
 	docker compose up --yes -d --quiet-pull --build
+
+restart:
+	docker compose restart
 
 dev:
 	@make clean && \

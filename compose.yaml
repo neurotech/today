@@ -11,10 +11,7 @@ services:
     ports:
       - "7001:7001"
 
-    # env_file:
-    #   - ./frontend/.env
-
-    restart: always
+    restart: no
 
     build:
       context: ./frontend

@@ -1,18 +1,18 @@
-FROM node:alpine
+FROM node:24-slim AS base
 
-RUN deluser --remove-home node
-
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+COPY . /frontend
 WORKDIR /frontend
 
-ENV NODE_ENV=development
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-COPY package.json .
-COPY package-lock.json .
+FROM base AS build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run build
 
-RUN npm install
-
-COPY . .
-
-ENV NODE_ENV=production
-
-CMD [ "npm", "run", "build" ]
+FROM base
+COPY --from=prod-deps /frontend/node_modules /frontend/node_modules
+COPY --from=build /frontend/dist /frontend/dist
