@@ -2,30 +2,47 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 import { Button } from "../../../components/Buttons/Button";
 import { Textbox } from "../../../components/Textbox";
-import type { Address } from "../../../hooks/useConfig";
+import {
+  isAddress,
+  isBirthday,
+  type ConfigEntity,
+  type ConfigKey,
+  type UpdatedConfigEntity,
+} from "../../../hooks/useConfig";
 
-type ConfigTileProps = {
-  address: Address;
-  updateConfig: (address: Address) => void;
+interface ConfigTileProps {
+  entity: ConfigEntity;
+  configKey: ConfigKey;
+  updateConfig: (updatedEntity: UpdatedConfigEntity) => void;
   deleteConfig: (key: string, id: string) => void;
+  rightValueFormatter?: (value: string) => string;
+}
+
+const getValues = (entity: ConfigEntity): { left: string; right: string } => {
+  if (isAddress(entity)) {
+    return { left: entity.value.label, right: entity.value.slug };
+  }
+
+  if (isBirthday(entity)) {
+    return { left: entity.value.person, right: entity.value.birthdate };
+  }
+
+  return { left: "", right: "" };
 };
 
-export const EMPTY_ADDRESS = () => ({
-  id: undefined,
-  key: "properties",
-  value: {
-    label: "",
-    slug: "",
-  },
-});
-
 export const ConfigTile = ({
-  address,
+  entity,
+  configKey,
   updateConfig,
   deleteConfig,
+  rightValueFormatter,
 }: ConfigTileProps) => {
+  const { left, right } = getValues(entity);
+
   const [editing, setEditing] = useState<boolean>(false);
-  const [updatedAddress, setUpdatedAddress] = useState<Address>(address);
+  const [leftValue, setLeftValue] = useState<string>(left);
+  const [rightValue, setRightValue] = useState<string>(right);
+
   const toggleEdit = () => setEditing((previous) => !previous);
 
   return (
@@ -36,38 +53,24 @@ export const ConfigTile = ({
             {editing ? (
               <Textbox
                 placeholder="Label"
-                inputValue={updatedAddress.value.label}
-                onChangeHandler={(e) =>
-                  setUpdatedAddress((p) => ({
-                    ...p,
-                    value: {
-                      ...p.value,
-                      label: e.target.value,
-                    },
-                  }))
-                }
+                inputValue={leftValue}
+                onChangeHandler={(e) => setLeftValue(e.target.value)}
               />
             ) : (
-              address.value.label
+              leftValue
             )}
           </div>
           <div className="bg-velvet-900/60 text-velvet-300 flex-1 justify-center flex items-center px-1 text-xs font-mono self-stretch content-center rounded-r-xs border-r-1 border-r-transparent">
             {editing ? (
               <Textbox
                 placeholder="Slug"
-                inputValue={updatedAddress.value.slug}
-                onChangeHandler={(e) =>
-                  setUpdatedAddress((p) => ({
-                    ...p,
-                    value: {
-                      ...p.value,
-                      slug: e.target.value,
-                    },
-                  }))
-                }
+                inputValue={rightValue}
+                onChangeHandler={(e) => setRightValue(e.target.value)}
               />
+            ) : rightValueFormatter ? (
+              rightValueFormatter(rightValue)
             ) : (
-              address.value.slug
+              rightValue
             )}
           </div>
         </div>
@@ -84,7 +87,12 @@ export const ConfigTile = ({
                 minWidth="min-w-14"
                 label={"Save"}
                 onClick={() => {
-                  updateConfig(updatedAddress);
+                  updateConfig({
+                    id: entity.id,
+                    key: configKey,
+                    leftValue,
+                    rightValue,
+                  });
                   toggleEdit();
                 }}
               />
@@ -100,7 +108,7 @@ export const ConfigTile = ({
                 minWidth="min-w-14"
                 label={<TrashIcon className="size-4" />}
                 onClick={() => {
-                  if (address.id) deleteConfig("properties", address.id);
+                  if (entity.id) deleteConfig(configKey, entity.id);
                 }}
               />
             </>

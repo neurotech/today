@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { HorizontalRule } from "../../../../components/HorizontalRule";
 import { Panel } from "../../../../components/Panel";
-import { type Address, useConfig } from "../../../../hooks/useConfig";
+import {
+  useConfig,
+  type UpdatedConfigEntity,
+} from "../../../../hooks/useConfig";
 import { AddNewAddress } from "./AddressTile/AddNewAddress";
 import { ConfigTile } from "../ConfigTile";
 
@@ -14,12 +17,23 @@ export const PropertiesPanel = () => {
     getConfig,
     updateConfig,
     deleteConfig,
-  } = useConfig<Address, Address[]>();
+  } = useConfig();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Getting on mount only
   useEffect(() => {
     getConfig("properties");
   }, []);
+
+  const handleAdd = (updatedEntity: UpdatedConfigEntity) => {
+    updateConfig({
+      id: updatedEntity.id,
+      key: updatedEntity.key,
+      value: {
+        label: updatedEntity.leftValue,
+        slug: updatedEntity.rightValue,
+      },
+    });
+  };
 
   return (
     <Panel
@@ -34,16 +48,15 @@ export const PropertiesPanel = () => {
           )}
           {addresses?.map((p) => (
             <ConfigTile
-              key={p.value.slug}
-              address={p}
-              updateConfig={updateConfig}
+              key={p.id}
+              entity={p}
+              configKey="properties"
+              updateConfig={handleAdd}
               deleteConfig={deleteConfig}
             />
           ))}
           <HorizontalRule />
-          <AddNewAddress
-            handleNewAddress={(address: Address) => createConfig(address)}
-          />
+          <AddNewAddress handleNewAddress={createConfig} />
         </div>
       }
     />

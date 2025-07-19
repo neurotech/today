@@ -1,19 +1,13 @@
 import { useEffect } from "react";
 import { HorizontalRule } from "../../../../components/HorizontalRule";
 import { Panel } from "../../../../components/Panel";
-import { type Birthday, useConfig } from "../../../../hooks/useConfig";
-// import { AddressTile } from "../PropertiesPanel/AddressTile/AddressTile";
-import { AddNewBirthday } from "./AddNewBirthday";
+import {
+  useConfig,
+  type UpdatedConfigEntity,
+} from "../../../../hooks/useConfig";
 import { ConfigTile } from "../ConfigTile";
-
-export const EMPTY_BIRTHDAY = (): Birthday => ({
-  id: undefined,
-  key: "properties",
-  value: {
-    person: "",
-    birthdate: "",
-  },
-});
+import { AddNewBirthday } from "./AddNewBirthday";
+import { formatDate } from "date-fns";
 
 export const BirthdaysPanel = () => {
   const {
@@ -24,12 +18,23 @@ export const BirthdaysPanel = () => {
     getConfig,
     updateConfig,
     deleteConfig,
-  } = useConfig<Birthday, Birthday[]>();
+  } = useConfig();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: Getting on mount only.
   useEffect(() => {
     getConfig("birthdays");
   }, []);
+
+  const handleAdd = (updatedEntity: UpdatedConfigEntity) => {
+    updateConfig({
+      id: updatedEntity.id,
+      key: updatedEntity.key,
+      value: {
+        person: updatedEntity.leftValue,
+        birthdate: updatedEntity.rightValue,
+      },
+    });
+  };
 
   return (
     <Panel
@@ -38,22 +43,23 @@ export const BirthdaysPanel = () => {
       error={error}
       content={
         <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-velvet-400">Addresses:</h3>
           {birthdays && birthdays?.length <= 0 && (
             <div>Please add a birthday below.</div>
           )}
           {birthdays?.map((p) => (
             <ConfigTile
-              key={p.value.person}
-              address={p}
-              updateConfig={updateConfig}
+              key={p.id}
+              entity={p}
+              configKey="birthdays"
+              updateConfig={handleAdd}
               deleteConfig={deleteConfig}
+              rightValueFormatter={(value: string) =>
+                formatDate(value, "dd MMMM yyyy")
+              }
             />
           ))}
           <HorizontalRule />
-          <AddNewBirthday
-            handleNewBirthday={(birthday: Birthday) => createConfig(birthday)}
-          />
+          <AddNewBirthday handleNewBirthday={createConfig} />
         </div>
       }
     />

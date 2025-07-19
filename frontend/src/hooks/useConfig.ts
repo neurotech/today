@@ -3,40 +3,65 @@ import { useFetch } from "./useFetch";
 
 export type ConfigKey = "properties" | "birthdays";
 
-type BaseConfig = {
-  key: string;
-  id?: string;
+export type BaseConfigEntity = {
+  id: string | undefined;
+  key: ConfigKey;
 };
 
-export type Address = {
-  key: string;
-  id?: string;
-  value: {
-    label: string;
-    slug: string;
-  };
+export interface Address extends BaseConfigEntity {
+  value: { label: string; slug: string };
+}
+
+export interface Birthday extends BaseConfigEntity {
+  value: { person: string; birthdate: string };
+}
+
+export type ConfigEntity = Address | Birthday;
+
+export type UpdatedConfigEntity = BaseConfigEntity & {
+  leftValue: string;
+  rightValue: string;
 };
 
-export type Birthday = BaseConfig & {
+export const EMPTY_ADDRESS = (): Address => ({
+  id: undefined,
+  key: "properties",
   value: {
-    person: string;
-    birthdate: string;
-  };
+    label: "",
+    slug: "",
+  },
+});
+
+export const EMPTY_BIRTHDAY = (): Birthday => ({
+  id: undefined,
+  key: "birthdays",
+  value: {
+    person: "",
+    birthdate: "",
+  },
+});
+
+export const isAddress = (entity: ConfigEntity): entity is Address => {
+  return (entity as Address).value.slug !== undefined;
+};
+
+export const isBirthday = (entity: ConfigEntity): entity is Birthday => {
+  return (entity as Birthday).value.birthdate !== undefined;
 };
 
 const urlPath = "api/config";
 
-export const useConfig = <T, K>() => {
+export const useConfig = () => {
   const { data, loading, error, postURL, getURL, patchURL, deleteURL } =
-    useFetch<T, K>();
+    useFetch<ConfigEntity, ConfigEntity[]>();
 
-  const createConfig = async (configValue: T) =>
+  const createConfig = async (configValue: ConfigEntity) =>
     await postURL(`${getUrlPrefix()}${urlPath}`, configValue);
 
   const getConfig = async (key: ConfigKey) =>
     await getURL(`${getUrlPrefix()}${urlPath}/${key}`);
 
-  const updateConfig = async (configValue: T) =>
+  const updateConfig = async (configValue: ConfigEntity) =>
     await patchURL(`${getUrlPrefix()}${urlPath}`, configValue);
 
   const deleteConfig = async (key: string, id: string) =>

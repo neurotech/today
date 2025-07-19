@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../../../../components/Buttons/Button";
 import { Textbox } from "../../../../../components/Textbox";
-import type { Address } from "../../../../../hooks/useConfig";
-import { EMPTY_ADDRESS } from "../../ConfigTile";
+import { EMPTY_ADDRESS, type Address } from "../../../../../hooks/useConfig";
 
 type AddNewAddressProps = {
   handleNewAddress: (address: Address) => void;
@@ -20,7 +19,7 @@ export const AddNewAddress = ({ handleNewAddress }: AddNewAddressProps) => {
           setNewAddress((p) => ({
             ...p,
             value: {
-              ...newAddress.value,
+              ...p.value,
               label: e.target.value,
             },
           }))
@@ -33,7 +32,7 @@ export const AddNewAddress = ({ handleNewAddress }: AddNewAddressProps) => {
           setNewAddress((p) => ({
             ...p,
             value: {
-              ...newAddress.value,
+              ...p.value,
               slug: e.target.value,
             },
           }))

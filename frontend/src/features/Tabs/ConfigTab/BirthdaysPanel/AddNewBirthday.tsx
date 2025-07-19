@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../../../components/Buttons/Button";
 import { Textbox } from "../../../../components/Textbox";
-import type { Birthday } from "../../../../hooks/useConfig";
-import { EMPTY_BIRTHDAY } from "./BirthdaysPanel";
+import { EMPTY_BIRTHDAY, type Birthday } from "../../../../hooks/useConfig";
 
 type AddNewBirthdayProps = {
   handleNewBirthday: (birthday: Birthday) => void;
@@ -20,7 +19,7 @@ export const AddNewBirthday = ({ handleNewBirthday }: AddNewBirthdayProps) => {
           setNewBirthday((p) => ({
             ...p,
             value: {
-              ...newBirthday.value,
+              ...p.value,
               person: e.target.value,
             },
           }))
@@ -28,12 +27,13 @@ export const AddNewBirthday = ({ handleNewBirthday }: AddNewBirthdayProps) => {
       />
       <input
         type="date"
+        className="w-full flex-1 px-1 py-0.5 border-1 rounded-sm text-sm border-velvet-800 bg-velvet-950 text-velvet-400 focus-within:text-velvet-100 focus-visible:outline-3 focus-visible:outline-velvet-800/20"
         value={newBirthday.value.birthdate || ""}
         onChange={(e) =>
           setNewBirthday((p) => ({
             ...p,
             value: {
-              ...newBirthday.value,
+              ...p.value,
               birthdate: e.target.value,
             },
           }))
