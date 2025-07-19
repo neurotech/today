@@ -1,2 +1,2 @@
 export const getUrlPrefix = () =>
-	import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";
+  import.meta.env.MODE === "development" ? "http://slab:7000/" : "/";

@@ -1,27 +1,28 @@
 import { useEffect } from "react";
-import { useFetch } from "./useFetch";
 import { getUrlPrefix } from "../utils/getUrlPrefix";
+import { useFetch } from "./useFetch";
 
 type GitHubDetail = {
-	repo_name: string;
-	repo_owner: string;
-	description: string;
-	language: string | null;
-	stars: string;
-	url: string;
+  repo_name: string;
+  repo_owner: string;
+  description: string;
+  language: string | null;
+  stars: string;
+  url: string;
 };
 
 export const useGitHub = () => {
-	const { data, loading, error, getURL } = useFetch<
-		GitHubDetail,
-		GitHubDetail[]
-	>();
+  const { data, loading, error, getURL } = useFetch<
+    GitHubDetail,
+    GitHubDetail[]
+  >();
 
-	useEffect(() => {
-		getGitHubTrending();
-	}, []);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Getting on mount only.
+  useEffect(() => {
+    getGitHubTrending();
+  }, []);
 
-	const getGitHubTrending = async () => getURL(`${getUrlPrefix()}api/github`);
+  const getGitHubTrending = async () => getURL(`${getUrlPrefix()}api/github`);
 
-	return { data, loading, error, getGitHubTrending };
+  return { data, loading, error, getGitHubTrending };
 };
