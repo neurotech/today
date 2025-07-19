@@ -4,7 +4,7 @@ import { Button } from "../../../components/Buttons/Button";
 import { Textbox } from "../../../components/Textbox";
 import type { Address } from "../../../hooks/useConfig";
 
-type AddressTileProps = {
+type ConfigTileProps = {
   address: Address;
   updateConfig: (address: Address) => void;
   deleteConfig: (key: string, id: string) => void;
@@ -19,11 +19,11 @@ export const EMPTY_ADDRESS = () => ({
   },
 });
 
-export const AddressTile = ({
+export const ConfigTile = ({
   address,
   updateConfig,
   deleteConfig,
-}: AddressTileProps) => {
+}: ConfigTileProps) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [updatedAddress, setUpdatedAddress] = useState<Address>(address);
   const toggleEdit = () => setEditing((previous) => !previous);

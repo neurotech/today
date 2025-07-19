@@ -4,7 +4,7 @@ import { Panel } from "../../../../components/Panel";
 import { type Birthday, useConfig } from "../../../../hooks/useConfig";
 // import { AddressTile } from "../PropertiesPanel/AddressTile/AddressTile";
 import { AddNewBirthday } from "./AddNewBirthday";
-import { AddressTile } from "../AddressTile";
+import { ConfigTile } from "../ConfigTile";
 
 export const EMPTY_BIRTHDAY = (): Birthday => ({
   id: undefined,
@@ -43,7 +43,7 @@ export const BirthdaysPanel = () => {
             <div>Please add a birthday below.</div>
           )}
           {birthdays?.map((p) => (
-            <AddressTile
+            <ConfigTile
               key={p.value.person}
               address={p}
               updateConfig={updateConfig}

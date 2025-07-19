@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "../../../../../components/Buttons/Button";
 import { Textbox } from "../../../../../components/Textbox";
 import type { Address } from "../../../../../hooks/useConfig";
-import { EMPTY_ADDRESS } from "../../AddressTile";
+import { EMPTY_ADDRESS } from "../../ConfigTile";
 
 type AddNewAddressProps = {
   handleNewAddress: (address: Address) => void;

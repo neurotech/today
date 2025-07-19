@@ -3,7 +3,7 @@ import { HorizontalRule } from "../../../../components/HorizontalRule";
 import { Panel } from "../../../../components/Panel";
 import { type Address, useConfig } from "../../../../hooks/useConfig";
 import { AddNewAddress } from "./AddressTile/AddNewAddress";
-import { AddressTile } from "../AddressTile";
+import { ConfigTile } from "../ConfigTile";
 
 export const PropertiesPanel = () => {
   const {
@@ -33,7 +33,7 @@ export const PropertiesPanel = () => {
             <div>Please add an address below.</div>
           )}
           {addresses?.map((p) => (
-            <AddressTile
+            <ConfigTile
               key={p.value.slug}
               address={p}
               updateConfig={updateConfig}
