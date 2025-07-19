@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"build": "tsc -b && vite build --watch",
+		"build": "vite build",
 		"check": "biome check",
 		"dev": "vite --port 7100"
 	},
@@ -19,7 +19,7 @@
 		"uuid": "^11.1.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
+		"@biomejs/biome": "2.0.6",
 		"@types/react": "^19.1.2",
 		"@types/react-dom": "^19.1.2",
 		"@vitejs/plugin-react": "^4.4.1",
