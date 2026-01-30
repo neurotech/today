@@ -3,7 +3,7 @@ volumes:
 
 services:
   frontend:
-    container_name: castle-frontend
+    container_name: today-frontend
 
     volumes:
     - static:/frontend/dist
@@ -28,7 +28,7 @@ services:
           path: ./package-lock.json
 
   backend:
-    container_name: castle-backend
+    container_name: today-backend
     restart: always
     volumes:
       - static:/backend/dist

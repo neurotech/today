@@ -1,6 +1,6 @@
 import sqlite3
 
-database_path = "/backend/database/castle.db"
+database_path = "/backend/database/today.db"
 
 
 def get_connection_and_cursor() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
@@ -10,7 +10,7 @@ def get_connection_and_cursor() -> tuple[sqlite3.Connection, sqlite3.Cursor]:
 
 
 def initialise_database():
-    with open("/backend/castle/db/schema.sql", "r") as file:
+    with open("/backend/today/db/schema.sql", "r") as file:
         schema_sql = file.read()
 
     (connection, cursor) = get_connection_and_cursor()

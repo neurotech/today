@@ -34,4 +34,4 @@ ENV PATH="/backend/.venv/bin:$PATH"
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []
 
-CMD [ "fastapi", "run", "castle/main.py", "--host", "0.0.0.0", "--port", "7000" ]
+CMD [ "fastapi", "run", "today/main.py", "--host", "0.0.0.0", "--port", "7000" ]

@@ -1,6 +1,6 @@
 type ConfigKey = "activeTab" | "addresses";
 
-const prefix = "castle";
+const prefix = "today";
 
 export const useLocalStorage = () => {
   const getValue = (key: ConfigKey): string =>

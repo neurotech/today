@@ -10,7 +10,7 @@
       "request": "launch",
       "module": "uvicorn",
       "args": [
-        "backend.castle.main:app",
+        "backend.today.main:app",
         "--reload"
       ],
       "jinja": true

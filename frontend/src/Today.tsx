@@ -19,7 +19,7 @@ const getFormattedDateAndTime = (now: Date) => ({
   time: format(now, "hh:mm a"),
 });
 
-export const Castle = () => {
+export const Today = () => {
   const { getValue } = useLocalStorage();
   const [activeTab, setActiveTab] = useState<TabID>(
     (getValue("activeTab") as TabID) || "home-tab",
@@ -46,7 +46,7 @@ export const Castle = () => {
     >
       <header className="flex flex-row justify-between items-center font-bold p-2 bg-velvet-1000">
         <h1 className="text-velvet-500 text-shadow-black/30 text-shadow-2xs font-logo text-2xl font-normal select-none tracking-tighter">
-          Castle
+          Today
         </h1>
         <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
         <h1 className="text-velvet-500 tabular-nums">
