@@ -690,25 +690,46 @@ If cache mounts are wanted back later, install the buildx plugin and restore the
 
 ## Phase 9: decommission
 
-- [ ] Delete `backend/` and `frontend/`.
-- [ ] Delete `features/ZenOfPython/`. Do not port it.
-- [ ] Drop the `motion` dependency. `ZenOfPython` was its only consumer, so
-      nothing else in the app uses it.
-- [ ] **Path of Exile, do not port any of:**
-      - `frontend/src/features/PathOfExile/` (`PathOfExile.tsx`,
-        `CurrencyChip.tsx`, `LeagueChip.tsx`)
-      - `frontend/src/hooks/usePathOfExile.ts`
-      - `backend/today/poe.py` and the `/api/poe` route in `main.py`
-      - the `PathOfExile` import and column in `HomeTab.tsx`
-      - the PoE line in `README.md`'s DONE list
-      These all disappear with the `frontend/`+`backend/` deletion above, so no
-      separate cleanup pass is needed. Listed so nothing gets ported by reflex.
-- [ ] Delete `getUrlPrefix.ts`. Same-origin everywhere means no prefix and no
-      `http://slab:7000` hardcoding.
-- [ ] Delete the CORS config. Single origin.
-- [ ] Rename `castle.code-workspace` to `today.code-workspace`. It was missed in
-      the rename commit.
-- [ ] Update `README.md`.
+**Status: done. The migration is complete.**
+
+- [x] `backend/` and `frontend/` deleted. `git rm` only removes tracked files,
+      so `frontend/node_modules` and `backend/today/__pycache__` needed a
+      separate `rm -rf`.
+- [x] `ZenOfPython` and the `motion` dependency never ported.
+- [x] Path of Exile gone in full.
+- [x] `getUrlPrefix.ts` gone with the SPA. The **other** `http://slab:7000`
+      hardcoding, in `public/living-worlds/main.js`, is now relative
+      (`/api/scene`, `/api/advice`).
+- [x] CORS config gone with the FastAPI app. Single origin.
+- [x] `today.code-workspace` (done early, in Phase 1).
+- [x] `README.md` rewritten.
+
+### Also cleaned up
+
+- `.vscode/launch.json` still launched `uvicorn backend.today.main:app`.
+  Replaced with a `next dev` debug configuration.
+- `tsconfig.json` and `biome.json` no longer need to exclude `frontend/` and
+  `backend/`; `.dockerignore` no longer needs to either.
+
+### Living Worlds preserved
+
+`public/living-worlds/` was copied across intact (13 files, 80 KB) and is served
+correctly. The feature still cannot render until the scene JSON is recovered,
+but nothing further is lost, and the two API paths it depends on are now
+same-origin. `/api/advice` already works; `/api/scene` remains unbuilt.
+
+### Security note
+
+The path traversal in `properties.py` is now gone from the working tree. It
+still exists in git history, which is fine, but **if that FastAPI backend is
+still running anywhere it should be stopped**, since the vulnerability is live
+in the deployed process rather than the source.
+
+### Verified
+
+`pnpm build`, `typecheck` and `biome check` all clean with the old trees gone.
+All four routes plus `/api/advice` return 200, and `living-worlds/index.html`
+and `main.js` both serve from `public/` with the rewritten relative fetches.
 
 ## Known bugs to fix in transit
 

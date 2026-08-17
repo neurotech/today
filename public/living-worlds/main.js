@@ -136,7 +136,7 @@ const CanvasCycle = {
 	loadImage: async function (name, title, offsetX) {
 		this.stop();
 
-		const payload = await fetch(`http://slab:7000/api/scene?name=${name}`);
+		const payload = await fetch(`/api/scene?name=${name}`);
 		const payloadJSON = await payload.json();
 		const parsed = JSON.parse(payloadJSON);
 
@@ -382,7 +382,7 @@ const CanvasCycle = {
 		const quoteElement = document.getElementById("living-worlds-quote");
 
 		if (quoteElement) {
-			const data = await fetch("http://slab:7000/api/advice");
+			const data = await fetch("/api/advice");
 			const json = await data.json();
 			quoteElement.textContent = json.advice;
 

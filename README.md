@@ -1,17 +1,73 @@
 # today
 
+A personal dashboard. Next.js 16 (App Router), Tailwind 4, SQLite.
+
+Feeds are fetched server-side in Server Components and cached, so the browser
+does no data fetching. Config is stored in SQLite and edited through Server
+Actions.
+
+## Running
+
+```bash
+make dev     # next dev on :7000
+make start   # build and run the container, daemonised
+make logs    # follow container logs
+make stop    # stop the container
+make clean   # stop and remove the container and image
+make help    # the box with the colours in it
+```
+
+Docker builds with the legacy builder as well as BuildKit. The container runs a
+Next standalone build as an unprivileged user, with `./data` bind-mounted for
+the SQLite database.
+
+## Configuration
+
+Copy `.env.sample` to `.env.local`. Only `DATABASE_PATH` is used, defaulting to
+`./data/today.db`. Compose sets it to `/app/data/today.db`.
+
+## Tabs
+
+| Route | Contents |
+|---|---|
+| `/` | GitHub Trending |
+| `/reading` | Lobsters, Hacker News |
+| `/tools` | Placeholder |
+| `/config` | Birthdays |
+
+## Data sources
+
+| Source | How |
+|---|---|
+| [GitHub Trending](https://github.com/trending) | HTML scrape with `cheerio`, 1 h cache |
+| [lobste.rs](https://lobste.rs/) | [hottest.json](https://lobste.rs/hottest.json), 15 min cache |
+| Hacker News | [Firebase API](https://github.com/HackerNews/API), 15 min cache |
+| [Advice Slip](https://api.adviceslip.com/) | `/api/advice`, uncached |
+
+Refresh buttons are Server Actions that expire the relevant cache tag.
+
 ## TODO
 
 * RSS Reader - https://feeds.kottke.org/main - https://palmreport.substack.com/feed
-* Birthday tracker
+* Birthday notifications (the config side exists, nothing surfaces them yet)
+* Revive Living Worlds. The assets are in `public/living-worlds/`, but the scene
+  JSON needs recovering: effectgames.com is gone and the files were never
+  hydrated. See MIGRATION.md.
 
-## DONE
+## Removed
 
-* Domain property listing monitoring - take screenshot and crop - https://www.askpython.com/python/examples/crop-an-image-in-python
-* Add concept of expiry to property monitoring, i.e. if image is x hours old, capture a new screenshot
-* Scrape [GitHub Trending](https://github.com/trending) with `BeautifulSoup`
-* [lobste.rs](https://lobste.rs/) | [json](https://lobste.rs/hottest.json)
+* **Path of Exile currency prices.** poe.ninja's `currencyoverview` endpoint
+  returns 404 for every league.
+* **Domain property screenshots.** domain.com.au returns 403 to automated
+  browsers on `/property-profile/`.
+
+## History
+
+Previously a Vite + React SPA with a FastAPI backend, in two containers. See
+[MIGRATION.md](MIGRATION.md) for the migration plan, what was verified and the
+bugs found along the way.
 
 ## Credits
 
 * Cursor from [Zachtronics'](https://www.zachtronics.com/) [Opus Magnum](https://www.zachtronics.com/opus-magnum/)
+* Living Worlds is Joseph Huckaby's [Canvas Cycle](http://www.effectgames.com/effect/article.psp.html/joe/Old_School_Color_Cycling_with_HTML5)

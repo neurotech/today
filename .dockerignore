@@ -9,11 +9,6 @@ out
 # Runtime data: the SQLite database lives in a bind mount, never the image.
 data
 
-# The old app. Deleted in Phase 9; excluded now so it never reaches the build
-# context.
-frontend
-backend
-
 *.md
 Dockerfile
 .dockerignore
