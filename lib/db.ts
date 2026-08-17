@@ -1,5 +1,5 @@
 import { mkdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { dirname } from "node:path";
 import Database from "better-sqlite3";
 
 // Schema is inlined rather than read from a .sql file. The Python version did
@@ -17,7 +17,12 @@ CREATE TABLE
   );
 `;
 
-const databasePath = resolve(process.env.DATABASE_PATH ?? "./data/today.db");
+// Deliberately NOT path.resolve()'d. Turbopack's static analysis treats
+// `resolve()` on a dynamic value as filesystem access and responds by tracing
+// the entire project into .next/standalone, source files and public/ included.
+// better-sqlite3 and mkdirSync both resolve relative paths against cwd anyway,
+// and compose passes an absolute path.
+const databasePath = process.env.DATABASE_PATH ?? "./data/today.db";
 
 /**
  * A bind-mounted ./data owned by root produces a bare `SQLITE_CANTOPEN` thrown

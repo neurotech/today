@@ -637,10 +637,10 @@ outputFileTracingIncludes: {
   self-hosts the fonts at build time. It does *not* need to reach github.com,
   lobste.rs or firebaseio.com, because every page using them is
   `force-dynamic` (Phase 4).
-- **Next's standalone output copies the entire project tree**, including
-  `frontend/`, `backend/`, `data/` and a 384 KB `tsbuildinfo`. `.dockerignore`
-  excludes all of them from the build context so they never reach the image.
-  Phase 9 makes most of this moot.
+- ~~**Next's standalone output copies the entire project tree.**~~ **Wrong
+  diagnosis, corrected below.** It is not normal behaviour; it was caused by
+  `path.resolve()` on a dynamic value in `lib/db.ts`. See "Whole-project
+  tracing" below.
 - **Runs as `node` (uid 1000)**, which matches the host user, so the `./data`
   bind mount is writable without chown games.
 - **No `develop.watch` in compose.** The image runs a production standalone
@@ -675,6 +675,38 @@ outputFileTracingIncludes: {
    because pnpm was blocking the build script anyway.
 
 The build context is 35 kB, confirming `.dockerignore` is doing its job.
+
+### Whole-project tracing, and a correction
+
+The first successful Docker build surfaced a warning that had been silently true
+all along:
+
+```
+./lib/db.ts:20  Warning: Dynamic filesystem access causes tracing of the whole project
+const databasePath = resolve(process.env.DATABASE_PATH ?? "./data/today.db");
+```
+
+Turbopack's static analysis treats `path.resolve()` on a dynamic value as
+filesystem access, and responds by tracing **the entire project** into
+`.next/standalone` — all source files and `public/` included. That is the real
+reason `frontend/`, `backend/`, `data/` and `MIGRATION.md` were appearing in the
+standalone output. It was noted earlier as though it were normal Next behaviour.
+It is not.
+
+The fix is to drop `resolve` entirely:
+
+```ts
+const databasePath = process.env.DATABASE_PATH ?? "./data/today.db";
+```
+
+Both `mkdirSync` and better-sqlite3 resolve relative paths against cwd anyway,
+and compose passes an absolute path. `.next/standalone` is now just
+`server.js`, `package.json`, `node_modules` and `.next/`, with nothing from the
+source tree. Verified that all routes, the API, static assets, Living Worlds and
+the database still work under both an absolute and a relative `DATABASE_PATH`.
+
+`.dockerignore` was doing a real job masking this, but the root cause was in the
+application code.
 
 ### Still to do on a machine with Docker
 
