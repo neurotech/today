@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 // columns keep their original tracks.
 export default function Home() {
   return (
-    <section className="grid grid-cols-[373px_1fr] gap-2 items-start">
+    <section className="grid grid-cols-[728px_1fr] gap-2 items-start">
       <section className="flex flex-col gap-2 w-fit">
         <LivingWorlds />
       </section>
