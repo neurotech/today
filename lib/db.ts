@@ -45,10 +45,10 @@ const openDatabase = () => {
     throw permissionHint("Cannot create the directory for", error);
   }
 
-  let database: Database.Database;
+  let connection: Database.Database;
 
   try {
-    database = new Database(databasePath);
+    connection = new Database(databasePath);
   } catch (error) {
     throw permissionHint("Cannot open the database at", error);
   }
@@ -56,12 +56,12 @@ const openDatabase = () => {
   // WAL lets reads proceed while a write is in flight. The old code opened and
   // closed a connection per query, which made this moot; a long-lived
   // connection makes it worth setting.
-  database.pragma("journal_mode = WAL");
-  database.pragma("foreign_keys = ON");
+  connection.pragma("journal_mode = WAL");
+  connection.pragma("foreign_keys = ON");
 
-  database.exec(SCHEMA);
+  connection.exec(SCHEMA);
 
-  return database;
+  return connection;
 };
 
 // Next's dev server re-evaluates modules on hot reload. Without a global, each
@@ -70,10 +70,24 @@ const globalForDatabase = globalThis as typeof globalThis & {
   todayDatabase?: Database.Database;
 };
 
-export const db = globalForDatabase.todayDatabase ?? openDatabase();
+let database: Database.Database | undefined;
 
-if (process.env.NODE_ENV !== "production") {
-  globalForDatabase.todayDatabase = db;
-}
+/**
+ * Opened on first query, not at module evaluation. Eagerly connecting made a
+ * root-owned bind mount throw during import, which is an uncaught Server
+ * Component error: production Next replaces the message with a generic
+ * "Application error", so `permissionHint` only ever reached the container
+ * logs. Deferring it lets the caller catch the throw and render the hint.
+ *
+ * A failed open leaves `database` unset, so the next request retries. Fixing
+ * the permissions therefore does not need a restart.
+ */
+export const getDb = (): Database.Database => {
+  database ??= globalForDatabase.todayDatabase ?? openDatabase();
 
-export { databasePath };
+  if (process.env.NODE_ENV !== "production") {
+    globalForDatabase.todayDatabase = database;
+  }
+
+  return database;
+};

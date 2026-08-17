@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { ZodError } from "zod";
 import {
   type ConfigKey,
   createConfig,
@@ -30,13 +31,22 @@ const toValue = (
   }
 };
 
+/**
+ * A ZodError's `message` is the whole issues array as JSON, which is unreadable
+ * on screen. The issue messages are already written for a human, so use those.
+ */
+const toMessage = (error: unknown): string =>
+  error instanceof ZodError
+    ? error.issues.map((issue) => issue.message).join(", ")
+    : (error as Error).message;
+
 const run = (work: () => void): ActionResult => {
   try {
     work();
     revalidatePath("/config");
     return { ok: true };
   } catch (error) {
-    return { ok: false, error: (error as Error).message };
+    return { ok: false, error: toMessage(error) };
   }
 };
 
@@ -59,7 +69,15 @@ export const updateConfigAction = async (
     updateConfig(id, key, toValue(key, left, right));
   });
 
-export const deleteConfigAction = async (id: number): Promise<ActionResult> =>
+export const deleteConfigAction = async (
+  id: number,
+  key: ConfigKey,
+): Promise<ActionResult> =>
   run(() => {
-    deleteConfig(id);
+    // `deleteConfig` reports a missing row rather than throwing. Turning that
+    // into an error here means the caller sees it, instead of a click that
+    // silently does nothing.
+    if (!deleteConfig(id, key)) {
+      throw new Error(`config row ${id} (${key}) not found`);
+    }
   });

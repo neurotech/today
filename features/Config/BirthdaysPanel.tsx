@@ -1,7 +1,7 @@
 import { formatDate } from "date-fns";
 import { HorizontalRule } from "@/components/HorizontalRule";
 import { Panel } from "@/components/Panel";
-import { getConfig } from "@/lib/config";
+import { type Birthday, getConfig } from "@/lib/config";
 import { AddNewConfig } from "./AddNewConfig";
 import { ConfigTile } from "./ConfigTile";
 
@@ -16,7 +16,24 @@ const formatBirthdate = (birthdate: string) => {
 };
 
 export const BirthdaysPanel = () => {
-  const birthdays = getConfig("birthdays");
+  let birthdays: Birthday[];
+
+  // The database is opened on the first query, so a permission problem on the
+  // ./data bind mount surfaces here. Catching it puts `permissionHint`'s
+  // `chown` instruction on the page; uncaught, production Next would replace it
+  // with a generic "Application error" and the hint would only reach the logs.
+  // Same shape as the feed features, where a dead source fails inside its panel.
+  try {
+    birthdays = getConfig("birthdays");
+  } catch (error) {
+    return (
+      <Panel
+        heading="Birthdays"
+        error={(error as Error).message}
+        content={null}
+      />
+    );
+  }
 
   return (
     <Panel

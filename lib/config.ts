@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { db } from "./db";
+import { getDb } from "./db";
 
 // The old backend/today/config.py had `Literal["properties", "birthdays"]`.
 // "properties" went with the Domain screenshot feature, which was cut after
@@ -11,9 +11,20 @@ import { db } from "./db";
 export const CONFIG_KEYS = ["birthdays"] as const;
 export type ConfigKey = (typeof CONFIG_KEYS)[number];
 
+// Both fields were bare `z.string()`, which validated nothing beyond the type:
+// editing a row to blank stored an empty person and an empty birthdate, and
+// `birthdate` accepted arbitrary text, which is why `formatBirthdate` in
+// BirthdaysPanel needs a try/catch at all.
+//
+// Trimming lives here rather than in the callers, so the schema is the single
+// boundary and every write path gets it. It runs on reads too, so a row stored
+// before this tightened is skipped with a warning instead of rendering blank.
 const birthdayValueSchema = z.object({
-  person: z.string(),
-  birthdate: z.string(),
+  person: z.string().trim().min(1, "person cannot be empty"),
+  birthdate: z
+    .string()
+    .trim()
+    .pipe(z.iso.date("birthdate must be a date, as yyyy-MM-dd")),
 });
 
 const valueSchemas = {
@@ -61,7 +72,7 @@ const parseRow = <K extends ConfigKey>(
 };
 
 export const getConfig = <K extends ConfigKey>(key: K): EntityFor<K>[] => {
-  const rows = db
+  const rows = getDb()
     .prepare("SELECT id, key, value FROM config WHERE key = ?")
     .all(key) as ConfigRow[];
 
@@ -76,7 +87,7 @@ export const createConfig = <K extends ConfigKey>(
 ): EntityFor<K> => {
   const parsed = valueSchemas[key].parse(value);
 
-  const result = db
+  const result = getDb()
     .prepare("INSERT INTO config (key, value) VALUES (?, ?)")
     .run(key, JSON.stringify(parsed));
 
@@ -94,7 +105,7 @@ export const updateConfig = <K extends ConfigKey>(
 ): EntityFor<K> => {
   const parsed = valueSchemas[key].parse(value);
 
-  const result = db
+  const result = getDb()
     .prepare("UPDATE config SET value = ? WHERE id = ? AND key = ?")
     .run(JSON.stringify(parsed), id, key);
 
@@ -105,9 +116,20 @@ export const updateConfig = <K extends ConfigKey>(
   return { id, key, value: parsed } as EntityFor<K>;
 };
 
-/** Returns false when the row did not exist, rather than failing silently. */
-export const deleteConfig = (id: number): boolean => {
-  const result = db.prepare("DELETE FROM config WHERE id = ?").run(id);
+/**
+ * Scoped by key to match `updateConfig`. Server Actions are public HTTP
+ * endpoints, so an unscoped delete meant any row id could be destroyed,
+ * including the `properties` rows the migration deliberately left in place.
+ *
+ * Returns false when no such row existed, rather than failing silently.
+ */
+export const deleteConfig = <K extends ConfigKey>(
+  id: number,
+  key: K,
+): boolean => {
+  const result = getDb()
+    .prepare("DELETE FROM config WHERE id = ? AND key = ?")
+    .run(id, key);
 
   return result.changes > 0;
 };
