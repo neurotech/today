@@ -142,6 +142,19 @@ const CanvasCycle = {
 		// Served straight from public/. No API route, no network dependency on
 		// effectgames.com, which no longer hosts these.
 		const payload = await fetch(`./scenes/${slug}.json`);
+
+		// All 19 slugs in scenes.js resolve to a file today, so this is purely
+		// defensive. Without it a missing scene rejects `payload.json()`, and
+		// neither caller (line 64, and the scenefade tween) awaits or catches
+		// this function, so the failure surfaced only as an unhandled rejection.
+		// The cycling is already stopped by `this.stop()` above, so bailing out
+		// leaves the last frame on screen rather than a blank canvas.
+		if (!payload.ok) {
+			return console.error(
+				`ERROR: Could not load scene ${slug}.json: ${payload.status}`,
+			);
+		}
+
 		const parsed = await payload.json();
 
 		const canvas = document.getElementById("mycanvas");
@@ -385,13 +398,38 @@ const CanvasCycle = {
 	getAdvice: async () => {
 		const quoteElement = document.getElementById("living-worlds-quote");
 
-		if (quoteElement) {
-			const data = await fetch("/api/advice");
-			const json = await data.json();
-			quoteElement.textContent = json.advice;
-
-			setTimeout(() => CanvasCycle.showOverlay(), 800);
+		if (!quoteElement) {
+			return;
 		}
+
+		// Advice Slip is a third party, and /api/advice answers 502 with
+		// `{ error }` when it is unreachable. Reading `json.advice` unconditionally
+		// put the string "undefined" on screen as the quote. A failure now leaves
+		// whatever quote is already showing; on the first scene there is none, so
+		// the element is hidden rather than rendering an empty pair of quote marks.
+		try {
+			const response = await fetch("/api/advice");
+
+			if (!response.ok) {
+				throw new Error(`/api/advice returned ${response.status}`);
+			}
+
+			const { advice } = await response.json();
+
+			if (!advice) {
+				throw new Error("/api/advice returned no advice");
+			}
+
+			quoteElement.textContent = advice;
+		} catch (error) {
+			console.error("ERROR: Could not load advice:", error);
+		}
+
+		quoteElement.style.display = quoteElement.textContent ? "" : "none";
+
+		// Runs either way: the overlay also carries the scene detail, which is
+		// still worth showing when the quote is missing.
+		setTimeout(() => CanvasCycle.showOverlay(), 800);
 	},
 };
 
