@@ -26,6 +26,15 @@ the SQLite database.
 Copy `.env.sample` to `.env.local`. Only `DATABASE_PATH` is used, defaulting to
 `./data/today.db`. Compose sets it to `/app/data/today.db`.
 
+`./data` is bind-mounted into the container, which runs as uid 1000. The
+directory is tracked (via `data/.gitkeep`) so a checkout creates it owned by
+you. If Docker ever creates it instead, it will be owned by root and the app
+will fail to open the database:
+
+```bash
+sudo chown -R 1000:1000 data
+```
+
 ## Tabs
 
 | Route | Contents |

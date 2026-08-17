@@ -19,11 +19,34 @@ CREATE TABLE
 
 const databasePath = resolve(process.env.DATABASE_PATH ?? "./data/today.db");
 
+/**
+ * A bind-mounted ./data owned by root produces a bare `SQLITE_CANTOPEN` thrown
+ * during module evaluation, which says nothing about the cause. Both failure
+ * points are wrapped so the message names the fix.
+ */
+const permissionHint = (action: string, cause: unknown) =>
+  new Error(
+    `${action} ${databasePath}: ${(cause as Error).message}. ` +
+      `In Docker this usually means the ./data bind mount on the host is owned ` +
+      `by root while the container runs as uid 1000. Fix with: ` +
+      `chown -R 1000:1000 data`,
+  );
+
 const openDatabase = () => {
   // The volume mount may hand us an empty directory, or none at all.
-  mkdirSync(dirname(databasePath), { recursive: true });
+  try {
+    mkdirSync(dirname(databasePath), { recursive: true });
+  } catch (error) {
+    throw permissionHint("Cannot create the directory for", error);
+  }
 
-  const database = new Database(databasePath);
+  let database: Database.Database;
+
+  try {
+    database = new Database(databasePath);
+  } catch (error) {
+    throw permissionHint("Cannot open the database at", error);
+  }
 
   // WAL lets reads proceed while a write is in flight. The old code opened and
   // closed a connection per query, which made this moot; a long-lived

@@ -725,6 +725,31 @@ still exists in git history, which is fine, but **if that FastAPI backend is
 still running anywhere it should be stopped**, since the vulnerability is live
 in the deployed process rather than the source.
 
+### Post-deploy fix: bind mount owned by root
+
+First run in the container failed on `/config` with a bare
+`SqliteError: unable to open database file` thrown during module evaluation.
+
+Cause: `./data` did not exist on the host, so the Docker daemon created it as
+**root**, and the bind mount then overlaid the `chown node:node /app/data` done
+in the image. The container runs as uid 1000 and could not create the database
+file. The Dockerfile `chown` is useless against a bind mount; it only helps if
+no mount is attached.
+
+Two fixes:
+
+1. `data/.gitkeep` is now tracked (`.gitignore` changed from `/data/` to
+   `/data/*` plus `!/data/.gitkeep`), so a checkout creates the directory owned
+   by the user and Docker never has to.
+2. `lib/db.ts` wraps both the `mkdirSync` and the `new Database()` calls and
+   names the cause and the fix, instead of surfacing an opaque
+   `SQLITE_CANTOPEN` from module evaluation.
+
+Reproduced with a `chmod 500` directory (identical `SQLITE_CANTOPEN`) and
+confirmed the new message appears in the server log.
+
+Existing deployments need the one-off `sudo chown -R 1000:1000 data`.
+
 ### Verified
 
 `pnpm build`, `typecheck` and `biome check` all clean with the old trees gone.

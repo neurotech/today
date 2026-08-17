@@ -197,4 +197,8 @@ next-env.d.ts
 .vercel
 
 # Runtime data: sqlite db, property screenshots, living-worlds scenes
-/data/
+# Contents ignored, but the directory itself is tracked via .gitkeep so that a
+# checkout creates it owned by the user. If Docker creates it instead, it is
+# owned by root and the container (uid 1000) cannot write the database.
+/data/*
+!/data/.gitkeep
