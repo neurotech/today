@@ -14,8 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# `lib/` and `lib64/` removed here: they are Python build-artifact rules, but
+# the Next app keeps its source in /lib, and they were silently excluding it.
 parts/
 sdist/
 var/
@@ -187,3 +187,14 @@ backend/scenes/*.json
 
 # Frontend
 frontend/node_modules
+
+# Node / Next.js (added Phase 1 of the Next migration)
+node_modules/
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+
+# Runtime data: sqlite db, property screenshots, living-worlds scenes
+/data/

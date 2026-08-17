@@ -1,0 +1,5 @@
+allowBuilds:
+  # Native module: fetches or compiles a prebuilt binding on install.
+  better-sqlite3: true
+  sharp: false
+  unrs-resolver: false

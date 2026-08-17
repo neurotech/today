@@ -10,7 +10,6 @@ from lobsters import get_lobsters
 from github import get_github_trending
 from scenes import get_scene, hydrate
 from properties import get_property
-from poe import get_poe_currency
 from tasks import start_schedule
 from advice import get_advice
 
@@ -44,11 +43,6 @@ initialise_database()
 @app.get("/api/advice")
 async def advice():
     return get_advice()
-
-
-@app.get("/api/poe")
-async def poe(league: str, currency: str):
-    return get_poe_currency(league, currency)
 
 
 @app.get("/api/property", response_class=FileResponse)

@@ -1,0 +1,24 @@
+.git
+.gitignore
+
+node_modules
+.next
+out
+*.tsbuildinfo
+
+# Runtime data: the SQLite database lives in a bind mount, never the image.
+data
+
+# The old app. Deleted in Phase 9; excluded now so it never reaches the build
+# context.
+frontend
+backend
+
+*.md
+Dockerfile
+.dockerignore
+compose.yaml
+Makefile
+*.code-workspace
+.env*
+!.env.sample

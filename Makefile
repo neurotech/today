@@ -1,4 +1,4 @@
-.PHONY: all frontend start restart dev clean help
+.PHONY: all dev start stop restart logs clean help
 
 COLOUR_GREEN=\033[0;32m
 COLOUR_RED=\033[0;31m
@@ -25,41 +25,38 @@ export TODAY_BANNER
 
 all: help
 
-frontend:
+dev:
 	clear && \
-	cd frontend && \
 	pnpm install && \
 	echo "$$TODAY_BANNER" && \
 	pnpm run dev
 
 start:
-	@make clean && \
 	clear && \
 	echo "$$TODAY_BANNER" && \
-	docker compose up --yes -d --quiet-pull --build
+	docker compose up -d --quiet-pull --build
+
+stop:
+	docker compose stop
 
 restart:
 	docker compose restart
 
-dev:
-	@make clean && \
-	clear && \
-	echo "$$TODAY_BANNER" && \
-	docker compose up --yes --watch
+logs:
+	docker compose logs -f
 
 clean:
-	@docker compose stop && \
-	docker compose rm -f && \
-	docker image rm -f today-backend && \
-	docker image rm -f today-frontend
+	@docker compose down --remove-orphans && \
+	docker image rm -f today-today
 
 help:
 	@clear
 	@echo "$$TODAY_BANNER"
 	@echo "   $(COLOUR_WHITE)┌─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┬$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┐$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_PURPLE)frontend$(COLOUR_END) $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start $(COLOUR_RED)vite$(COLOUR_YELLOW) in $(COLOUR_PURPLE)development$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_GREEN)start$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start in $(COLOUR_RED)DAEMON$(COLOUR_YELLOW) mode.$(COLOUR_END)                      $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)dev$(COLOUR_END)      $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start in $(COLOUR_RED)ATTACHED$(COLOUR_YELLOW) mode.$(COLOUR_END)                    $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)clean$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop and remove the containers and images.$(COLOUR_END) $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_PURPLE)dev$(COLOUR_END)      $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start $(COLOUR_RED)Next$(COLOUR_YELLOW) in $(COLOUR_PURPLE)development$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_GREEN)start$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Build and start in $(COLOUR_RED)DAEMON$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)stop$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop the container.$(COLOUR_END)                        $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)logs$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Follow container logs.$(COLOUR_END)                     $(COLOUR_GRAY)│$(COLOUR_END)"
+	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)clean$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop and remove the container and image.$(COLOUR_END)   $(COLOUR_GRAY)│$(COLOUR_END)"
 	@echo "   $(COLOUR_WHITE)└─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┴$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┘$(COLOUR_END)"
 	@echo ""
