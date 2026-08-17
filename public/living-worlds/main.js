@@ -223,6 +223,11 @@ const CanvasCycle = {
 		// force a full palette and pixel refresh for first frame
 		this.oldTimeOffset = -1;
 
+		// New Bitmap, so its palette starts on the scene's base cycles. Clearing
+		// this makes the first setTimeOfDayPalette install the cycles belonging to
+		// whichever keyframe is current.
+		this.activeCyclePalette = null;
+
 		// create an intermediate palette that will hold the time-of-day colors
 		this.todPalette = new Palette(img.base.colors, img.base.cycles);
 
@@ -402,6 +407,14 @@ const CanvasCycle = {
 			}
 			after.palette = this.timeline[temp];
 			after.offset = temp + 86400; // adjust timestamp for day after
+		}
+
+		// Cycles come from the keyframe we are on, not from the scene base. Colours
+		// blend continuously between the two keyframes, but a cycle is a discrete
+		// range and rate, so it switches at the boundary rather than tweening.
+		if (before.palette !== this.activeCyclePalette) {
+			this.activeCyclePalette = before.palette;
+			this.bmp.setCycles(before.palette.cycles);
 		}
 
 		// copy the 'before' palette colors into our intermediate palette
