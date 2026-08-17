@@ -269,10 +269,14 @@ appear alongside the db. The route was deleted afterwards.
 
 ### Gotchas hit
 
-1. **`better-sqlite3` needs `allowBuilds` in `pnpm-workspace.yaml`.** pnpm 11
-   blocks install scripts by default (`ERR_PNPM_IGNORED_BUILDS`), and a plain
-   `pnpm install` afterwards reports "Already up to date" without running them.
-   `pnpm rebuild better-sqlite3` is the fix.
+1. **`better-sqlite3` must have `allowBuilds: false`.** pnpm 11 blocks install
+   scripts by default (`ERR_PNPM_IGNORED_BUILDS`), which looks like something to
+   fix. It is not. The package has *no* install script, but it does ship a
+   `binding.gyp`, so allowing builds makes pnpm run an implicit
+   `node-gyp rebuild` that compiles from source and needs Python plus a
+   toolchain. That is pointless (v13 ships prebuilt bindings in `prebuilds/`,
+   which is what actually loads) and it breaks the Docker build outright, since
+   `node:24-slim` has neither. See Phase 8.
 2. **App Router private folders.** The verification route was first created at
    `app/api/_phase3_selftest/`, and never registered: a `_` prefix marks a
    *private folder* that opts out of routing. It built clean and 404'd. Watch
@@ -643,7 +647,7 @@ outputFileTracingIncludes: {
   build; syncing source into it would do nothing. `make dev` runs `next dev`
   locally instead.
 
-### Two fixes from the first real build attempt
+### Three fixes from the first real build attempts
 
 1. **`RUN --mount=type=cache` is BuildKit-only** and fails hard on the legacy
    builder with "the --mount option requires BuildKit". The host had no buildx
@@ -656,6 +660,19 @@ outputFileTracingIncludes: {
    bash. Every colour-bearing `echo` is now `printf '%b\n'`, which is POSIX and
    behaves consistently. This was pre-existing, inherited from the original
    Makefile, not introduced by the migration.
+
+3. **`allowBuilds: better-sqlite3: true` broke the install.** pnpm ran an
+   implicit `node-gyp rebuild` (the package has no install script, but it does
+   ship a `binding.gyp`), which needs Python and a compiler. `node:24-slim` has
+   neither, so `pnpm install --frozen-lockfile` died with
+   `Could not find any Python installation to use`.
+
+   Setting it to **`false`** is the fix, not adding Python. v13 ships prebuilt
+   bindings in `prebuilds/` and that is what loads at runtime; no
+   `build/Release` is ever produced, locally or in the container. Verified by
+   deleting `node_modules`, reinstalling clean with builds disabled, and
+   confirming the module loads and runs SQL. This had been masked locally
+   because pnpm was blocking the build script anyway.
 
 The build context is 35 kB, confirming `.dockerignore` is doing its job.
 

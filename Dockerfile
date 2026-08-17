@@ -8,8 +8,10 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /app
 
-# pnpm-workspace.yaml carries the `allowBuilds` entry for better-sqlite3.
-# Without it pnpm silently skips the install script.
+# pnpm-workspace.yaml must be copied: it carries `allowBuilds: better-sqlite3:
+# false`, which stops pnpm running an implicit `node-gyp rebuild`. Without it
+# the install tries to compile from source and fails here, because node:24-slim
+# has no Python or build toolchain. The prebuilt binding is used instead.
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # No `RUN --mount=type=cache` for the pnpm store: that is BuildKit-only syntax

@@ -1,5 +1,11 @@
 allowBuilds:
-  # Native module: fetches or compiles a prebuilt binding on install.
-  better-sqlite3: true
+  # Must stay false. better-sqlite3 has no install script, but it ships a
+  # binding.gyp, so allowing builds makes pnpm run an implicit
+  # `node-gyp rebuild` that compiles from source and needs Python plus a
+  # toolchain. node:24-slim has neither, so the Docker build dies.
+  #
+  # It is also pointless: v13 ships prebuilt bindings in prebuilds/, and that is
+  # what gets loaded at runtime. No build/Release is ever produced or needed.
+  better-sqlite3: false
   sharp: false
   unrs-resolver: false
