@@ -14,8 +14,14 @@ make start   # build and run the container, daemonised
 make logs    # follow container logs
 make stop    # stop the container
 make clean   # stop and remove the container and image
+make prune   # remove dangling images to reclaim disk
 make help    # the box with the colours in it
 ```
+
+Every `make start` rebuild leaves the previous image dangling, so run
+`make prune` occasionally. It is deliberately not part of `start`, since it also
+discards layers the next build would have reused. `docker system df` shows what
+has accumulated.
 
 Docker builds with the legacy builder as well as BuildKit. The container runs a
 Next standalone build as an unprivileged user, with `./data` bind-mounted for

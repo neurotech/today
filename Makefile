@@ -1,4 +1,4 @@
-.PHONY: all dev start stop restart logs clean help
+.PHONY: all dev start stop restart logs clean prune help
 
 COLOUR_GREEN=\033[0;32m
 COLOUR_RED=\033[0;31m
@@ -49,6 +49,13 @@ clean:
 	@docker compose down --remove-orphans && \
 	docker image rm -f today-today
 
+# Each `make start` rebuild retags today-today:latest and leaves the previous
+# image dangling, so these accumulate. System-wide, but only ever touches
+# untagged and unreferenced images. Kept separate from `start` because it also
+# discards layers the next build would have reused.
+prune:
+	@docker image prune -f
+
 help:
 	@clear
 	@printf '%b\n' "$$TODAY_BANNER"
@@ -58,5 +65,6 @@ help:
 	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)stop$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop the container.$(COLOUR_END)                        $(COLOUR_GRAY)│$(COLOUR_END)"
 	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)logs$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Follow container logs.$(COLOUR_END)                     $(COLOUR_GRAY)│$(COLOUR_END)"
 	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)clean$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop and remove the container and image.$(COLOUR_END)   $(COLOUR_GRAY)│$(COLOUR_END)"
+	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)prune$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Remove dangling images to reclaim disk.$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END)"
 	@printf '%b\n' "   $(COLOUR_WHITE)└─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┴$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┘$(COLOUR_END)"
 	@echo ""
