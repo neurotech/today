@@ -3,6 +3,7 @@ body {
 	overflow: hidden;
 	margin: 0;
 	padding: 0;
+	cursor: url("./cursor_normal.png"), pointer;
 }
 
 @keyframes fade {
@@ -30,7 +31,6 @@ body {
 	   same region as the old 355px-of-640px crop, at twice the size. */
 	width: 710px;
 	position: relative;
-	cursor: url("./cursor_normal.png"), pointer;
 
 	#living-worlds-overlay-container {
 		opacity: 1;
