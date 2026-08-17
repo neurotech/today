@@ -21,7 +21,7 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
   // footer with `length - 5`. With 14 repos it read "and 9 more" then revealed
   // 5. Expanding now shows everything the label promised, matching Lobsters and
   // Hacker News.
-  const hidden = repos.slice(VISIBLE).length;
+  const hidden = Math.max(0, repos.length - VISIBLE);
 
   return (
     <Panel
@@ -39,11 +39,11 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
             >
               <section className="flex flex-col gap-1.5 p-2">
                 <header className="flex justify-between gap-4 leading-none">
-                  <h1 className="text-md font-bold text-velvet-400">
+                  <h3 className="text-md font-bold text-velvet-400">
                     {repo.repoName}
                     <span className="text-velvet-900 font-normal"> by </span>
                     {repo.repoOwner}
-                  </h1>
+                  </h3>
                   <div className="text-sm font-mono flex items-center text-velvet-600">
                     {repo.stars}
                     <StarIcon className="size-5 ml-1.5 text-velvet-800" />
@@ -53,9 +53,9 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
                 {/* Was <main>, but the layout already has one and a document
                     may only contain a single main landmark. */}
                 <div className="grid grid-cols-[1fr_120px] gap-1">
-                  <h2 className="text-sm text-velvet-500">
-                    {repo.description}
-                  </h2>
+                  {/* Prose, not a heading, and it was outranking the repo name
+                      it describes. */}
+                  <p className="text-sm text-velvet-500">{repo.description}</p>
                   <div className="bg-velvet-900/80 text-velvet-300 border-1 border-transparent rounded-xs text-xs px-1 py-0.5 text-center font-bold w-fit self-end justify-self-end">
                     {repo.language || "None"}
                   </div>

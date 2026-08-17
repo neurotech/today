@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Panel } from "@/components/Panel";
 import { HackerNews } from "@/features/HackerNews/HackerNews";
 import { Lobsters } from "@/features/Lobsters/Lobsters";
+
+export const metadata: Metadata = { title: "Reading" };
 
 export const dynamic = "force-dynamic";
 

@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { Panel } from "@/components/Panel";
 import { BirthdaysPanel } from "@/features/Config/BirthdaysPanel";
+
+export const metadata: Metadata = { title: "Config" };
 
 // Reads SQLite, so it must not be prerendered at build time.
 export const dynamic = "force-dynamic";

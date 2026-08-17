@@ -25,7 +25,7 @@ const VISIBLE = 10;
 
 export const HackerNewsPanel = ({ stories, refresh }: HackerNewsPanelProps) => {
   const [showMore, setShowMore] = useState(false);
-  const hidden = stories.slice(VISIBLE).length;
+  const hidden = Math.max(0, stories.length - VISIBLE);
 
   return (
     <Panel

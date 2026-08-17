@@ -24,18 +24,30 @@ export const Clock = () => {
   const [dateAndTime, setDateAndTime] = useState<DateAndTime | null>(null);
 
   useEffect(() => {
-    setDateAndTime(getFormattedDateAndTime(new Date()));
+    let timer: ReturnType<typeof setTimeout>;
 
-    const timer = setInterval(
-      () => setDateAndTime(getFormattedDateAndTime(new Date())),
-      1000,
-    );
+    // The display has minute resolution, so a 1000 ms interval re-rendered the
+    // header 60 times more often than it could possibly change. Each tick
+    // schedules the next one on the upcoming minute boundary instead, which
+    // also stops the clock drifting a second late over a long session.
+    const tick = () => {
+      const now = new Date();
+      setDateAndTime(getFormattedDateAndTime(now));
 
-    return () => clearInterval(timer);
+      timer = setTimeout(
+        tick,
+        60_000 - (now.getSeconds() * 1000 + now.getMilliseconds()),
+      );
+    };
+
+    tick();
+
+    return () => clearTimeout(timer);
   }, []);
 
+  // Not a heading. It was an h1, competing with the site title beside it.
   return (
-    <h1 className="text-velvet-500 tabular-nums min-h-6">
+    <p className="text-velvet-500 tabular-nums min-h-6">
       {dateAndTime && (
         <>
           {dateAndTime.date}
@@ -43,6 +55,6 @@ export const Clock = () => {
           {dateAndTime.time}
         </>
       )}
-    </h1>
+    </p>
   );
 };

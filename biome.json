@@ -7,7 +7,17 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**/*.ts", "**/*.tsx", "!.next/**", "!next-env.d.ts"]
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.mjs",
+      "**/*.css",
+      "**/*.json",
+      "!.next/**",
+      "!next-env.d.ts",
+      "!tsconfig.tsbuildinfo",
+      "!public/**"
+    ]
   },
   "formatter": {
     "enabled": true,

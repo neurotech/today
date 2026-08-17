@@ -15,8 +15,14 @@ const ebGaramond = EB_Garamond({
   subsets: ["latin"],
 });
 
+// The template gives each route its own title, so browser history and a wall of
+// pinned tabs stay distinguishable. Every page was "Today". `app/icon.svg` is
+// picked up by convention and ends the /favicon.ico 404 on every page load.
 export const metadata: Metadata = {
-  title: "Today",
+  title: {
+    default: "Today",
+    template: "%s ・ Today",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

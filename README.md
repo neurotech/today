@@ -27,6 +27,11 @@ Docker builds with the legacy builder as well as BuildKit. The container runs a
 Next standalone build as an unprivileged user, with `./data` bind-mounted for
 the SQLite database.
 
+Compose healthchecks the container against `/api/health`, which answers
+`{"ok": true}` and deliberately touches neither the database nor any feed: a
+permissions problem on `./data` should show the explanation on the page, not
+send `restart: always` into a restart loop.
+
 ## Configuration
 
 Copy `.env.sample` to `.env.local`. Only `DATABASE_PATH` is used, defaulting to

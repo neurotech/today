@@ -8,27 +8,22 @@ interface PanelProps {
   error?: string | null;
   heading?: string;
   headingRight?: ReactNode;
-  fillWidth?: boolean;
   footer?: string | ReactNode;
 }
 
-const fillWidthStyles: Record<string, string> = {
-  true: "flex-1",
-  false: "",
-};
-
+// A `fillWidth` prop switched a `flex-1` in here. No caller ever passed it; the
+// grid on each page sizes the panels.
 export const Panel = ({
   content,
   loading = false,
   error,
   heading,
   headingRight,
-  fillWidth = false,
   footer,
 }: PanelProps) => {
   return (
     <section
-      className={`${fillWidthStyles[fillWidth.toString()]} flex flex-col shadow-xs/55 border-1 rounded-sm border-velvet-950 bg-velvet-1000`}
+      className={`flex flex-col shadow-xs/55 border-1 rounded-sm border-velvet-950 bg-velvet-1000`}
     >
       {heading && (
         <>
@@ -41,12 +36,20 @@ export const Panel = ({
           <HorizontalRule />
         </>
       )}
+      {/* Neither of these is a heading; both were h3. */}
       {loading && (
-        <h3 className="flex flex-col justify-center self-center min-h-50 select-none">
+        <div className="flex flex-col justify-center self-center min-h-50 select-none">
           <Loading />
-        </h3>
+        </div>
       )}
-      {error && <h3>Error: {error}</h3>}
+      {/* The state you see precisely when a source dies, so it gets the same
+          care as the happy path: it used to render unstyled and unpadded,
+          outside the content wrapper. */}
+      {error && (
+        <p className="p-2 text-sm text-red-400" role="alert">
+          {error}
+        </p>
+      )}
       {!loading && !error && <div className="flex flex-col p-2">{content}</div>}
       {footer}
     </section>

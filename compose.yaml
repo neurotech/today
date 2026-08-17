@@ -18,5 +18,22 @@ services:
     environment:
       DATABASE_PATH: /app/data/today.db
 
+    # `restart: always` only reacts to the process exiting. A wedged Node
+    # process keeps the port open and reports healthy forever, so ask it a
+    # question instead. node:24-slim ships neither curl nor wget, and node has
+    # had a global fetch for years, so use that rather than installing one.
+    healthcheck:
+      # Double-quoted, with single quotes inside the JS, so the scalar cannot be
+      # misread as YAML. Exec form, so there is no shell to quote for either.
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:7000/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
 # No `develop.watch` here. The image runs a production standalone build, so
 # syncing source into it would achieve nothing. Use `make dev` for development.
