@@ -61,7 +61,7 @@ const CanvasCycle = {
 
 			this.sceneIdx = initialSceneIdx;
 			const scene = scenes[initialSceneIdx];
-			this.loadImage(scene.name, scene.title);
+			this.loadImage(scene);
 
 			setInterval(() => {
 				this.randomScene();
@@ -113,8 +113,7 @@ const CanvasCycle = {
 		TweenManager.tween({
 			target: {
 				value: this.globalBrightness,
-				newSceneName: scene.name,
-				newSceneTitle: scene.title,
+				newScene: scene,
 			},
 			duration: this.transitionDuration,
 			mode: "EaseInOut",
@@ -124,21 +123,26 @@ const CanvasCycle = {
 				CanvasCycle.globalBrightness = tween.target.value;
 			},
 			onTweenComplete: (tween) => {
-				CanvasCycle.loadImage(
-					tween.target.newSceneName,
-					tween.target.newSceneTitle,
-				);
+				CanvasCycle.loadImage(tween.target.newScene);
 			},
 			category: "scenefade",
 		});
 	},
 
-	loadImage: async function (name, title, offsetX) {
+	// Takes the whole scene rather than just its name: four names (V08, V19,
+	// V25, V29) appear twice with different scripts, so name alone cannot
+	// identify a scene. The old /api/scene?name= endpoint could only ever serve
+	// one of each pair.
+	loadImage: async function (scene, offsetX) {
 		this.stop();
 
-		const payload = await fetch(`/api/scene?name=${name}`);
-		const payloadJSON = await payload.json();
-		const parsed = JSON.parse(payloadJSON);
+		const { name, title, month, scpt } = scene;
+		const slug = `${name}-${month}-${scpt}`;
+
+		// Served straight from public/. No API route, no network dependency on
+		// effectgames.com, which no longer hosts these.
+		const payload = await fetch(`./scenes/${slug}.json`);
+		const parsed = await payload.json();
 
 		const canvas = document.getElementById("mycanvas");
 		if (canvas) {
@@ -150,7 +154,7 @@ const CanvasCycle = {
 
 		const overlay = document.getElementById("living-worlds-scene-detail");
 		if (overlay)
-			overlay.innerHTML = `${title.replace(" - ", "<span> - </span>")} <span>[</span>${name}.json<span>]</span>`;
+			overlay.innerHTML = `${title.replace(" - ", "<span> - </span>")} <span>[</span>${slug}.json<span>]</span>`;
 
 		this.getAdvice();
 

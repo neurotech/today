@@ -39,7 +39,7 @@ sudo chown -R 1000:1000 data
 
 | Route | Contents |
 |---|---|
-| `/` | GitHub Trending |
+| `/` | Living Worlds, GitHub Trending |
 | `/reading` | Lobsters, Hacker News |
 | `/tools` | Placeholder |
 | `/config` | Birthdays |
@@ -59,9 +59,7 @@ Refresh buttons are Server Actions that expire the relevant cache tag.
 
 * RSS Reader - https://feeds.kottke.org/main - https://palmreport.substack.com/feed
 * Birthday notifications (the config side exists, nothing surfaces them yet)
-* Revive Living Worlds. The assets are in `public/living-worlds/`, but the scene
-  JSON needs recovering: effectgames.com is gone and the files were never
-  hydrated. See MIGRATION.md.
+
 
 ## Removed
 
@@ -79,4 +77,6 @@ bugs found along the way.
 ## Credits
 
 * Cursor from [Zachtronics'](https://www.zachtronics.com/) [Opus Magnum](https://www.zachtronics.com/opus-magnum/)
-* Living Worlds is Joseph Huckaby's [Canvas Cycle](http://www.effectgames.com/effect/article.psp.html/joe/Old_School_Color_Cycling_with_HTML5)
+* Living Worlds is Joseph Huckaby's [Canvas Cycle](https://www.effectgames.com/demos/canvascycle/), art by Mark Ferrari.
+  The 19 scene files in `public/living-worlds/scenes/` were recovered from
+  effectgames.com and converted from JS object literals to JSON.

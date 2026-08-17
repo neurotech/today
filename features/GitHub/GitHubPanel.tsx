@@ -50,14 +50,16 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
                   </div>
                 </header>
                 <HorizontalRule />
-                <main className="grid grid-cols-[1fr_120px] gap-1">
+                {/* Was <main>, but the layout already has one and a document
+                    may only contain a single main landmark. */}
+                <div className="grid grid-cols-[1fr_120px] gap-1">
                   <h2 className="text-sm text-velvet-500">
                     {repo.description}
                   </h2>
                   <div className="bg-velvet-900/80 text-velvet-300 border-1 border-transparent rounded-xs text-xs px-1 py-0.5 text-center font-bold w-fit self-end justify-self-end">
                     {repo.language || "None"}
                   </div>
-                </main>
+                </div>
               </section>
             </a>
           ))}

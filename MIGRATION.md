@@ -11,8 +11,8 @@ Stated rather than asked. Change these and the plan changes with them.
    and a local SQLite file both rule out serverless.
 2. **Path of Exile is cut**, decided after Phase 0 found the data source dead.
    Not ported, not replaced.
-3. **Living Worlds is deferred**, not cut. Its scene files are unrecoverable so
-   far, so Phase 7 is parked and the rest of the migration proceeds without it.
+3. **Living Worlds was deferred, then recovered.** The scene data turned out to
+   be served from a `cache/` path the old code never used. See Phase 7.
 4. **domain.com.au property screenshots are kept**, though unverified until
    Phase 5.
 5. **One container replaces two.** No Python remains.
@@ -30,17 +30,14 @@ today/
     config/page.tsx
     api/
       advice/route.ts     # consumed by the living-worlds iframe
-      scene/route.ts      # consumed by the living-worlds iframe
-      property/route.ts   # returns a PNG
-  components/             # Panel, Button, Textbox, Connector, ...
-  features/               # GitHub, Lobsters, HackerNews, PathOfExile, ...
+  components/             # Panel, Button, Textbox, ...
+  features/               # GitHub, Lobsters, HackerNews, Config, Clock, Tabs
   lib/
     db.ts                 # better-sqlite3 connection + schema init
     config.ts             # config table CRUD
     sources/              # github.ts, lobsters.ts, hackernews.ts, advice.ts
-    property.ts           # Playwright screenshot + disk cache
-  public/living-worlds/   # vendored, unchanged
-  data/                   # gitignored: today.db, images/, scenes/
+  public/living-worlds/   # vendored, plus scenes/ recovered in Phase 7
+  data/                   # gitignored except .gitkeep: today.db
   compose.yaml
   Dockerfile
   Makefile
@@ -64,7 +61,7 @@ the source.**
 | Advice Slip API | **OK.** 200. |
 | GitHub Trending | **Selectors intact**, but see caveat below. |
 | poe.ninja currency API | **Dead.** 404. |
-| effectgames.com scenes | **Dead.** Site is gone. |
+| effectgames.com scenes | ~~**Dead.**~~ **Wrong, see Phase 7.** `scene.php` is gone, but the data is still served from a `cache/` path. |
 | domain.com.au | **Inconclusive.** Needs a real browser to test. |
 | Local `today.db` | Absent. Repo dirs hold only `.keep`. |
 
@@ -98,6 +95,12 @@ JSON the canvas renders **nothing**. Living Worlds is entirely broken in
 production today, not merely missing its overlay. archive.org was returning 503
 during this check, so recoverability is unconfirmed. **Decision required.**
 
+> **Correction (Phase 7).** "The scene JSON cannot be re-fetched from source" was
+> wrong. Only `scene.php` is gone. The same host still serves every scene from
+> `demos/worlds/cache/{name}-{month}-{scpt}.js`, a path the old code never used.
+> All 20 were recovered. The mistake was concluding the data was gone from one
+> dead endpoint rather than looking for another.
+
 **domain.com.au returned 403** to a bare curl with a browser user-agent, which
 proves nothing either way. Real Playwright with a full browser may well pass.
 Untestable until Phase 5, so treat property screenshots as unverified rather
@@ -112,9 +115,9 @@ either, there is nothing to migrate and Phase 3 starts empty.
 1. **Path of Exile: cut.** The data source is gone and finding a replacement is
    a research task, not a migration task. Not ported, not replaced. Removal is
    in Phase 9.
-2. **Living Worlds: deferred.** Scene JSON recovery is parked, not abandoned.
-   Phase 7 blocks nothing else, so the migration proceeds without it and the
-   feature can be revived whenever the files turn up.
+2. **Living Worlds: deferred** at the time, and later **recovered** in Phase 7
+   once the `cache/` path was found. The deferral was the right call given what
+   was known; the conclusion that the data was unrecoverable was not.
 
 Both occupied a fixed 373px column in the home grid
 (`grid-cols-[373px_1fr_0.75fr_373px]`: Living Worlds column 1, PoE column 4),
@@ -305,7 +308,7 @@ fetch-on-mount all get deleted.
 | Lobsters | `lobsters.py` | `lib/sources/lobsters.ts` | 15 min |
 | Hacker News | `useHackerNews.ts` (client!) | `lib/sources/hackernews.ts` | 15 min |
 | Advice | `advice.py` | `lib/sources/advice.ts` + route handler | no cache |
-| Scene (deferred) | `scenes.py` | route handler reading `data/scenes/*.json` | static |
+| Scene (done, Phase 7) | `scenes.py` | static files in `public/living-worlds/scenes/`, no route | static |
 
 **Status: done** (except the deferred scene route). `cheerio` 1.2.0,
 `date-fns` 4.4.0 added.
@@ -552,14 +555,67 @@ tracks the old four-column grid used for exactly these two features.
 
 ## Phase 7: living worlds
 
-> **DEFERRED.** Not part of this migration. effectgames.com is gone, so the 20
-> scene JSON files cannot be fetched from source, and without them the canvas
-> renders nothing. The feature is already dark in production, so deferring it
-> costs nothing that is not already lost.
->
-> Nothing else depends on this phase. Do the migration without it, leave
-> `public/living-worlds/` in place unported, and pick this up if the JSON turns
-> up. Everything below is the recipe for that day.
+**Status: done. Living Worlds renders for the first time.**
+
+### The scene data was never actually gone
+
+Phase 0 concluded effectgames.com was dead because `scene.php` 404s. That was
+right about `scene.php` and wrong about the site: the host still serves
+pre-rendered scene data from a **cache** path, which the old `scenes.py` never
+used:
+
+```
+https://www.effectgames.com/demos/worlds/cache/{name}-{month}-{scpt}.js
+```
+
+All 20 fetched successfully.
+
+### Recovery
+
+The files are `CanvasCycle.initScene({...})` wrapping a **JavaScript object
+literal**, not JSON: single-quoted strings and unquoted keys. The old backend
+threw `json-repair` at this. Cleaner approach: run each file in a `node:vm`
+sandbox with a `CanvasCycle.initScene` stub that captures the object, then
+`JSON.stringify` it. Exact, no heuristics.
+
+Converted output is 20.6 MB raw, **2.4 MB gzipped** (~180 KB per scene), so the
+files are committed to `public/living-worlds/scenes/` and served as static
+assets. The feature now has no external dependency at all, and **`/api/scene`
+was never needed** — it is not built and never will be.
+
+19 of the 20 are kept; `V05AM-10October-octendclrscpt` is in the old `scenes.py`
+list but not in the client's `scenes.js`, so it was dropped rather than shipped
+unused. Re-fetchable from the URL above if ever wanted.
+
+### A third latent bug
+
+`loadImage(name)` fetched `/api/scene?name=V19`, but **four names appear twice**
+in `scenes.js` with different scripts: V08, V19, V25 and V29, each a clear and a
+cloudy variant of the same base image. Keying on name alone cannot distinguish
+them, and the old `scenes.py` had the matching flaw, saving every scene as
+`{file}.json` so 5 of 20 would overwrite each other. `loadImage` now takes the
+whole scene object and builds `{name}-{month}-{scpt}`.
+
+Also fixed a double parse: the old code did `await payload.json()` then
+`JSON.parse()` again, because FastAPI returned the file contents as a JSON
+*string*. Static files need one parse.
+
+### Verified in a real browser
+
+Not just "the JSON serves". Chromium was driven against the running app:
+
+- Canvas renders 640x480, all 307,200 pixels non-black, 168 distinct sampled
+  colours. Screenshot shows Mark Ferrari's "Jungle Waterfall - Rain" correctly.
+- Overlay reads `Jungle Waterfall - Rain [V08RAIN-05May-MAYRAINSCPT.json]`.
+- The advice quote renders, so `/api/advice` works from inside the iframe.
+- Zero page errors, zero failed requests.
+- **Palette cycling confirmed**: five canvas snapshots at 700 ms intervals
+  hashed to five distinct values. It animates, it is not a static frame.
+- All 19 scenes fetch over HTTP and parse with valid
+  `base.width/height/colors/pixels`.
+
+Playwright was installed into a throwaway `/tmp` project for this, so the app's
+dependencies are untouched.
 
 - [ ] **Source the scene JSON.** Retry archive.org (it was 503 during Phase 0)
       for the 20 URLs in `scenes.py`, or find a Canvas Cycle mirror. The
@@ -815,7 +871,7 @@ Found during analysis. Do not port these across.
 | Playwright in Docker: image size, chromium deps, memory | Medium | Do it last, in isolation. It is the one part that can genuinely stall. |
 | ~~`better-sqlite3` native build in the Next build~~ | Resolved | Phase 3 verified it end-to-end inside the running server. v13 ships prebuilds, so no compiler toolchain is needed, and `.next/standalone` traces the `.node` binding correctly. |
 | ~~Scraped sources already broken~~ | Resolved | Phase 0 confirmed 2 of 5 dead. PoE cut, Living Worlds deferred. The 3 survivors (GitHub, Lobsters, HN) all verified working. |
-| Living Worlds never comes back | Accepted | Deferred by decision. The feature is already dark in production, so the downside is realised, not pending. |
+| ~~Living Worlds never comes back~~ | Resolved | Scene data recovered from effectgames.com's `cache/` path and committed. Verified rendering and cycling in a real browser. |
 | ~~domain.com.au blocks headless Chromium~~ | **Confirmed, feature dead** | Phase 5 tested it properly: `/property-profile/` returns 403 "Access Denied" to any automated browser, for real and fake slugs alike. Three legitimate mitigations failed. Decision required, see Phase 5. |
 | Losing config data during the move | Low | Back up `today.db` from the host first. It is a plain file copy. |
 | RSC ceremony exceeds the value for a single-user LAN dashboard | Known trade-off | Accepted. The win is consolidation (one runtime, one language, one lockfile), not performance. |
