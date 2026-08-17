@@ -200,6 +200,13 @@ Class.create("Palette", {
 					cycleRate =
 						cycle.rate / Math.floor(Palette.CYCLE_SPEED / speedAdjust);
 
+					// Reset per cycle. cycleAmount is declared at function scope, so
+					// a reverse mode matching none of the branches below would other-
+					// wise reuse the previous cycle's value, or stay undefined on the
+					// first iteration and put NaN through blendShiftColors into every
+					// colour in the range.
+					cycleAmount = 0;
+
 					if (cycle.reverse < 3) {
 						// standard cycle
 						cycleAmount = Palette.DFLOAT_MOD(
@@ -216,7 +223,15 @@ Class.create("Palette", {
 							cycleAmount = cycleSize * 2 - cycleAmount;
 					} else if (cycle.reverse < 6) {
 						// sine wave
-						cycleAmount = DFLOAT_MOD(timeNow / (1000 / cycleRate), cycleSize);
+						// Qualified: DFLOAT_MOD is a static on Palette, not a global,
+						// so the bare call threw a ReferenceError out of the rAF
+						// callback. No shipped scene uses reverse 4 or 5, but the
+						// throw would have killed the loop with inGame still true,
+						// which run() refuses to restart.
+						cycleAmount = Palette.DFLOAT_MOD(
+							timeNow / (1000 / cycleRate),
+							cycleSize,
+						);
 						cycleAmount =
 							Math.sin((cycleAmount * 3.1415926 * 2) / cycleSize) + 1;
 						if (cycle.reverse == 4) cycleAmount *= cycleSize / 4;

@@ -120,6 +120,18 @@ const CanvasCycle = {
 	switchScene: function (sceneIdx) {
 		this.hideOverlay();
 		const scene = scenes[sceneIdx];
+
+		// The fade below is driven by TweenManager.logic, which only ticks from
+		// animate(). With no loop running there is nothing to advance it, so its
+		// onTweenComplete, the thing that actually loads the scene, would never
+		// fire. That is the state after a failed first load, and it used to make
+		// both the 120s rotation and clicking inert until the iframe reloaded.
+		// Skip straight to the load instead, so the next rotation retries.
+		if (!this.inGame) {
+			this.loadImage(scene);
+			return;
+		}
+
 		TweenManager.removeAll({ category: "scenefade" });
 		TweenManager.tween({
 			target: {
@@ -145,28 +157,44 @@ const CanvasCycle = {
 	// identify a scene. The old /api/scene?name= endpoint could only ever serve
 	// one of each pair.
 	loadImage: async function (scene, offsetX) {
-		this.stop();
-
 		const { name, title, month, scpt } = scene;
 		const slug = `${name}-${month}-${scpt}`;
 
 		// Served straight from public/. No API route, no network dependency on
 		// effectgames.com, which no longer hosts these.
-		const payload = await fetch(`./scenes/${slug}.json`);
+		//
+		// Nothing is torn down until the replacement is in hand. `stop()` used to
+		// run before the fetch, which made any failure here permanent: run() is
+		// reached only through processImage below, and TweenManager.logic only
+		// ticks from animate(), so with the loop stopped neither the 120s
+		// rotation nor a click could get back. One failed fetch killed the panel
+		// until the iframe was reloaded. The catch also covers a rejected fetch
+		// (offline, DNS) and malformed JSON, neither of which the old `!ok` test
+		// caught; both surfaced only as an unhandled rejection.
+		let parsed;
+		try {
+			const payload = await fetch(`./scenes/${slug}.json`);
 
-		// All 19 slugs in scenes.js resolve to a file today, so this is purely
-		// defensive. Without it a missing scene rejects `payload.json()`, and
-		// neither caller (line 64, and the scenefade tween) awaits or catches
-		// this function, so the failure surfaced only as an unhandled rejection.
-		// The cycling is already stopped by `this.stop()` above, so bailing out
-		// leaves the last frame on screen rather than a blank canvas.
-		if (!payload.ok) {
-			return console.error(
-				`ERROR: Could not load scene ${slug}.json: ${payload.status}`,
-			);
+			if (!payload.ok) {
+				throw new Error(`HTTP ${payload.status}`);
+			}
+
+			parsed = await payload.json();
+		} catch (error) {
+			// A scenefade tween has already faded the outgoing scene to black by
+			// the time it calls in here, so restore it rather than leaving the
+			// panel dark while it cycles on invisibly. The removeAll matters when
+			// loadImage was entered directly rather than through switchScene, as
+			// init does: any fade still in flight would otherwise overwrite the
+			// brightness again on the next frame. On the very first load there is
+			// no loop and nothing to show yet; the next rotation retries.
+			if (this.inGame) {
+				TweenManager.removeAll({ category: "scenefade" });
+				this.globalBrightness = 1.0;
+			}
+
+			return console.error(`ERROR: Could not load scene ${slug}.json:`, error);
 		}
-
-		const parsed = await payload.json();
 
 		const canvas = document.getElementById("mycanvas");
 		if (canvas) {
@@ -182,6 +210,9 @@ const CanvasCycle = {
 
 		this.getAdvice();
 
+		// Safe to tear down now: the replacement is parsed and processImage
+		// restarts the loop via run().
+		this.stop();
 		CanvasCycle.processImage(parsed);
 	},
 
