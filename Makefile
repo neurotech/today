@@ -28,12 +28,12 @@ all: help
 dev:
 	clear && \
 	pnpm install && \
-	echo "$$TODAY_BANNER" && \
+	printf '%b\n' "$$TODAY_BANNER" && \
 	pnpm run dev
 
 start:
 	clear && \
-	echo "$$TODAY_BANNER" && \
+	printf '%b\n' "$$TODAY_BANNER" && \
 	docker compose up -d --quiet-pull --build
 
 stop:
@@ -51,12 +51,12 @@ clean:
 
 help:
 	@clear
-	@echo "$$TODAY_BANNER"
-	@echo "   $(COLOUR_WHITE)┌─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┬$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┐$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_PURPLE)dev$(COLOUR_END)      $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start $(COLOUR_RED)Next$(COLOUR_YELLOW) in $(COLOUR_PURPLE)development$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_GREEN)start$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Build and start in $(COLOUR_RED)DAEMON$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)stop$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop the container.$(COLOUR_END)                        $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)logs$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Follow container logs.$(COLOUR_END)                     $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)clean$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop and remove the container and image.$(COLOUR_END)   $(COLOUR_GRAY)│$(COLOUR_END)"
-	@echo "   $(COLOUR_WHITE)└─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┴$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┘$(COLOUR_END)"
+	@printf '%b\n' "$$TODAY_BANNER"
+	@printf '%b\n' "   $(COLOUR_WHITE)┌─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┬$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┐$(COLOUR_END)"
+	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_PURPLE)dev$(COLOUR_END)      $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Start $(COLOUR_RED)Next$(COLOUR_YELLOW) in $(COLOUR_PURPLE)development$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
+	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_GREEN)start$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Build and start in $(COLOUR_RED)DAEMON$(COLOUR_YELLOW) mode.$(COLOUR_END)            $(COLOUR_GRAY)│$(COLOUR_END)"
+	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)stop$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop the container.$(COLOUR_END)                        $(COLOUR_GRAY)│$(COLOUR_END)"
+	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_BLUE)logs$(COLOUR_END)     $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Follow container logs.$(COLOUR_END)                     $(COLOUR_GRAY)│$(COLOUR_END)"
+	@printf '%b\n' "   $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_WHITE)make$(COLOUR_END) $(COLOUR_RED)clean$(COLOUR_END)    $(COLOUR_GRAY)│$(COLOUR_END) $(COLOUR_YELLOW)Stop and remove the container and image.$(COLOUR_END)   $(COLOUR_GRAY)│$(COLOUR_END)"
+	@printf '%b\n' "   $(COLOUR_WHITE)└─$(COLOUR_GRAY)──────────────$(COLOUR_WHITE)┴$(COLOUR_GRAY)───────────────────────────────────────────$(COLOUR_WHITE)─┘$(COLOUR_END)"
 	@echo ""

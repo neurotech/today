@@ -643,6 +643,22 @@ outputFileTracingIncludes: {
   build; syncing source into it would do nothing. `make dev` runs `next dev`
   locally instead.
 
+### Two fixes from the first real build attempt
+
+1. **`RUN --mount=type=cache` is BuildKit-only** and fails hard on the legacy
+   builder with "the --mount option requires BuildKit". The host had no buildx
+   plugin, so Compose fell back to the legacy builder. The cache mount only
+   saved pnpm re-download time, so it was removed rather than requiring a
+   toolchain upgrade. Nothing BuildKit-specific remains: `COPY --from`,
+   `COPY --chown` and multi-stage all work on the legacy builder.
+2. **The Makefile banner printed raw `\033[...]`.** Some `/bin/sh` `echo`
+   builtins do not interpret backslash escapes, and Make uses `/bin/sh`, not
+   bash. Every colour-bearing `echo` is now `printf '%b\n'`, which is POSIX and
+   behaves consistently. This was pre-existing, inherited from the original
+   Makefile, not introduced by the migration.
+
+The build context is 35 kB, confirming `.dockerignore` is doing its job.
+
 ### Still to do on a machine with Docker
 
 ```bash
@@ -651,6 +667,9 @@ make start && make logs
 
 Then confirm http://localhost:7000 serves, and that `./data/today.db` appears on
 the host.
+
+If cache mounts are wanted back later, install the buildx plugin and restore the
+`--mount=type=cache` line; it is a pure speed optimisation.
 
 ## Phase 9: decommission
 

@@ -12,7 +12,9 @@ WORKDIR /app
 # Without it pnpm silently skips the install script.
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# No `RUN --mount=type=cache` for the pnpm store: that is BuildKit-only syntax
+# and fails outright on the legacy builder. It only saved re-download time.
+RUN pnpm install --frozen-lockfile
 
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
