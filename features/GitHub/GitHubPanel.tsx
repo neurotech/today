@@ -13,9 +13,15 @@ type GitHubPanelProps = {
   refresh: () => Promise<void>;
 };
 
+const VISIBLE = 5;
+
 export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
   const [showMore, setShowMore] = useState(false);
-  const showFooter = repos.length > 5;
+  // The old version showed 5, expanded to a hardcoded 10, but labelled the
+  // footer with `length - 5`. With 14 repos it read "and 9 more" then revealed
+  // 5. Expanding now shows everything the label promised, matching Lobsters and
+  // Hacker News.
+  const hidden = repos.slice(VISIBLE).length;
 
   return (
     <Panel
@@ -23,7 +29,7 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
       headingRight={<RefreshAction action={refresh} />}
       content={
         <div className="flex flex-col gap-2">
-          {repos.slice(0, showMore ? 10 : 5).map((repo) => (
+          {repos.slice(0, showMore ? repos.length : VISIBLE).map((repo) => (
             <a
               key={`${repo.repoName}-${repo.repoOwner}`}
               href={repo.url}
@@ -58,12 +64,12 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
         </div>
       }
       footer={
-        showFooter && (
+        hidden > 0 && (
           <>
             <HorizontalRule />
             <MoreLessButton
               showMore={showMore}
-              itemCount={repos.slice(5).length}
+              itemCount={hidden}
               onClick={() => setShowMore((p) => !p)}
             />
           </>
