@@ -428,10 +428,16 @@ const CanvasCycle = {
 		}
 
 		// Advice Slip is a third party, and /api/advice answers 502 with
-		// `{ error }` when it is unreachable. Reading `json.advice` unconditionally
-		// put the string "undefined" on screen as the quote. A failure now leaves
-		// whatever quote is already showing; on the first scene there is none, so
-		// the element is hidden rather than rendering an empty pair of quote marks.
+		// `{ error }` when it is unreachable. Its TLS handshake alone runs to
+		// ~9.5s against fetch's 10s connect timeout, so from some networks the
+		// call fails about half the time and there is nothing this end can do
+		// about it.
+		//
+		// The overlay is revealed only on success. It carries the scene detail as
+		// well as the quote, but showing it with a stale quote, or with an empty
+		// pair of quote marks on the first scene, reads worse than leaving it
+		// down until there is something to say. switchScene has already hidden it
+		// by this point, so bailing out simply leaves it hidden.
 		try {
 			const response = await fetch("/api/advice");
 
@@ -447,13 +453,9 @@ const CanvasCycle = {
 
 			quoteElement.textContent = advice;
 		} catch (error) {
-			console.error("ERROR: Could not load advice:", error);
+			return console.error("ERROR: Could not load advice:", error);
 		}
 
-		quoteElement.style.display = quoteElement.textContent ? "" : "none";
-
-		// Runs either way: the overlay also carries the scene detail, which is
-		// still worth showing when the quote is missing.
 		setTimeout(() => CanvasCycle.showOverlay(), 800);
 	},
 };
