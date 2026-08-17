@@ -15,6 +15,19 @@ function getRandomSceneIndex(currentSceneIndex, totalScenes) {
 	return randomSceneIndex;
 }
 
+// Seconds since local midnight, which is the unit the scene timelines are keyed
+// in. Read from the wall clock on every new second rather than counted up:
+// requestAnimationFrame does not fire in a hidden tab, so a counter fell behind
+// by exactly the time the tab spent hidden and never caught up. A dashboard left
+// in a background tab all day ended up showing morning light in the evening.
+// Reading the clock also makes DST shifts and machine sleep self-correcting.
+//
+// getHours/getMinutes/getSeconds cap this at 86399, so no wrap is needed.
+function getLocalTimeOffset() {
+	const now = new Date();
+	return now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+}
+
 const CanvasCycle = {
 	ctx: null,
 	imageData: null,
@@ -55,9 +68,7 @@ const CanvasCycle = {
 			const initialSceneIdx = getRandomSceneIndex(-1, scenes.length);
 
 			// start synced to local time
-			const now = new Date();
-			this.timeOffset =
-				(now.getHours() + 1) * 3600 + now.getMinutes() * 60 + now.getSeconds();
+			this.timeOffset = getLocalTimeOffset();
 
 			this.sceneIdx = initialSceneIdx;
 			const scene = scenes[initialSceneIdx];
@@ -252,12 +263,12 @@ const CanvasCycle = {
 		// animate one frame. and schedule next
 		if (this.inGame) {
 			let optimize = true;
-			const newSec = FrameCount.count();
 
-			if (newSec) {
-				// advance time
-				this.timeOffset++;
-				if (this.timeOffset >= 86400) this.timeOffset = 0;
+			// count() reports a wall-clock second boundary, which is all this
+			// needs: it gates the resync so setTimeOfDayPalette runs once a
+			// second rather than once a frame.
+			if (FrameCount.count()) {
+				this.timeOffset = getLocalTimeOffset();
 			}
 
 			if (this.timeOffset !== this.oldTimeOffset) {
@@ -304,22 +315,34 @@ const CanvasCycle = {
 
 		// locate nearest timeline palette before, and after current time
 		// auto-wrap to find nearest out-of-bounds events (i.e. tomorrow and yesterday)
+		//
+		// `for..in` yields string keys, so each offset is put through Number()
+		// before it is used. The two main scans mix the offset with a number and
+		// would coerce anyway, but the wrap branches compare an offset against
+		// another offset: left as strings those went lexicographic, so "78300"
+		// > "9900" was false and the scan kept the wrong key (V16 November and
+		// V29 September picked a pre-dawn palette instead of the last one of the
+		// day). `temp + 86400` had the matching problem, concatenating to
+		// "1980086400" rather than adding, which flattened the after-wrap fade
+		// to zero in every scene.
 		const before = {
 			palette: null,
 			dist: 86400,
 			offset: 0,
 		};
-		for (const offset in this.timeline) {
+		for (const key in this.timeline) {
+			const offset = Number(key);
 			if (offset <= this.timeOffset && this.timeOffset - offset < before.dist) {
 				before.dist = this.timeOffset - offset;
-				before.palette = this.timeline[offset];
+				before.palette = this.timeline[key];
 				before.offset = offset;
 			}
 		}
 		if (!before.palette) {
 			// no palette found, so wrap around and grab one with highest offset
-			let temp = 0;
-			for (const offset in this.timeline) {
+			let temp = -1;
+			for (const key in this.timeline) {
+				const offset = Number(key);
 				if (offset > temp) temp = offset;
 			}
 			before.palette = this.timeline[temp];
@@ -331,17 +354,19 @@ const CanvasCycle = {
 			dist: 86400,
 			offset: 0,
 		};
-		for (const offset in this.timeline) {
+		for (const key in this.timeline) {
+			const offset = Number(key);
 			if (offset >= this.timeOffset && offset - this.timeOffset < after.dist) {
 				after.dist = offset - this.timeOffset;
-				after.palette = this.timeline[offset];
+				after.palette = this.timeline[key];
 				after.offset = offset;
 			}
 		}
 		if (!after.palette) {
 			// no palette found, so wrap around and grab one with lowest offset
 			let temp = 86400;
-			for (const offset in this.timeline) {
+			for (const key in this.timeline) {
+				const offset = Number(key);
 				if (offset < temp) temp = offset;
 			}
 			after.palette = this.timeline[temp];

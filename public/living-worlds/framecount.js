@@ -75,9 +75,12 @@ var FrameCount = {
 	},
 	
 	count: function() {
-		// advance one frame
+		// advance one frame, and report whether the wall clock rolled over into a
+		// new second. CanvasCycle.animate() drives its time-of-day offset off this
+		// return value, so without it the day/night timeline never advances.
 		var _now = this._now_epoch();
 		var _int_now = parseInt(_now, 10);
+		var _new_sec = false;
 		if (_int_now != this.lastSecond) {
 			this.totalFrames += this.frameCount;
 			if (!this.startTime) this.startTime = _int_now;
@@ -89,8 +92,10 @@ var FrameCount = {
 			this.lastSecond = _int_now;
 			
 			if (this.visible) this.update();
+			_new_sec = true;
 		}
 		this.frameCount++;
+		return _new_sec;
 	}
 	
 };
