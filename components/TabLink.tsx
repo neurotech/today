@@ -41,7 +41,7 @@ export const TabLink = ({ href, label, tabPosition }: TabLinkProps) => {
     <Link
       href={href}
       aria-current={isActive ? "page" : undefined}
-      className={`${activeStyles(isActive)} ${positionStyles[tabPosition]} flex justify-center items-center cursor-pointer text-sm transition-colors px-2 py-1.5 border-1 border-transparent`}
+      className={`${activeStyles(isActive)} ${positionStyles[tabPosition]} flex justify-center items-center cursor-pointer text-sm transition-colors px-2 py-1.5 border border-transparent`}
     >
       {label}
     </Link>

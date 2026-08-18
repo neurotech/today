@@ -23,7 +23,7 @@ export const Panel = ({
 }: PanelProps) => {
   return (
     <section
-      className={`flex flex-col shadow-xs/55 border-1 rounded-sm border-velvet-950 bg-velvet-1000`}
+      className={`flex flex-col shadow-xs/55 border rounded-sm border-velvet-950 bg-velvet-1000`}
     >
       {heading && (
         <>

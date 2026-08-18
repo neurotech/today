@@ -11,7 +11,7 @@ export const LivingWorlds = () => (
         height={960}
         src="/living-worlds/index.html"
         title="living-worlds"
-        className="border-1 rounded-xs border-velvet-900/70"
+        className="border rounded-xs border-velvet-900/70"
       />
     }
   />

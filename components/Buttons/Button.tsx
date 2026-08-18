@@ -24,7 +24,7 @@ export const Button = ({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`${minWidth} flex justify-center items-center cursor-pointer text-sm text-velvet-300 hover:text-velvet-50 transition-colors bg-velvet-800 hover:bg-velvet-600 rounded-sm p-1 border-1 border-velvet-600 hover:border-velvet-600 disabled:cursor-not-allowed disabled:border-neutral-800 disabled:bg-neutral-900 disabled:text-neutral-700`}
+      className={`${minWidth} flex justify-center items-center cursor-pointer text-sm text-velvet-300 hover:text-velvet-50 transition-colors bg-velvet-800 hover:bg-velvet-600 rounded-sm p-1 border border-velvet-600 hover:border-velvet-600 disabled:cursor-not-allowed disabled:border-neutral-800 disabled:bg-neutral-900 disabled:text-neutral-700`}
     >
       {label}
     </button>
