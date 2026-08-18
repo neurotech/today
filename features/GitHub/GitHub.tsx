@@ -9,8 +9,6 @@ export const GitHub = async () => {
 
     return <GitHubPanel repos={repos} refresh={refreshGitHub} />;
   } catch (error) {
-    // Matches the old UX: a failed source shows an error inside its own panel
-    // rather than taking down the page.
     return (
       <Panel
         heading="GitHub Trending"
