@@ -1,8 +1,6 @@
 "use client";
 
 import { StarIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { MoreLessButton } from "@/components/Buttons/MoreLessButton";
 import { HorizontalRule } from "@/components/HorizontalRule";
 import { Panel } from "@/components/Panel";
 import { RefreshAction } from "@/components/RefreshAction";
@@ -13,23 +11,14 @@ type GitHubPanelProps = {
   refresh: () => Promise<void>;
 };
 
-const VISIBLE = 5;
-
 export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
-  const [showMore, setShowMore] = useState(false);
-  // The old version showed 5, expanded to a hardcoded 10, but labelled the
-  // footer with `length - 5`. With 14 repos it read "and 9 more" then revealed
-  // 5. Expanding now shows everything the label promised, matching Lobsters and
-  // Hacker News.
-  const hidden = Math.max(0, repos.length - VISIBLE);
-
   return (
     <Panel
       heading="GitHub Trending"
       headingRight={<RefreshAction action={refresh} />}
       content={
         <div className="flex flex-col gap-2">
-          {repos.slice(0, showMore ? repos.length : VISIBLE).map((repo) => (
+          {repos.map((repo) => (
             <a
               key={`${repo.repoName}-${repo.repoOwner}`}
               href={repo.url}
@@ -50,11 +39,7 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
                   </div>
                 </header>
                 <HorizontalRule />
-                {/* Was <main>, but the layout already has one and a document
-                    may only contain a single main landmark. */}
                 <div className="grid grid-cols-[1fr_120px] gap-1">
-                  {/* Prose, not a heading, and it was outranking the repo name
-                      it describes. */}
                   <p className="text-sm text-velvet-500">{repo.description}</p>
                   <div className="bg-velvet-900/80 text-velvet-300 border-1 border-transparent rounded-xs text-xs px-1 py-0.5 text-center font-bold w-fit self-end justify-self-end">
                     {repo.language || "None"}
@@ -64,18 +49,6 @@ export const GitHubPanel = ({ repos, refresh }: GitHubPanelProps) => {
             </a>
           ))}
         </div>
-      }
-      footer={
-        hidden > 0 && (
-          <>
-            <HorizontalRule />
-            <MoreLessButton
-              showMore={showMore}
-              itemCount={hidden}
-              onClick={() => setShowMore((p) => !p)}
-            />
-          </>
-        )
       }
     />
   );
