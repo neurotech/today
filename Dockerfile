@@ -5,8 +5,17 @@
 FROM node:24-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 WORKDIR /app
+# `corepack enable` only drops in shims; the pnpm tarball is fetched lazily on
+# the first `pnpm` call. Both `deps` and `build` branch off `base`, so they are
+# siblings and neither sees the other's corepack cache: each downloaded pnpm
+# again. Worse, `build`'s copy was re-fetched on every rebuild, since `COPY . .`
+# invalidates that layer on any source change. Fetching here puts pnpm in one
+# layer both stages inherit, so it downloads once and then stays cached.
+# `corepack install` takes no version: it reads `packageManager` from
+# package.json, which stays the single source of truth.
+COPY package.json ./
+RUN corepack enable && corepack install
 
 # pnpm-workspace.yaml must be copied: it carries `allowBuilds: better-sqlite3:
 # false`, which stops pnpm running an implicit `node-gyp rebuild`. Without it
