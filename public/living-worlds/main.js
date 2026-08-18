@@ -43,10 +43,25 @@ const CanvasCycle = {
 	sceneIdx: -1,
 	highlightColor: -1,
 	defaultMaxVolume: 0.5,
-	transitionDuration: 150,
+	// Scene fade length in milliseconds. TweenManager counts in rendered frames,
+	// not time, so a fixed frame count made the fade as long as the display was
+	// slow: the old 150 frames ran 2.5s at 60Hz and about 1s at 144Hz. Converted
+	// against targetFPS at each tween site instead, so it is the same fade
+	// everywhere, and stays put now that the frame rate is capped.
+	transitionDurationMs: 1000,
+
+	transitionFrames: function () {
+		return (this.transitionDurationMs / 1000) * this.settings.targetFPS;
+	},
+
+	lastFrameTime: 0,
 
 	settings: {
-		targetFPS: 240,
+		// Honoured by animate(), which used to render on every
+		// requestAnimationFrame regardless. Colour cycling is driven off the wall
+		// clock, not the frame counter, so this changes how often the scene is
+		// sampled, never how fast it animates.
+		targetFPS: 30,
 		blendShiftEnabled: true,
 		speedAdjust: 1.0,
 	},
@@ -138,7 +153,7 @@ const CanvasCycle = {
 				value: this.globalBrightness,
 				newScene: scene,
 			},
-			duration: this.transitionDuration,
+			duration: this.transitionFrames(),
 			mode: "EaseInOut",
 			algo: "Quadratic",
 			props: { value: 0.0 },
@@ -269,7 +284,7 @@ const CanvasCycle = {
 			TweenManager.removeAll({ category: "scenefade" });
 			TweenManager.tween({
 				target: { value: 0 },
-				duration: this.transitionDuration,
+				duration: this.transitionFrames(),
 				mode: "EaseInOut",
 				algo: "Quadratic",
 				props: { value: 1.0 },
@@ -296,7 +311,35 @@ const CanvasCycle = {
 	},
 
 	animate: function () {
-		// animate one frame. and schedule next
+		// Schedule the next frame, and render this one only if the target frame
+		// interval has elapsed. requestAnimationFrame fires at the display's
+		// refresh rate, so on a 120 or 144 Hz panel every 640x480 frame was being
+		// recycled and re-uploaded two to three times more often than the art
+		// needs, at proportional CPU cost. rAF stays the driver rather than
+		// setTimeout, because the loop depends on it pausing in a hidden tab: see
+		// getLocalTimeOffset above.
+		if (this.inGame) {
+			// The 1ms of slack is not a fudge factor. GetTickCount floors to whole
+			// milliseconds, so on a 60Hz display the frame due at 33.33ms arrives
+			// reporting 33 and misses a strict comparison by a third of a
+			// millisecond. Every second frame would then be one tick short and the
+			// loop would settle on every third instead, running 20fps against a
+			// target of 30.
+			const now = GetTickCount();
+			if (now - this.lastFrameTime >= 1000 / this.settings.targetFPS - 1) {
+				this.lastFrameTime = now;
+				this.renderFrame();
+			}
+
+			if (this.inGame)
+				requestAnimationFrame(() => {
+					CanvasCycle.animate();
+				});
+		}
+	},
+
+	renderFrame: function () {
+		// animate one frame
 		if (this.inGame) {
 			let optimize = true;
 
@@ -329,8 +372,24 @@ const CanvasCycle = {
 				// bmp.palette.fadeToColor( pureBlack, 1.0 - globalBrightness, 1.0 );
 				this.bmp.palette.burnOut(1.0 - this.globalBrightness, 1.0);
 			}
-			this.bmp.render(this.imageData, optimize);
-			this.ctx.putImageData(this.imageData, 0, 0);
+			// `optimize` still true means no palette-wide change this frame, so the
+			// only pixels render() would touch are the animated ones. With none of
+			// those, both the redraw and the 1.2 MB upload reproduce the buffer
+			// byte for byte. Four scenes (V05AM October, both V25 July, V26
+			// January) have no animated pixels at all, and so were paying full
+			// price every frame to display a still image.
+			//
+			// Only the drawing is skipped, not the block below: TweenManager.logic
+			// is what advances a scene fade, and a fade is what clears the
+			// globalBrightness check that got us here. Skipping it too would leave
+			// the loop unable to ever start drawing again.
+			const unchanged =
+				optimize && this.bmp.drawCount && !this.bmp.optPixels.length;
+
+			if (!unchanged) {
+				this.bmp.render(this.imageData, optimize);
+				this.ctx.putImageData(this.imageData, 0, 0);
+			}
 
 			this.lastBrightness = this.globalBrightness;
 			this.lastHighlightColor = this.highlightColor;
@@ -338,11 +397,6 @@ const CanvasCycle = {
 
 			TweenManager.logic(this.clock);
 			this.clock++;
-
-			if (this.inGame)
-				requestAnimationFrame(() => {
-					CanvasCycle.animate();
-				});
 		}
 	},
 
