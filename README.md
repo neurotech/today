@@ -96,6 +96,11 @@ This matters more than it looks: on the server the container already holds
 all interfaces in dev, so the result is reachable at `http://your-server:7100`
 without any port forwarding.
 
+Reaching it by hostname rather than by IP is deliberate. Next blocks
+cross-origin requests for dev-only assets, and `next.config.ts` allows the
+machine's own name and its `.local` form by reading them at startup. An IP
+would have to be written down, and DHCP would eventually make it wrong.
+
 `./data` is bind-mounted into the container, which runs as uid 1000. The
 directory is tracked (via `data/.gitkeep`) so a checkout creates it owned by
 you. If Docker ever creates it instead, it will be owned by root and the app

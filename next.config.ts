@@ -1,6 +1,20 @@
+import { hostname } from "node:os";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Dev runs on the server, so the browser is always on another machine and
+  // every request for a dev-only asset is cross-origin. Next blocks those by
+  // default, and the page half-loads with a warning naming the host.
+  //
+  // Read from the machine rather than written down, for the same reason
+  // DEPLOY_HOST is not baked in: no hostname belongs in the repo. The .local
+  // form covers mDNS. Reaching the dev server by IP would need the address
+  // adding, which is why it is not the documented route: DHCP hands it out and
+  // it would go stale.
+  //
+  // Development only. `next build` and the container ignore this entirely.
+  allowedDevOrigins: [hostname(), `${hostname()}.local`],
+
   // The Docker image copies .next/standalone rather than the whole tree.
   output: "standalone",
 
