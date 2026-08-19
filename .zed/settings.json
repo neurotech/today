@@ -1,0 +1,81 @@
+{
+  // The Zed half of the shared editor setup. `.vscode/` is the same
+  // configuration for the VS Code family (including Cursor, which reads those
+  // files verbatim). Neither editor reads the other's directory, so the two
+  // have to be changed together: if they drift, a file formatted in one is
+  // rejected by `make check` after the other touches it.
+
+  // Biome is the formatter and the linter (see biome.json). The extension is
+  // the equivalent of .vscode/extensions.json's recommendation, except Zed can
+  // act on it rather than only suggesting it.
+  "auto_install_extensions": {
+    "biome": true
+  },
+
+  // Set per language rather than globally, so file types Biome does not handle
+  // (YAML, Markdown) keep Zed's own defaults. The formatter list runs in
+  // order: organise imports first, then format, matching biome.json's
+  // organizeImports assist so saving and `biome check` agree on import order
+  // instead of undoing each other.
+  "languages": {
+    "TypeScript": {
+      "format_on_save": "on",
+      "formatter": [
+        { "code_action": "source.organizeImports.biome" },
+        { "language_server": { "name": "biome" } }
+      ]
+    },
+    "TSX": {
+      "format_on_save": "on",
+      "formatter": [
+        { "code_action": "source.organizeImports.biome" },
+        { "language_server": { "name": "biome" } }
+      ]
+    },
+    "JavaScript": {
+      "format_on_save": "on",
+      "formatter": [
+        { "code_action": "source.organizeImports.biome" },
+        { "language_server": { "name": "biome" } }
+      ]
+    },
+    "JSON": {
+      "format_on_save": "on",
+      "formatter": { "language_server": { "name": "biome" } }
+    },
+    "JSONC": {
+      "format_on_save": "on",
+      "formatter": { "language_server": { "name": "biome" } }
+    },
+    "CSS": {
+      "format_on_save": "on",
+      "formatter": { "language_server": { "name": "biome" } }
+    }
+  },
+
+  // Zed has no search-only exclusion the way VS Code does, so this is a
+  // stronger tool than .vscode's `search.exclude`: it drops these from the
+  // project panel as well. Both entries are tracked files, which is why they
+  // need naming at all — .next/ and node_modules/ are gitignored and Zed
+  // already keeps gitignored files out of search.
+  //
+  // The list replaces Zed's defaults rather than extending them, so the
+  // defaults are repeated here verbatim.
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.svn",
+    "**/.hg",
+    "**/.jj",
+    "**/.sl",
+    "**/.repo",
+    "**/CVS",
+    "**/.DS_Store",
+    "**/Thumbs.db",
+    "**/.classpath",
+    "**/.settings",
+    // 19 scene files, ~1.3 MB each of raw palette data. They drown every search.
+    "public/living-worlds/scenes",
+    // Read through `git diff`, never opened by hand.
+    "**/pnpm-lock.yaml"
+  ]
+}

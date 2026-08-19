@@ -1,6 +1,8 @@
-# Checked out from Windows as well as WSL. Normalise to LF in the repo and on
-# disk, so a file touched by a Windows editor does not come back as a whole-file
-# diff. The Living Worlds scene JSON is data, not source, but it is text too.
+# Normalise to LF in the repo and on disk. Development is on Linux now, so
+# nothing in the day-to-day loop produces CRLF; this stays as insurance for a
+# checkout opened on Windows directly, where a touched file would otherwise come
+# back as a whole-file diff. The Living Worlds scene JSON is data, not source,
+# but it is text too.
 * text=auto eol=lf
 
 # Binary, and large. Never diffed, never normalised.

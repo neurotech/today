@@ -15,5 +15,12 @@ Dockerfile
 compose.yaml
 Makefile
 *.code-workspace
+
+# Editor setup, in the build context only because of `COPY . .` in the build
+# stage. Without these, saving a settings change invalidates that layer and
+# costs a full `next build` on the next `make start`.
+.vscode
+.zed
+
 .env*
 !.env.sample
