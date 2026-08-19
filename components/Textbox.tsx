@@ -19,7 +19,7 @@ export const Textbox = ({
       placeholder={placeholder}
       value={inputValue}
       onChange={(event) => onChangeHandler(event)}
-      className="w-full flex-1 px-1 py-0.5 border rounded-sm text-sm border-velvet-800 bg-velvet-950 text-velvet-400 focus-within:text-velvet-100 focus-visible:outline-3 focus-visible:outline-velvet-800/20"
+      className="w-full flex-1 px-1 py-0.5 border rounded-sm text-sm border-zinc-700 bg-zinc-800 text-zinc-400 focus-within:text-zinc-100 focus-visible:outline-3 focus-visible:outline-zinc-700/20"
     />
   );
 };

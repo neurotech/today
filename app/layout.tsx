@@ -16,8 +16,7 @@ const ebGaramond = EB_Garamond({
 });
 
 // The template gives each route its own title, so browser history and a wall of
-// pinned tabs stay distinguishable. Every page was "Today". `app/icon.svg` is
-// picked up by convention and ends the /favicon.ico 404 on every page load.
+// pinned tabs stay distinguishable.
 export const metadata: Metadata = {
   title: {
     default: "Today",
@@ -31,9 +30,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${hankenGrotesk.variable} ${ebGaramond.variable}`}
     >
-      <body className="font-display flex flex-col h-screen bg-velvet-1100 text-velvet-600 selection:bg-velvet-300 selection:text-velvet-900">
-        <header className="flex flex-row justify-between items-center font-bold p-2 bg-velvet-1000">
-          <h1 className="text-velvet-500 text-shadow-black/30 text-shadow-2xs font-logo text-2xl font-normal select-none tracking-tighter">
+      <body className="font-display flex flex-col h-screen bg-zinc-950 text-zinc-500 selection:bg-zinc-300 selection:text-zinc-700">
+        <header className="flex flex-row justify-between items-center font-bold p-2 bg-zinc-900">
+          <h1 className="text-zinc-400 text-shadow-black/30 text-shadow-2xs font-logo text-2xl font-normal select-none tracking-tighter">
             Today
           </h1>
           <TabBar />

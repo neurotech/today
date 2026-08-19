@@ -1,1 +1,1 @@
-export const HorizontalRule = () => <hr className="border-velvet-950" />;
+export const HorizontalRule = () => <hr className="border-zinc-800" />;

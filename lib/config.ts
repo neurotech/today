@@ -1,24 +1,14 @@
 import { z } from "zod";
 import { getDb } from "./db";
 
-// The old backend/today/config.py had `Literal["properties", "birthdays"]`.
-// "properties" went with the Domain screenshot feature, which was cut after
-// domain.com.au began returning 403 to automated browsers. Existing
-// `properties` rows are left untouched in the database, just unread.
-//
-// The generic machinery below is kept rather than collapsed, so adding a second
-// key later is a two-line change.
+// Only one key today. The generic machinery below is kept rather than
+// collapsed, so adding a second one later is a two-line change.
 export const CONFIG_KEYS = ["birthdays"] as const;
 export type ConfigKey = (typeof CONFIG_KEYS)[number];
 
-// Both fields were bare `z.string()`, which validated nothing beyond the type:
-// editing a row to blank stored an empty person and an empty birthdate, and
-// `birthdate` accepted arbitrary text, which is why `formatBirthdate` in
-// BirthdaysPanel needs a try/catch at all.
-//
 // Trimming lives here rather than in the callers, so the schema is the single
-// boundary and every write path gets it. It runs on reads too, so a row stored
-// before this tightened is skipped with a warning instead of rendering blank.
+// boundary and every write path gets it. It runs on reads too, so an invalid
+// stored row is skipped with a warning instead of rendering blank.
 const birthdayValueSchema = z.object({
   person: z.string().trim().min(1, "person cannot be empty"),
   birthdate: z
@@ -118,8 +108,7 @@ export const updateConfig = <K extends ConfigKey>(
 
 /**
  * Scoped by key to match `updateConfig`. Server Actions are public HTTP
- * endpoints, so an unscoped delete meant any row id could be destroyed,
- * including the `properties` rows the migration deliberately left in place.
+ * endpoints, so an unscoped delete would let any row id be destroyed.
  *
  * Returns false when no such row existed, rather than failing silently.
  */

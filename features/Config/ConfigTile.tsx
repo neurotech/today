@@ -21,9 +21,8 @@ export type ConfigTileProps = {
 };
 
 /**
- * Fully generic over the config key. The old version sniffed the entity shape
- * with isAddress/isBirthday guards; the caller now supplies an already-flattened
- * left/right pair, which is what the abandoned genericisation was aiming at.
+ * Fully generic over the config key: the caller supplies an already-flattened
+ * left/right pair rather than an entity for this tile to sniff.
  */
 export const ConfigTile = ({
   id,
@@ -47,10 +46,9 @@ export const ConfigTile = ({
     setEditing((previous) => !previous);
   };
 
-  // Both actions return an ActionResult that used to be discarded, so a
-  // rejected save closed the editor and looked like it had worked: the edited
-  // values stayed on screen because they are local state, and only a reload
-  // revealed otherwise. Failures now keep the editor open and say why.
+  // A failure keeps the editor open and says why. Closing it would look like
+  // the save had worked: the edited values are local state, so they stay on
+  // screen until a reload.
   const save = () =>
     startTransition(async () => {
       const result = await updateConfigAction(
@@ -85,7 +83,7 @@ export const ConfigTile = ({
     <section className="flex flex-col gap-1">
       <div className="flex flex-row gap-2 w-full min-h-9">
         <div className="flex flex-1">
-          <div className="bg-velvet-950 text-velvet-100 min-w-30 max-w-30 justify-center flex items-center p-1 text-xs font-mono rounded-l-xs border-l-1 border-l-transparent">
+          <div className="bg-zinc-800 text-zinc-100 min-w-30 max-w-30 justify-center flex items-center p-1 text-xs font-mono rounded-l-xs border-l-1 border-l-transparent">
             {editing ? (
               <Textbox
                 placeholder={leftPlaceholder}
@@ -96,12 +94,12 @@ export const ConfigTile = ({
               left
             )}
           </div>
-          <div className="bg-velvet-900/60 text-velvet-300 flex-1 justify-center flex items-center px-1 text-xs font-mono self-stretch content-center rounded-r-xs border-r-1 border-r-transparent">
+          <div className="bg-zinc-700/60 text-zinc-300 flex-1 justify-center flex items-center px-1 text-xs font-mono self-stretch content-center rounded-r-xs border-r-1 border-r-transparent">
             {editing ? (
               rightInputType === "date" ? (
                 <input
                   type="date"
-                  className="w-full flex-1 px-1 py-0.5 border rounded-sm text-sm border-velvet-800 bg-velvet-950 text-velvet-400 focus-within:text-velvet-100 focus-visible:outline-3 focus-visible:outline-velvet-800/20"
+                  className="w-full flex-1 px-1 py-0.5 border rounded-sm text-sm border-zinc-700 bg-zinc-800 text-zinc-400 focus-within:text-zinc-100 focus-visible:outline-3 focus-visible:outline-zinc-700/20"
                   value={rightValue}
                   onChange={(e) => setRightValue(e.target.value)}
                 />
@@ -118,8 +116,7 @@ export const ConfigTile = ({
           </div>
         </div>
 
-        {/* Three states: editing, confirming a delete, or idle. The bin used to
-            delete on the first click, with no undo. */}
+        {/* Three states: editing, confirming a delete, or idle. */}
         <div className="flex flex-row gap-2">
           {editing && (
             <>
@@ -182,7 +179,7 @@ export const ConfigTile = ({
       </div>
 
       {error && (
-        <p className="text-xs text-red-400 px-1" role="alert">
+        <p className="text-xs text-zinc-300 px-1" role="alert">
           {error}
         </p>
       )}

@@ -5,9 +5,8 @@ import { GITHUB_TAG } from "./sources/github";
 import { HACKER_NEWS_TAG } from "./sources/hackernews";
 import { LOBSTERS_TAG } from "./sources/lobsters";
 
-// These replace the client-side refetch that the old `RefreshButton` triggered
-// through useFetch. Expiring the tag is the whole implementation; Next
-// re-renders the Server Component with fresh data.
+// Expiring the tag is the whole implementation; Next re-renders the Server
+// Component with fresh data.
 //
 // `updateTag`, not `revalidateTag`. In Next 16 `revalidateTag` takes a second
 // cacheLife argument and expires lazily; `updateTag` is the Server-Action-only

@@ -25,11 +25,18 @@ next-env.d.ts
 /data/*
 !/data/.gitkeep
 
-# Editors and OS
+# Editors and OS. The three tracked .vscode files are shared project setup
+# (which formatter, which TypeScript, what to leave out of search); anything
+# else VS Code writes there is per-machine state.
 .DS_Store
 Thumbs.db
 .vscode/*
 !/.vscode/launch.json
+!/.vscode/extensions.json
+!/.vscode/settings.json
+
+# Per-machine Makefile overrides, notably DEPLOY_HOST.
+Makefile.local
 
 # Logs
 *.log

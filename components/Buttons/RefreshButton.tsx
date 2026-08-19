@@ -8,15 +8,13 @@ type RefreshButtonProps = Pick<ButtonProps, "onClick"> & {
 };
 
 const loadingStyles = (loading: boolean) =>
-  loading
-    ? "animate-spin text-velvet-500"
-    : "text-velvet-400 hover:text-velvet-300";
+  loading ? "animate-spin text-zinc-500" : "text-zinc-400 hover:text-zinc-300";
 
 export const RefreshButton = ({ loading, onClick }: RefreshButtonProps) => (
   <Button
     label={
       <ArrowPathIcon
-        className={`${loadingStyles(loading)} fill-velvet-300 size-3`}
+        className={`${loadingStyles(loading)} fill-zinc-300 size-3`}
       />
     }
     onClick={onClick}

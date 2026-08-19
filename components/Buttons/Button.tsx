@@ -9,10 +9,6 @@ export type ButtonProps = {
   disabled?: boolean;
 };
 
-// A `compressed` prop used to switch a `p-[0px]` in here. No caller ever passed
-// it, and it could not have worked: the class list ends with a hardcoded `p-1`,
-// and which of two same-specificity padding utilities wins depends on their
-// order in the generated stylesheet, not their order in this string.
 export const Button = ({
   label,
   onClick,
@@ -24,7 +20,7 @@ export const Button = ({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`${minWidth} flex justify-center items-center cursor-pointer text-sm text-velvet-300 hover:text-velvet-50 transition-colors bg-velvet-800 hover:bg-velvet-600 rounded-sm p-1 border border-velvet-600 hover:border-velvet-600 disabled:cursor-not-allowed disabled:border-neutral-800 disabled:bg-neutral-900 disabled:text-neutral-700`}
+      className={`${minWidth} flex justify-center items-center cursor-pointer text-sm text-zinc-300 hover:text-zinc-50 transition-colors bg-zinc-700 hover:bg-zinc-500 rounded-sm p-1 border border-zinc-500 hover:border-zinc-500 disabled:cursor-not-allowed disabled:border-zinc-800 disabled:bg-zinc-900 disabled:text-zinc-700`}
     >
       {label}
     </button>

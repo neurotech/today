@@ -9,9 +9,8 @@ type RefreshActionProps = {
 };
 
 /**
- * Bridges the ported `RefreshButton` (which wants a sync `onClick` and a
- * `loading` boolean) to a Server Action. `useTransition` supplies the pending
- * state that `useFetch`'s `loading` used to provide.
+ * Bridges `RefreshButton` (which wants a sync `onClick` and a `loading`
+ * boolean) to a Server Action, with `useTransition` supplying the pending state.
  */
 export const RefreshAction = ({ action }: RefreshActionProps) => {
   const [pending, startTransition] = useTransition();

@@ -1,17 +1,11 @@
-# Single image replacing the old two-container setup, where the frontend
-# container built `dist` into a shared volume and then exited so the backend
-# could serve it.
-
 FROM node:24-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 WORKDIR /app
 # `corepack enable` only drops in shims; the pnpm tarball is fetched lazily on
-# the first `pnpm` call. Both `deps` and `build` branch off `base`, so they are
-# siblings and neither sees the other's corepack cache: each downloaded pnpm
-# again. Worse, `build`'s copy was re-fetched on every rebuild, since `COPY . .`
-# invalidates that layer on any source change. Fetching here puts pnpm in one
-# layer both stages inherit, so it downloads once and then stays cached.
+# the first `pnpm` call. `deps` and `build` are siblings off `base`, so neither
+# sees the other's corepack cache. Fetching here puts pnpm in one layer both
+# stages inherit, so it downloads once and then stays cached.
 # `corepack install` takes no version: it reads `packageManager` from
 # package.json, which stays the single source of truth.
 COPY package.json ./
@@ -24,7 +18,7 @@ RUN corepack enable && corepack install
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # No `RUN --mount=type=cache` for the pnpm store: that is BuildKit-only syntax
-# and fails outright on the legacy builder. It only saved re-download time.
+# and fails outright on the legacy builder. It only saves re-download time.
 RUN pnpm install --frozen-lockfile
 
 FROM base AS build

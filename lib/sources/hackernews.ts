@@ -10,9 +10,8 @@ export const HACKER_NEWS_TAG = "hackernews";
 
 const API = "https://hacker-news.firebaseio.com/v0";
 
-// The old client-side hook fetched 10 stories then did `stories.slice(10)` to
-// decide whether to show the "more" footer, which was always empty. Fetching 20
-// and slicing at 10 is what it was meant to do.
+// Twice what the list shows: the "more" footer slices at 10, so the second ten
+// have to be fetched for it to have anything to reveal.
 const STORY_COUNT = 20;
 
 type HackerNewsApiItem = {
@@ -34,8 +33,8 @@ export const getHackerNews = async (): Promise<HackerNewsStory[]> => {
 
   const ids = (await response.json()) as number[];
 
-  // This N+1 used to run in the browser, so every visitor paid for ~11 serial
-  // round trips. On the server each item is cached independently.
+  // An N+1, but it runs on the server and each item is cached independently,
+  // so a visitor pays for none of it.
   const items = await Promise.all(
     ids.slice(0, STORY_COUNT).map(async (id) => {
       const item = await fetch(`${API}/item/${id}.json`, {
