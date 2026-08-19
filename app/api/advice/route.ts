@@ -2,14 +2,13 @@ import { NextResponse } from "next/server";
 import { getAdvice } from "@/lib/sources/advice";
 
 // Path is fixed by the Living Worlds iframe, which calls /api/advice directly
-// from public/living-worlds/main.js. Kept even though Phase 7 is deferred, so
-// the contract survives.
+// from public/living-worlds/main.js.
 export const dynamic = "force-dynamic";
 
 // undici collapses every transport failure into the message "fetch failed" and
 // hangs the real reason off `cause`. Advice Slip's TLS handshake alone runs to
 // ~9.5s against undici's 10s connect timeout, so this is usually
-// UND_ERR_CONNECT_TIMEOUT; unwrapped, the 502 body carried nothing actionable.
+// UND_ERR_CONNECT_TIMEOUT. Unwrapped, the 502 body carries nothing actionable.
 const describe = (error: unknown): string => {
   if (!(error instanceof Error)) return String(error);
 

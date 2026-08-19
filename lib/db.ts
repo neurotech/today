@@ -2,12 +2,8 @@ import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import Database from "better-sqlite3";
 
-// Schema is inlined rather than read from a .sql file. The Python version did
-// `open("/backend/today/db/schema.sql")` with an absolute container path, which
-// only worked inside Docker. Inlining removes that whole class of bug.
-//
-// Deliberately identical to backend/today/db/schema.sql, so migrating the
-// existing database is a plain file copy with no transform.
+// Inlined rather than read from a .sql file, so there is no path to resolve at
+// runtime and nothing extra to ship into the image.
 const SCHEMA = `
 CREATE TABLE
   IF NOT EXISTS config (
@@ -53,9 +49,7 @@ const openDatabase = () => {
     throw permissionHint("Cannot open the database at", error);
   }
 
-  // WAL lets reads proceed while a write is in flight. The old code opened and
-  // closed a connection per query, which made this moot; a long-lived
-  // connection makes it worth setting.
+  // WAL lets reads proceed while a write is in flight.
   connection.pragma("journal_mode = WAL");
   connection.pragma("foreign_keys = ON");
 
@@ -73,11 +67,11 @@ const globalForDatabase = globalThis as typeof globalThis & {
 let database: Database.Database | undefined;
 
 /**
- * Opened on first query, not at module evaluation. Eagerly connecting made a
- * root-owned bind mount throw during import, which is an uncaught Server
+ * Opened on first query, not at module evaluation. Connecting eagerly would
+ * make a root-owned bind mount throw during import, which is an uncaught Server
  * Component error: production Next replaces the message with a generic
- * "Application error", so `permissionHint` only ever reached the container
- * logs. Deferring it lets the caller catch the throw and render the hint.
+ * "Application error", so `permissionHint` would only reach the container logs.
+ * Deferring it lets the caller catch the throw and render the hint.
  *
  * A failed open leaves `database` unset, so the next request retries. Fixing
  * the permissions therefore does not need a restart.

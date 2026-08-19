@@ -12,9 +12,8 @@ export type GitHubRepo = {
 export const GITHUB_TAG = "github";
 
 /**
- * Port of `clean_string` in the old backend/today/github.py: trim, collapse
- * whitespace, strip spaces entirely, then drop anything that is not
- * alphanumeric, a comma or a slash. Turns "\n  1,234  \n" into "1,234".
+ * Trim, collapse whitespace, strip spaces entirely, then drop anything that is
+ * not alphanumeric, a comma or a slash. Turns "\n  1,234  \n" into "1,234".
  */
 const cleanStars = (value: string) =>
   value
@@ -39,8 +38,8 @@ export const getGitHubTrending = async (): Promise<GitHubRepo[]> => {
       const element = $(article);
       const href = element.find("h2 a").attr("href");
 
-      // The old version parsed the anchor's text and split on " / ". The href
-      // is "/owner/repo" and is far less brittle, so it is used instead.
+      // The href is "/owner/repo", which is far less brittle than parsing the
+      // anchor's text and splitting on " / ".
       const [, repoOwner, repoName] = (href ?? "").split("/");
 
       if (!repoOwner || !repoName) {

@@ -7,8 +7,6 @@ export const metadata: Metadata = { title: "Config" };
 // Reads SQLite, so it must not be prerendered at build time.
 export const dynamic = "force-dynamic";
 
-// Was three columns: Properties, Birthdays, Placeholder. Properties went with
-// the cut screenshot feature.
 export default function Config() {
   return (
     <section className="grid grid-cols-[1fr_1fr] gap-2 items-start">

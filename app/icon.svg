@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <!-- Drawn as rects rather than text: an SVG favicon has no access to the
        page's webfonts, so a glyph would fall back to whatever the browser
-       happens to have. Colours are velvet-1000 and velvet-500 from globals.css. -->
-  <rect width="32" height="32" rx="7" fill="#111223" />
-  <rect x="6" y="8" width="20" height="4.5" rx="1.5" fill="#7483e0" />
-  <rect x="13.75" y="8" width="4.5" height="16" rx="1.5" fill="#7483e0" />
+       happens to have. Colours are Tailwind zinc-900 and zinc-400. -->
+  <rect width="32" height="32" rx="7" fill="#18181b" />
+  <rect x="6" y="8" width="20" height="4.5" rx="1.5" fill="#a1a1aa" />
+  <rect x="13.75" y="8" width="4.5" height="16" rx="1.5" fill="#a1a1aa" />
 </svg>

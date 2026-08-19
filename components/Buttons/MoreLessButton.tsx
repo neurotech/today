@@ -23,7 +23,7 @@ export const MoreLessButton = ({
     <button
       type="button"
       onClick={onClick}
-      className="cursor-pointer transition-colors hover:bg-velvet-950 active:bg-velvet-1000 text-velvet-900 hover:text-velvet-300 text-xs italic text-center leading-none select-none py-2"
+      className="cursor-pointer transition-colors hover:bg-zinc-800 active:bg-zinc-900 text-zinc-700 hover:text-zinc-300 text-xs italic text-center leading-none select-none py-2"
     >
       {label}
     </button>

@@ -13,8 +13,6 @@ type AddNewConfigProps = {
   rightInputType?: "text" | "date";
 };
 
-/** Replaces AddNewAddress and AddNewBirthday, which differed only in labels
- *  and the right-hand input type. */
 export const AddNewConfig = ({
   configKey,
   leftPlaceholder,
@@ -26,8 +24,8 @@ export const AddNewConfig = ({
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
-  // `result.error` used to be discarded, so a rejected create just left the
-  // inputs populated with no indication of why.
+  // A rejected create says why, rather than leaving the inputs populated with
+  // no indication of what went wrong.
   const add = () =>
     startTransition(async () => {
       const result = await createConfigAction(configKey, left, right);
@@ -54,7 +52,7 @@ export const AddNewConfig = ({
         {rightInputType === "date" ? (
           <input
             type="date"
-            className="w-full flex-1 px-1 py-0.5 border rounded-sm text-sm border-velvet-800 bg-velvet-950 text-velvet-400 focus-within:text-velvet-100 focus-visible:outline-3 focus-visible:outline-velvet-800/20"
+            className="w-full flex-1 px-1 py-0.5 border rounded-sm text-sm border-zinc-700 bg-zinc-800 text-zinc-400 focus-within:text-zinc-100 focus-visible:outline-3 focus-visible:outline-zinc-700/20"
             value={right}
             onChange={(e) => setRight(e.target.value)}
           />
@@ -75,7 +73,7 @@ export const AddNewConfig = ({
       </div>
 
       {error && (
-        <p className="text-xs text-red-400 px-1" role="alert">
+        <p className="text-xs text-zinc-300 px-1" role="alert">
           {error}
         </p>
       )}

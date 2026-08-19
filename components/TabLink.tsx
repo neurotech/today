@@ -13,8 +13,8 @@ type TabLinkProps = {
 
 const activeStyles = (isActive: boolean) =>
   isActive
-    ? "bg-velvet-700 text-velvet-50"
-    : "bg-velvet-950/70 text-velvet-500 hover:text-velvet-100";
+    ? "bg-zinc-600 text-zinc-50"
+    : "bg-zinc-800/70 text-zinc-400 hover:text-zinc-100";
 
 // Keyed by a union rather than `string`, so this lookup is total.
 const positionStyles: Record<TabPosition, string> = {
@@ -24,14 +24,12 @@ const positionStyles: Record<TabPosition, string> = {
 };
 
 /**
- * Replaces the old TabButton. Same styling, but the active state comes from the
- * URL instead of React state, so tabs are linkable, bookmarkable and survive a
- * reload without localStorage.
+ * The active state comes from the URL rather than React state, so tabs are
+ * linkable, bookmarkable and survive a reload without localStorage.
  *
- * `role="tab"` with `aria-selected` was carried over from that TabButton, but a
- * `tab` is only valid inside a `tablist`, and TabBar is a plain `nav`. These are
- * real navigation links rather than tabs in the ARIA sense, so `aria-current`
- * is the correct way to mark the active one.
+ * A `tab` role is only valid inside a `tablist`, and TabBar is a plain `nav`.
+ * These are real navigation links rather than tabs in the ARIA sense, so
+ * `aria-current` is the correct way to mark the active one.
  */
 export const TabLink = ({ href, label, tabPosition }: TabLinkProps) => {
   const pathname = usePathname();

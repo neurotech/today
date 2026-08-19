@@ -10,9 +10,8 @@ import {
   type ValueFor,
 } from "./config";
 
-// The old SPA sent these to FastAPI over fetch, then refetched the whole list.
-// Here they run in-process and `revalidatePath` re-renders the Server Component
-// with fresh rows.
+// These run in-process; `revalidatePath` re-renders the Server Component with
+// fresh rows.
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 

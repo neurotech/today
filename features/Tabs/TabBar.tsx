@@ -1,6 +1,5 @@
 import { TabLink } from "@/components/TabLink";
 
-// No longer needs state or a setter: TabLink reads the active tab from the URL.
 export const TabBar = () => (
   <nav className="flex" aria-label="Sections">
     <TabLink href="/" label="🏡 Home" tabPosition="start" />

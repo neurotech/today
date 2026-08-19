@@ -27,8 +27,7 @@ body {
 #living-worlds-container {
 	display: flex;
 	justify-content: center;
-	/* Half the canvas's 1280px width: the scene is centre-cropped, showing the
-	   same region as the old 355px-of-640px crop, at twice the size. */
+	/* Half the canvas's 1280px width, so the scene is centre-cropped. */
 	width: 710px;
 	position: relative;
 
