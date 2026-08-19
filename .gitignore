@@ -25,15 +25,20 @@ next-env.d.ts
 /data/*
 !/data/.gitkeep
 
-# Editors and OS. The three tracked .vscode files are shared project setup
-# (which formatter, which TypeScript, what to leave out of search); anything
-# else VS Code writes there is per-machine state.
+# Editors and OS. `.vscode/` and `.zed/` are one shared project setup (which
+# formatter, what to keep out of search) expressed twice, because neither
+# editor reads the other's directory: VS Code and Cursor take the first, Zed
+# the second. They are tracked so the setup travels with the repo, and they
+# have to be changed together. Anything else either editor writes into those
+# directories is per-machine state and stays ignored.
 .DS_Store
 Thumbs.db
 .vscode/*
 !/.vscode/launch.json
 !/.vscode/extensions.json
 !/.vscode/settings.json
+.zed/*
+!/.zed/settings.json
 
 # Per-machine Makefile overrides, notably DEPLOY_HOST.
 Makefile.local

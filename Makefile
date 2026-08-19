@@ -23,10 +23,10 @@ endef
 
 export TODAY_BANNER
 
-# Docker is not installed in every environment this repo is developed in
-# (notably WSL, which has no daemon). Without this guard, every container
-# target fails with a socket error from `docker compose`, which reads as a
-# broken project rather than a missing tool.
+# The usual case is developing on the server, where Docker is present and every
+# target below works. This guard is for a checkout on a machine without a
+# daemon: without it those targets fail with a socket error from
+# `docker compose`, which reads as a broken project rather than a missing tool.
 DOCKER := $(shell command -v docker 2>/dev/null)
 define REQUIRE_DOCKER
 @[ -n "$(DOCKER)" ] || { \
@@ -62,8 +62,13 @@ start:
 	printf '%b\n' "$$TODAY_BANNER" && \
 	docker compose up -d --quiet-pull --build
 
+# For driving a build from somewhere other than the server. On the server
+# itself, `make start` is the deploy and DEPLOY_HOST stays unset: pointing this
+# at the machine it is running on would ssh to localhost to do what `make start`
+# does directly.
+#
 # Deliberately not guarded by REQUIRE_DOCKER: the whole point is to build where
-# Docker actually is. Only the remote needs it. `--ff-only` so a diverged
+# Docker actually is, and only the remote needs it. `--ff-only` so a diverged
 # checkout on the server fails loudly instead of opening a merge in a
 # non-interactive shell.
 deploy:

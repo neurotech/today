@@ -17,9 +17,10 @@
     "quickfix.biome": "explicit"
   },
 
-  // The repo is developed from Windows over the WSL remote. Without this, files
-  // created through the Windows side land with CRLF and every line shows as
-  // changed. .gitattributes enforces the same thing at the git layer.
+  // Belt-and-braces rather than load-bearing: development is on Linux, and
+  // Cursor over Remote-SSH writes files on the server rather than the client,
+  // so nothing here produces CRLF. It only matters for a checkout opened on
+  // Windows directly. .gitattributes enforces the same thing at the git layer.
   "files.eol": "\n",
 
   // Use the workspace TypeScript, not the version bundled with VS Code, so the

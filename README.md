@@ -20,12 +20,24 @@ make prune   # remove dangling images to reclaim disk
 make help    # the box with the colours in it
 ```
 
+`make dev` needs pnpm on the host, at the version pinned in `package.json`.
+Node 25 dropped the bundled corepack shim, so it has to be installed directly.
+Without sudo:
+
+```bash
+npm install -g pnpm --prefix ~/.local
+```
+
+`make check` additionally needs `.next/types`, which Next generates on the
+first `next dev` or `next build`. On a fresh clone it fails with `Cannot find
+name 'LayoutProps'` until `make dev` has run once.
+
 Everything except `dev`, `check` and `deploy` needs a local Docker daemon, and
 says so plainly if there is not one rather than failing with a socket error.
-That is the normal case when developing in WSL, where `make dev` and `make
-deploy` are the two targets that matter.
+Working on the server, that daemon is right there and every target applies:
+`make start` is the deploy.
 
-`make deploy` builds on the remote host instead of locally:
+`make deploy` is for driving a build from somewhere other than the server:
 
 ```bash
 make deploy DEPLOY_HOST=your-server
@@ -41,6 +53,9 @@ automatically):
 DEPLOY_HOST = your-server
 DEPLOY_PATH = ~/projects/today
 ```
+
+Leave `DEPLOY_HOST` unset on the server itself: aimed at the machine it runs
+on, `make deploy` would ssh to localhost to do what `make start` does directly.
 
 Every `make start` rebuild leaves the previous image dangling, so run
 `make prune` occasionally. It is deliberately not part of `start`, since it also
@@ -58,8 +73,12 @@ send `restart: always` into a restart loop.
 
 ## Configuration
 
-Copy `.env.sample` to `.env.local`. Only `DATABASE_PATH` is read from it,
-defaulting to `./data/today.db`. Compose sets it to `/app/data/today.db`.
+Copy `.env.sample` to `.env.local`. Only `DATABASE_PATH` is read from it.
+Compose sets it to `/app/data/today.db`; the sample points at
+`./data/today.dev.db` instead, deliberately. Developing on the server, `make
+dev` and the container share `./data`, and aiming both at one file means a dev
+Server Action edits the running app's config. The directory is gitignored apart
+from `.gitkeep`, so the second database costs nothing.
 
 The port defaults to 7000 everywhere and is overridden with `PORT`:
 
@@ -71,8 +90,11 @@ PORT=7100 make dev
 it in the shell before Next starts, so Next's own env loading is too late to
 affect it. Compose reads it from the shell or from `.env`, and applies it to the
 published port, the port inside the container and the healthcheck at once.
-Worth knowing on Windows, which reserves blocks of the dynamic port range for
-Hyper-V and can take 7000 out from under you.
+
+This matters more than it looks: on the server the container already holds
+7000, so `make dev` needs a different port whenever the app is up. Next binds
+all interfaces in dev, so the result is reachable at `http://your-server:7100`
+without any port forwarding.
 
 `./data` is bind-mounted into the container, which runs as uid 1000. The
 directory is tracked (via `data/.gitkeep`) so a checkout creates it owned by
@@ -85,11 +107,21 @@ sudo chown -R 1000:1000 data
 
 ## Editor
 
-`.vscode/` carries the shared setup: Biome as the formatter and linter, the
-workspace TypeScript rather than the one bundled with VS Code, and the Living
-Worlds scene data excluded from search. `.gitattributes` normalises everything
-to LF, so a file touched from the Windows side does not come back as a
-whole-file diff.
+`.vscode/` and `.zed/` carry the same shared setup: Biome as the formatter and
+linter, imports organised on save to match `biome check`, and the Living Worlds
+scene data kept out of search. VS Code and Cursor read the first, Zed the
+second, and neither reads the other's, so the two have to be changed
+together. When they drift, a file formatted in one editor is rejected by
+`make check` after the other touches it.
+
+Two differences worth knowing. Zed has no search-only exclusion, so its
+`file_scan_exclusions` also hides those paths from the project panel. And Zed
+does not forward ports the way VS Code and Cursor do over Remote-SSH, so reach
+a dev server on the server's own hostname rather than `localhost`.
+
+`.gitattributes` normalises everything to LF. Development is on Linux, so
+nothing in the loop produces CRLF; it is insurance for a checkout opened on
+Windows directly.
 
 ## Tabs
 

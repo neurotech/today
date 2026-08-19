@@ -7,9 +7,10 @@ services:
       context: .
 
     # `${PORT:-7000}` is substituted by Compose from the shell or `.env` (note:
-    # `.env`, not `.env.local`, which only Next reads). Windows reserves blocks
-    # of the dynamic port range for Hyper-V, so the port has to be movable
-    # without editing four files.
+    # `.env`, not `.env.local`, which only Next reads). The container and
+    # `make dev` run on the same machine now, so the port has to be movable
+    # without editing four files: whichever of the two starts second needs a
+    # different one.
     ports:
       - "${PORT:-7000}:${PORT:-7000}"
 
