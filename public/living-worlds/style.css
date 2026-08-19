@@ -1,0 +1,137 @@
+body {
+	background: #000;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	cursor: url("./cursor_normal.png"), pointer;
+}
+
+@keyframes fade {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+#living-worlds-container {
+	display: flex;
+	justify-content: center;
+	/* Half the canvas's 1280px width: the scene is centre-cropped, showing the
+	   same region as the old 355px-of-640px crop, at twice the size. */
+	width: 710px;
+	position: relative;
+
+	#living-worlds-overlay-container {
+		opacity: 1;
+	}
+
+	#living-worlds-overlay {
+		backdrop-filter: blur(4px) brightness(0.85) opacity(1);
+	}
+}
+
+#mycanvas {
+	transform: translate3d(0px, 0px, 0px) scale(1);
+	transform-origin: 0px 0px;
+
+	/* Rendered at 2x. The backing store stays 640x480 (main.js writes pixel data
+	   at native size); only the CSS box doubles. Sized here rather than via
+	   `transform: scale()` because main.js assigns to `canvas.style` wholesale,
+	   which would clobber an inline transform.
+
+	   `pixelated` is not optional: this is 8-bit pixel art, and the browser's
+	   default smooth interpolation turns it to mush when upscaled. */
+	width: 1280px;
+	height: 960px;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: pixelated;
+}
+
+#living-worlds-container :active,
+#living-worlds-container :focus {
+	cursor: url("./cursor_hand_closed.png"), auto;
+}
+
+#living-worlds-overlay-container {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+}
+
+#living-worlds-overlay {
+	transition: opacity 250ms, backdrop-filter 650ms;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin: 0px 12px 12px 10px;
+	padding: 10px;
+	gap: 10px;
+	align-items: center;
+
+	border: 1px solid rgba(0, 0, 0, 0.75);
+	border-radius: 4px;
+
+	background: rgba(0, 0, 0, 0.33);
+	box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.05);
+
+	#living-worlds-quote {
+		font-size: 24px;
+		line-height: 32px;
+		text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.45);
+		color: white;
+		text-align: left;
+		font-family: "EB Garamond", serif;
+		font-optical-sizing: auto;
+		font-weight: 400;
+		font-style: normal;
+		padding: 5px;
+
+		margin: 5px 5px 0px 5px;
+
+		&:before {
+			content: "“";
+			color: rgba(255, 255, 255, 0.5);
+		}
+
+		&:after {
+			content: "”";
+			color: rgba(255, 255, 255, 0.5);
+		}
+	}
+
+	#living-worlds-horizontal-rule {
+		height: 1px;
+		background-color: rgba(255, 255, 255, 0.075);
+		border: none;
+		width: 100%;
+		padding: 0;
+		margin: 0;
+		mix-blend-mode: overlay;
+	}
+
+	#living-worlds-scene-detail {
+		align-self: flex-end;
+		font-size: 12px;
+		font-family: "YJTop Ellipsis", "ヒラギノ角ゴ ProN",
+			"Hiragino Kaku Gothic ProN", メイリオ, Meiryo, Osaka, "ＭＳ Ｐゴシック",
+			MS PGothic, sans-serif;
+		color: rgba(255, 255, 255, 0.8);
+		text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.33);
+
+		span {
+			color: rgb(85, 85, 85);
+		}
+	}
+}

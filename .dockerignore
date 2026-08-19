@@ -1,0 +1,19 @@
+.git
+.gitignore
+
+node_modules
+.next
+out
+*.tsbuildinfo
+
+# Runtime data: the SQLite database lives in a bind mount, never the image.
+data
+
+*.md
+Dockerfile
+.dockerignore
+compose.yaml
+Makefile
+*.code-workspace
+.env*
+!.env.sample
