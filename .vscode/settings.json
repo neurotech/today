@@ -1,0 +1,36 @@
+{
+  // Biome owns formatting for everything in biome.json's `includes`. Set per
+  // language rather than globally, so file types Biome does not handle (YAML,
+  // Markdown) keep whatever the editor already does.
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[typescriptreact]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[javascript]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[json]": { "editor.defaultFormatter": "biomejs.biome" },
+  "[css]": { "editor.defaultFormatter": "biomejs.biome" },
+
+  // Matches biome.json's organizeImports assist, so saving and `biome check`
+  // agree on import order instead of undoing each other.
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
+    "quickfix.biome": "explicit"
+  },
+
+  // The repo is developed from Windows over the WSL remote. Without this, files
+  // created through the Windows side land with CRLF and every line shows as
+  // changed. .gitattributes enforces the same thing at the git layer.
+  "files.eol": "\n",
+
+  // Use the workspace TypeScript, not the version bundled with VS Code, so the
+  // editor and `pnpm typecheck` report the same errors.
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  "search.exclude": {
+    "**/.next": true,
+    "**/node_modules": true,
+    "**/pnpm-lock.yaml": true,
+    // 19 scene files, ~1.3 MB each of raw palette data. They drown every search.
+    "public/living-worlds/scenes": true
+  }
+}

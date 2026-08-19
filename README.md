@@ -10,12 +10,36 @@ Actions.
 
 ```bash
 make dev     # next dev on :7000
+make check   # tsc --noEmit, then biome check
 make start   # build and run the container, daemonised
+make deploy  # the same, over ssh on DEPLOY_HOST
 make logs    # follow container logs
 make stop    # stop the container
 make clean   # stop and remove the container and image
 make prune   # remove dangling images to reclaim disk
 make help    # the box with the colours in it
+```
+
+Everything except `dev`, `check` and `deploy` needs a local Docker daemon, and
+says so plainly if there is not one rather than failing with a socket error.
+That is the normal case when developing in WSL, where `make dev` and `make
+deploy` are the two targets that matter.
+
+`make deploy` builds on the remote host instead of locally:
+
+```bash
+make deploy DEPLOY_HOST=your-server
+```
+
+It runs `git pull --ff-only && docker compose up -d --build` over ssh, so the
+branch has to be pushed first, and a diverged checkout on the server fails
+loudly rather than opening a merge in a non-interactive shell. To avoid passing
+`DEPLOY_HOST` every time, put it in `Makefile.local` (untracked, included
+automatically):
+
+```make
+DEPLOY_HOST = your-server
+DEPLOY_PATH = ~/projects/today
 ```
 
 Every `make start` rebuild leaves the previous image dangling, so run
@@ -34,8 +58,21 @@ send `restart: always` into a restart loop.
 
 ## Configuration
 
-Copy `.env.sample` to `.env.local`. Only `DATABASE_PATH` is used, defaulting to
-`./data/today.db`. Compose sets it to `/app/data/today.db`.
+Copy `.env.sample` to `.env.local`. Only `DATABASE_PATH` is read from it,
+defaulting to `./data/today.db`. Compose sets it to `/app/data/today.db`.
+
+The port defaults to 7000 everywhere and is overridden with `PORT`:
+
+```bash
+PORT=7100 make dev
+```
+
+`PORT` is an environment variable, not a `.env.local` entry: `pnpm dev` expands
+it in the shell before Next starts, so Next's own env loading is too late to
+affect it. Compose reads it from the shell or from `.env`, and applies it to the
+published port, the port inside the container and the healthcheck at once.
+Worth knowing on Windows, which reserves blocks of the dynamic port range for
+Hyper-V and can take 7000 out from under you.
 
 `./data` is bind-mounted into the container, which runs as uid 1000. The
 directory is tracked (via `data/.gitkeep`) so a checkout creates it owned by
@@ -45,6 +82,14 @@ will fail to open the database:
 ```bash
 sudo chown -R 1000:1000 data
 ```
+
+## Editor
+
+`.vscode/` carries the shared setup: Biome as the formatter and linter, the
+workspace TypeScript rather than the one bundled with VS Code, and the Living
+Worlds scene data excluded from search. `.gitattributes` normalises everything
+to LF, so a file touched from the Windows side does not come back as a
+whole-file diff.
 
 ## Tabs
 

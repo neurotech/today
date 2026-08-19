@@ -1,0 +1,12 @@
+{
+  // Biome is the formatter and the linter (see biome.json). Without it
+  // installed, VS Code silently falls back to its built-in TypeScript
+  // formatter, whose output biome check then rejects.
+  "recommendations": ["biomejs.biome"],
+
+  // Prettier and ESLint would both fight Biome for the same files.
+  "unwantedRecommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
+  ]
+}
