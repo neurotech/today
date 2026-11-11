@@ -1,0 +1,55 @@
+body {
+	background: #000;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	cursor: url("./cursor_normal.png"), pointer;
+}
+
+@keyframes fade {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+#living-worlds-container {
+	display: flex;
+	justify-content: center;
+	/* Half the canvas's 1280px width, so the scene is centre-cropped. */
+	width: 710px;
+	position: relative;
+}
+
+#mycanvas {
+	transform: translate3d(0px, 0px, 0px) scale(1);
+	transform-origin: 0px 0px;
+
+	/* Rendered at 2x. The backing store stays 640x480 (main.js writes pixel data
+	   at native size); only the CSS box doubles. Sized here rather than via
+	   `transform: scale()` because main.js assigns to `canvas.style` wholesale,
+	   which would clobber an inline transform.
+
+	   `pixelated` is not optional: this is 8-bit pixel art, and the browser's
+	   default smooth interpolation turns it to mush when upscaled. */
+	width: 1280px;
+	height: 960px;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: pixelated;
+}
+
+#living-worlds-container :active,
+#living-worlds-container :focus {
+	cursor: url("./cursor_hand_closed.png"), auto;
+}
