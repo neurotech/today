@@ -32,7 +32,7 @@ export const ReadingTile = ({ url, title, score, time }: ReadingTileProps) => {
           inherit, so the level carries no visual weight of its own. */}
       <h3 className="text-md font-bold text-zinc-400">{title}</h3>
       {hostname && (
-        <aside className="text-sm text-zinc-700 italic min-w-45 text-right">
+        <aside className="text-sm text-zinc-600 italic min-w-45 text-right">
           {hostname}
         </aside>
       )}
