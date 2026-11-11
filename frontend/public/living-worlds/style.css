@@ -30,14 +30,6 @@ body {
 	/* Half the canvas's 1280px width, so the scene is centre-cropped. */
 	width: 710px;
 	position: relative;
-
-	#living-worlds-overlay-container {
-		opacity: 1;
-	}
-
-	#living-worlds-overlay {
-		backdrop-filter: blur(4px) brightness(0.85) opacity(1);
-	}
 }
 
 #mycanvas {
@@ -60,30 +52,4 @@ body {
 #living-worlds-container :active,
 #living-worlds-container :focus {
 	cursor: url("./cursor_hand_closed.png"), auto;
-}
-
-#living-worlds-overlay-container {
-	position: absolute;
-	width: 100%;
-	bottom: 0;
-	left: 0;
-}
-
-#living-worlds-overlay {
-	transition:
-		opacity 250ms,
-		backdrop-filter 650ms;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	margin: 0px 12px 12px 10px;
-	padding: 10px;
-	gap: 10px;
-	align-items: center;
-
-	border: 1px solid rgba(0, 0, 0, 0.75);
-	border-radius: 4px;
-
-	background: rgba(0, 0, 0, 0.33);
-	box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.05);
 }
