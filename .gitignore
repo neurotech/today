@@ -1,0 +1,7 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Living Worlds
+frontend/public/living-worlds/scenes/
