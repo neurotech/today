@@ -1,7 +1,10 @@
-import { format } from "date-fns/format";
-import { Trash } from "lucide-react";
+import { FileQuestion, Trash } from "lucide-react";
+import { use } from "react";
+import { DialogContext } from "../../context/dialog-context";
 import { useMutation } from "../../hooks/useMutation";
 import type { WaygateItemResponse } from "../../types/waygate";
+import { formatMetadata } from "./formatter";
+import { WaygateItemDetail } from "./waygate-item-detail";
 
 const apiUrl = (path: string) => {
 	const url = new URL(path, window.location.href);
@@ -17,13 +20,12 @@ export const WaygateItem = ({
 	item: WaygateItemResponse;
 	refetch: () => void;
 }) => {
+	const { setDialog } = use(DialogContext);
 	const remove = useMutation<string, void>("DELETE", (id) =>
 		apiUrl(`/items/${id}`),
 	);
 
-	const created = format(item.createdAt, "Mo MMM RRRR 'at' h:mm a");
-	const url = new URL(item.item);
-	const formattedUrl = `${url.hostname}${url.pathname ? url.pathname : ""}`;
+	const { created, formattedUrl } = formatMetadata(item);
 
 	return (
 		<div className="flex items-center justify-between gap-px w-full">
@@ -31,8 +33,16 @@ export const WaygateItem = ({
 				type="button"
 				className="cursor-pointer rounded-l-sm p-1.5 bg-zinc-700/40 hover:bg-rose-500 hover:text-black/90 transition-colors"
 				onClick={async () => {
-					await remove.mutate(item.id.toString());
-					refetch();
+					setDialog({
+						open: true,
+						title: "Delete Waygate Item",
+						message: "Are you sure you want to delete this item?",
+						body: <WaygateItemDetail item={item} />,
+						onConfirm: async () => {
+							await remove.mutate(item.id.toString());
+							refetch();
+						},
+					});
 				}}
 			>
 				<Trash size={12} />
@@ -45,8 +55,10 @@ export const WaygateItem = ({
 					target="_blank"
 					rel="noopener"
 				>
-					{item.favicon && (
+					{item.favicon ? (
 						<img src={item.favicon} alt="Favicon" className="size-3 shrink-0" />
+					) : (
+						<FileQuestion size={11} className="text-zinc-500" />
 					)}
 					<div className="grid w-full grid-cols-6 items-center">
 						<span className="col-span-4 truncate text-left font-medium text-xs">
