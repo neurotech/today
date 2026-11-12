@@ -5,20 +5,20 @@ import { LivingWorlds } from "./features/LivingWorlds/living-worlds";
 import { Waygate } from "./features/Waygate/waygate";
 
 export const App = () => {
-	return (
-		<div className="font-display flex flex-col h-screen bg-zinc-900 text-zinc-500 selection:bg-zinc-300 selection:text-zinc-700">
-			<main className="relative flex flex-row justify-between overflow-y-auto p-4 gap-4">
-				<div className="flex flex-col flex-1 self-start gap-4">
-					<Calendar />
-					<Waygate />
-				</div>
+  return (
+    <div className="font-display flex h-screen flex-col bg-zinc-900 text-zinc-500 selection:bg-zinc-300 selection:text-zinc-700">
+      <main className="relative flex flex-row justify-between gap-4 overflow-y-auto p-4">
+        <div className="flex flex-1 flex-col gap-4 self-start">
+          <Calendar />
+          <Waygate />
+        </div>
 
-				<Card className="flex-0">
-					<LivingWorlds />
-				</Card>
-			</main>
+        <Card className="flex-0">
+          <LivingWorlds />
+        </Card>
+      </main>
 
-			<Dialog />
-		</div>
-	);
+      <Dialog />
+    </div>
+  );
 };

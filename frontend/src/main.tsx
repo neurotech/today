@@ -7,11 +7,11 @@ import { DialogProvider } from "./context/dialog-context.tsx";
 const root = document.getElementById("root");
 
 if (root) {
-	createRoot(root).render(
-        <StrictMode>
-            <DialogProvider>
-                <App />
-            </DialogProvider>
-		</StrictMode>,
-	);
+  createRoot(root).render(
+    <StrictMode>
+      <DialogProvider>
+        <App />
+      </DialogProvider>
+    </StrictMode>,
+  );
 }

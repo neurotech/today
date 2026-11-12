@@ -1,28 +1,45 @@
 {
-  "languages": {
-    "JavaScript": {
-      "formatter": { "language_server": { "name": "biome" } },
-      "code_actions_on_format": {
-        "source.fixAll.biome": true,
-        "source.organizeImports.biome": true
-      },
-      "format_on_save": "on"
+    "languages": {
+        "JavaScript": {
+            "format_on_save": "on",
+            "formatter": [
+                { "language_server": { "name": "oxfmt" } },
+                { "code_action": "source.fixAll.oxc" }
+            ]
+        },
+        "TypeScript": {
+            "format_on_save": "on",
+            "formatter": [
+                { "language_server": { "name": "oxfmt" } },
+                { "code_action": "source.fixAll.oxc" }
+            ]
+        },
+        "TSX": {
+            "format_on_save": "on",
+            "formatter": [
+                { "language_server": { "name": "oxfmt" } },
+                { "code_action": "source.fixAll.oxc" }
+            ]
+        }
     },
-    "TypeScript": {
-      "formatter": { "language_server": { "name": "biome" } },
-      "code_actions_on_format": {
-        "source.fixAll.biome": true,
-        "source.organizeImports.biome": true
-      },
-      "format_on_save": "on"
-    },
-    "TSX": {
-      "formatter": { "language_server": { "name": "biome" } },
-      "code_actions_on_format": {
-        "source.fixAll.biome": true,
-        "source.organizeImports.biome": true
-      },
-      "format_on_save": "on"
+    "lsp": {
+        "oxlint": {
+            "initialization_options": {
+                "settings": {
+                    "run": "onType",
+                    "typeAware": true,
+                    "fixKind": "safe_fix",
+                    "unusedDisableDirectives": "deny"
+                }
+            }
+        },
+        "oxfmt": {
+            "initialization_options": {
+                "settings": {
+                    "run": "onSave",
+                    "fmt.experimental": true
+                }
+            }
+        }
     }
-  }
 }
