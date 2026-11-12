@@ -14,7 +14,8 @@ export const useMutation = <TVariables = void, TData = void>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <Leaving it in the deps would make mutate change every render, which defeats useCallback and would retrigger any effect that depends on mutate>
+  const { body } = options;
+
   const mutate = useCallback(
     async (variables: TVariables): Promise<TData> => {
       setLoading(true);
@@ -22,7 +23,7 @@ export const useMutation = <TVariables = void, TData = void>(
 
       try {
         const target = typeof path === "function" ? path(variables) : path;
-        const payload = options.body ? options.body(variables) : variables;
+        const payload = body ? body(variables) : variables;
         const hasBody = method !== "DELETE" && payload !== undefined;
 
         const response = await fetch(target, {
@@ -35,9 +36,12 @@ export const useMutation = <TVariables = void, TData = void>(
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
+        // A 204 has no body, so callers must use a TData that allows undefined (e.g. void).
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
         if (response.status === 204) return undefined as TData;
 
-        return (await response.json()) as TData;
+        const data: TData = await response.json();
+        return data;
       } catch (err) {
         const e = err instanceof Error ? err : new Error(String(err));
         setError(e);
@@ -46,7 +50,7 @@ export const useMutation = <TVariables = void, TData = void>(
         setLoading(false);
       }
     },
-    [method],
+    [method, path, body],
   );
 
   return { mutate, loading, error };

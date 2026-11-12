@@ -34,7 +34,7 @@ export const DialogProvider = ({ children }: { children: ReactNode }) => {
   const close = useCallback(() => {
     setDialog({ open: false, title: "", message: "", onConfirm: () => {} });
     dialog.onClose?.();
-  }, [dialog.onClose]);
+  }, [dialog]);
 
   return (
     <DialogContext.Provider value={{ dialog, setDialog, close }}>

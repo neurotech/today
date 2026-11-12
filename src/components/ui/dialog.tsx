@@ -30,7 +30,8 @@ export default function Dialog() {
   };
 
   return (
-    // biome-ignore lint/a11y/useKeyWithClickEvents: backdrop click is a pointer-only convenience; Escape (native cancel event) is the keyboard equivalent
+    // Backdrop click is a pointer-only convenience; Escape (native cancel event) is the keyboard equivalent.
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
     <dialog
       ref={ref}
       role="alertdialog"

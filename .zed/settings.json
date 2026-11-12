@@ -1,45 +1,45 @@
 {
-    "languages": {
-        "JavaScript": {
-            "format_on_save": "on",
-            "formatter": [
-                { "language_server": { "name": "oxfmt" } },
-                { "code_action": "source.fixAll.oxc" }
-            ]
-        },
-        "TypeScript": {
-            "format_on_save": "on",
-            "formatter": [
-                { "language_server": { "name": "oxfmt" } },
-                { "code_action": "source.fixAll.oxc" }
-            ]
-        },
-        "TSX": {
-            "format_on_save": "on",
-            "formatter": [
-                { "language_server": { "name": "oxfmt" } },
-                { "code_action": "source.fixAll.oxc" }
-            ]
-        }
+  "languages": {
+    "JavaScript": {
+      "format_on_save": "on",
+      "formatter": [
+        { "language_server": { "name": "oxfmt" } },
+        { "code_action": "source.fixAll.oxc" }
+      ]
     },
-    "lsp": {
-        "oxlint": {
-            "initialization_options": {
-                "settings": {
-                    "run": "onType",
-                    "typeAware": true,
-                    "fixKind": "safe_fix",
-                    "unusedDisableDirectives": "deny"
-                }
-            }
-        },
-        "oxfmt": {
-            "initialization_options": {
-                "settings": {
-                    "run": "onSave",
-                    "fmt.experimental": true
-                }
-            }
-        }
+    "TypeScript": {
+      "format_on_save": "on",
+      "formatter": [
+        { "language_server": { "name": "oxfmt" } },
+        { "code_action": "source.fixAll.oxc" }
+      ]
+    },
+    "TSX": {
+      "format_on_save": "on",
+      "formatter": [
+        { "language_server": { "name": "oxfmt" } },
+        { "code_action": "source.fixAll.oxc" }
+      ]
     }
+  },
+  "lsp": {
+    "oxlint": {
+      "initialization_options": {
+        "settings": {
+          "run": "onType",
+          "typeAware": true,
+          "fixKind": "safe_fix",
+          "unusedDisableDirectives": "deny"
+        }
+      }
+    },
+    "oxfmt": {
+      "initialization_options": {
+        "settings": {
+          "run": "onSave",
+          "fmt.experimental": true
+        }
+      }
+    }
+  }
 }

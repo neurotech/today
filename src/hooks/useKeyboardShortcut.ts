@@ -16,7 +16,7 @@ export const useKeyboardShortcut = ({
   handler,
 }: Options) => {
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) return undefined;
 
     const listener = (event: KeyboardEvent) => {
       const modifierMatches = metaKey ? event.metaKey || event.ctrlKey : true;

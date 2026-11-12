@@ -12,3 +12,6 @@ Dockerfile
 .dockerignore
 docker-compose.yaml
 Makefile
+
+dist
+.zed

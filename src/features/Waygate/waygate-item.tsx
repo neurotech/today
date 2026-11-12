@@ -1,5 +1,5 @@
 import { FileQuestion, Trash } from "lucide-react";
-import { use } from "react";
+import { use, useCallback } from "react";
 import { DialogContext } from "../../context/dialog-context";
 import { useMutation } from "../../hooks/useMutation";
 import type { WaygateItemResponse } from "../../types/waygate";
@@ -21,9 +21,19 @@ export const WaygateItem = ({
   refetch: () => void;
 }) => {
   const { setDialog } = use(DialogContext);
-  const remove = useMutation<string, void>("DELETE", (id) =>
-    apiUrl(`/items/${id}`),
-  );
+  const remove = useMutation<string>("DELETE", (id) => apiUrl(`/items/${id}`));
+  const handleDelete = useCallback(() => {
+    setDialog({
+      open: true,
+      title: "Delete Waygate Item",
+      message: "Are you sure you want to delete this item?",
+      body: <WaygateItemDetail item={item} />,
+      onConfirm: async () => {
+        await remove.mutate(item.id.toString());
+        refetch();
+      },
+    });
+  }, [setDialog, item, remove, refetch]);
 
   const { created, formattedUrl } = formatMetadata(item);
 
@@ -32,18 +42,7 @@ export const WaygateItem = ({
       <button
         type="button"
         className="cursor-pointer rounded-l-sm bg-zinc-700/40 p-1.5 transition-colors hover:bg-rose-500 hover:text-black/90"
-        onClick={async () => {
-          setDialog({
-            open: true,
-            title: "Delete Waygate Item",
-            message: "Are you sure you want to delete this item?",
-            body: <WaygateItemDetail item={item} />,
-            onConfirm: async () => {
-              await remove.mutate(item.id.toString());
-              refetch();
-            },
-          });
-        }}
+        onClick={handleDelete}
       >
         <Trash size={12} />
       </button>
