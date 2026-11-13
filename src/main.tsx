@@ -4,6 +4,7 @@ import { App } from "./App.tsx";
 import "./index.css";
 import { DialogProvider } from "./context/dialog-context.tsx";
 import { ConfigProvider } from "./context/config-context.tsx";
+import { LightboxProvider } from "./context/lightbox-context.tsx";
 
 const root = document.getElementById("root");
 
@@ -12,7 +13,9 @@ if (root) {
     <StrictMode>
       <ConfigProvider>
         <DialogProvider>
-          <App />
+          <LightboxProvider>
+            <App />
+          </LightboxProvider>
         </DialogProvider>
       </ConfigProvider>
     </StrictMode>,

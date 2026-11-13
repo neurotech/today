@@ -8,6 +8,7 @@ import {
   type ConfigData,
   type Route,
 } from "./context/config-context";
+import Lightbox from "./components/ui/lightbox";
 
 const renderPage = (page: Route, config: ConfigData): JSX.Element => {
   switch (page) {
@@ -48,7 +49,9 @@ export const AppShell = ({ loading }: { loading: boolean }) => {
           {loading ? <></> : renderPage(currentPage, config)}
         </div>
       </main>
+
       <Dialog />
+      <Lightbox />
     </div>
   );
 };
