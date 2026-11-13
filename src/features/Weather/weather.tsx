@@ -2,6 +2,7 @@ import { ThermometerSun } from "lucide-react";
 import { Card } from "../../components/ui/card";
 import { useFetch } from "../../hooks/useFetch";
 import { cn } from "../../utils/cn";
+import Radar from "./radar";
 
 export type WeatherResponse = {
   town: string;
@@ -40,7 +41,7 @@ export const Weather = ({
       }
     >
       <div className="flex justify-between">
-        <div className="text-zinc-400">
+        <div className="flex flex-col gap-1 text-zinc-400">
           <p className="flex gap-1 text-2xl">
             <span className="text-blue-300">{data?.min_temp_c}°C</span>–
             <span className="text-rose-300">{data?.max_temp_c}°C</span>
@@ -52,11 +53,7 @@ export const Weather = ({
         </div>
 
         <div className="rounded-sm border border-zinc-950">
-          <img
-            src="http://slab:7777"
-            alt="bomr"
-            className="flex size-48 rounded-sm grayscale invert"
-          />
+          <Radar />
         </div>
       </div>
     </Card>
