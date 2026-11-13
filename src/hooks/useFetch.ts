@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Result<T> = {
   url: string;
@@ -9,12 +9,18 @@ type Result<T> = {
 
 type UseFetchProps = {
   url?: string;
+  headers?: Record<string, string>;
 };
 
-export const useFetch = <T>({ url }: UseFetchProps) => {
+export const useFetch = <T>({ url, headers }: UseFetchProps) => {
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<Result<T> | null>(null);
   const refetch = useCallback(() => setAttempt((n) => n + 1), []);
+
+  const headersRef = useRef(headers);
+  useEffect(() => {
+    headersRef.current = headers;
+  }, [headers]);
 
   useEffect(() => {
     if (!url) return undefined;
@@ -25,7 +31,10 @@ export const useFetch = <T>({ url }: UseFetchProps) => {
       try {
         const response = await fetch(url, {
           signal: controller.signal,
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...headersRef.current,
+          },
         });
 
         if (!response.ok) {

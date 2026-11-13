@@ -7,6 +7,7 @@ type CardProps = {
   headerTitle?: string;
   headerIcon?: ReactNode;
   className?: HTMLAttributes<HTMLElement>["className"];
+  containerClassName?: HTMLAttributes<HTMLElement>["className"];
 };
 
 export const Card = ({
@@ -14,10 +15,11 @@ export const Card = ({
   headerTitle,
   headerIcon,
   className,
+  containerClassName,
 }: CardProps) => (
   <section
     className={cn(
-      "flex flex-col flex-1 rounded-md bg-zinc-800 shadow-black/50 shadow-xs ring-1 ring-zinc-600/70",
+      "flex flex-col flex-1 rounded-md bg-zinc-800 shadow-black/20 shadow-md ring-1 ring-zinc-600/70",
       className,
     )}
   >
@@ -30,6 +32,6 @@ export const Card = ({
         <Separator />
       </>
     ) : null}
-    <main className="p-2">{children}</main>
+    <main className={cn("p-2", containerClassName)}>{children}</main>
   </section>
 );

@@ -3,4 +3,23 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "${WEB_PORT:?WEB_PORT must be set}:8000"
+    environment:
+      API_UPSTREAM: api:${API_PORT:?API_PORT must be set}
+    depends_on:
+      - api
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      API_HOST: 0.0.0.0
+      API_PORT: ${API_PORT}
+      DATABASE_PATH: /data/today.db
+    volumes:
+      - api-data:/data
+    expose:
+      - "${API_PORT}"
+
+volumes:
+  api-data:
