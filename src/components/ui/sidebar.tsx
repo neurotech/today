@@ -8,8 +8,8 @@ import {
 import { Separator } from "./separator";
 import { cn } from "../../utils/cn";
 import type { Route } from "../../context/config-context";
-import { useState } from "react";
 import { useKeyboardShortcut } from "../../hooks/useKeyboardShortcut";
+import { useSidebar } from "../../hooks/useSidebar";
 
 type SidebarProps = {
   currentPage: Route;
@@ -27,7 +27,8 @@ export const Sidebar = ({
   setCurrentPage,
   configInvalid,
 }: SidebarProps) => {
-  const [expanded, setExpanded] = useState<boolean>(true);
+  const { expanded, setExpanded } = useSidebar();
+
   useKeyboardShortcut({ key: "[", handler: () => setExpanded(false) });
   useKeyboardShortcut({ key: "]", handler: () => setExpanded(true) });
 
@@ -54,7 +55,9 @@ export const Sidebar = ({
         ) : null}
         <button
           type="button"
-          className="flex size-10 cursor-pointer items-center justify-center text-zinc-600 transition-colors hover:text-zinc-300"
+          className={cn(
+            "flex size-10 cursor-pointer items-center justify-center text-zinc-600 hover:text-zinc-300",
+          )}
           onClick={() => setExpanded((p) => !p)}
         >
           {expanded ? <PanelLeftClose /> : <PanelLeftOpen />}
