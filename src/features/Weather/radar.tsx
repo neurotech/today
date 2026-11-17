@@ -18,12 +18,12 @@ export default function Radar() {
     <button
       type="button"
       onClick={() => openLightbox(enlargedRadar)}
-      className="group rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400"
+      className="group rounded-sm border border-zinc-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400"
     >
       <img
         src={RADAR_SRC}
         alt="Radar"
-        className="block size-48 cursor-pointer rounded-sm grayscale invert transition-all group-hover:grayscale-0 group-hover:invert-0 group-focus-visible:grayscale-0 group-focus-visible:invert-0"
+        className="block size-44 cursor-pointer rounded-sm grayscale invert transition-all group-hover:grayscale-0 group-hover:invert-0 group-focus-visible:grayscale-0 group-focus-visible:invert-0"
       />
     </button>
   );

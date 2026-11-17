@@ -42,9 +42,13 @@ export const Weather = ({
     >
       <div className="flex justify-between">
         <div className="flex flex-col gap-1 text-zinc-400">
-          <p className="flex gap-1 text-2xl">
-            <span className="text-blue-300">{data?.min_temp_c}°C</span>–
-            <span className="text-rose-300">{data?.max_temp_c}°C</span>
+          <p className="flex text-xl">
+            <span className="rounded-l-sm bg-sky-500 px-2 py-0.5 text-white">
+              {data?.min_temp_c}°C
+            </span>
+            <span className="rounded-r-sm bg-rose-500 px-2 py-0.5 text-white">
+              {data?.max_temp_c}°C
+            </span>
           </p>
           <p className="text-xl text-zinc-300">{data?.sky_condition}</p>
           {data?.storm_outlook && (
@@ -52,9 +56,7 @@ export const Weather = ({
           )}
         </div>
 
-        <div className="rounded-sm border border-zinc-950">
-          <Radar />
-        </div>
+        <Radar />
       </div>
     </Card>
   );
