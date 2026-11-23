@@ -8,7 +8,7 @@ export const WaygateItemDetail = ({ item }: { item: WaygateItemResponse }) => {
 
   return (
     <a
-      className="mt-4 flex items-start justify-between gap-4 rounded-sm border border-zinc-600 bg-zinc-700/60 p-2 hover:bg-zinc-700/90"
+      className="flex items-start justify-between gap-4 rounded-sm border border-zinc-600 bg-zinc-700/60 p-2 hover:bg-zinc-700/90"
       href={item.item}
       target="_blank"
       rel="noopener"

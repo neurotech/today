@@ -60,9 +60,11 @@ export default function Dialog() {
           <Separator />
 
           <div className="overflow-y-auto p-4">
-            <p id={descId} className="text-zinc-100">
-              {dialog.message}
-            </p>
+            {dialog.message && dialog.message !== "" ? (
+              <p id={descId} className="text-zinc-100">
+                {dialog.message}
+              </p>
+            ) : null}
             {dialog.body}
           </div>
 

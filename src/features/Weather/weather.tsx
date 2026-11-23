@@ -35,7 +35,10 @@ export const Weather = ({
       headerIcon={
         <ThermometerSun
           size={16}
-          className={cn("cursor-pointer", loading ? " text-amber-300" : "")}
+          className={cn(
+            "cursor-pointer hover:text-zinc-400 transition-colors",
+            loading ? " hover:text-amber-300 text-amber-300" : "",
+          )}
           onClick={() => refetch()}
         />
       }

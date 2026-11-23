@@ -3,8 +3,8 @@ import { createContext, type ReactNode, useCallback, useState } from "react";
 type DialogMeta = {
   open: boolean;
   title: string;
-  message: string;
   onConfirm: () => void;
+  message?: string;
   body?: ReactNode;
   onClose?: () => void;
 };

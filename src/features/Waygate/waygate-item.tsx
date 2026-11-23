@@ -25,8 +25,7 @@ export const WaygateItem = ({
   const handleDelete = useCallback(() => {
     setDialog({
       open: true,
-      title: "Delete Waygate Item",
-      message: "Are you sure you want to delete this item?",
+      title: "Are you sure you want to delete this item?",
       body: <WaygateItemDetail item={item} />,
       onConfirm: async () => {
         await remove.mutate(item.id.toString());

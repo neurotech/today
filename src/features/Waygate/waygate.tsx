@@ -22,8 +22,10 @@ export const Waygate = () => {
         <LoaderPinwheel
           size={16}
           className={cn(
-            "cursor-pointer",
-            loading ? "animate-spin text-amber-300" : "",
+            "cursor-pointer hover:text-zinc-400 transition-colors",
+            loading
+              ? "animate-spin hover:text-amber-300 hover:animate-spin text-amber-300"
+              : "",
           )}
           onClick={() => refetch()}
         />

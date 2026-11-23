@@ -40,9 +40,11 @@ export const Calendar = () => {
 
         <div className="w-0.5 border-l border-l-zinc-600/70" />
 
-        <div className="flex flex-1 justify-center self-center px-2 text-6xl text-zinc-300 proportional-nums">
+        <div className="flex flex-1 items-center justify-center self-center px-2 text-6xl text-zinc-300 proportional-nums">
           <h1 className="">{hour}</h1>
-          <h1 className="animate-pulse text-zinc-400">:</h1>
+          <h1 className="text-zinc-40 block animate-pulse self-center leading-10">
+            :
+          </h1>
           <h1 className="">{minute}</h1>
           <h1 className="ml-2 text-zinc-500">{amPm}</h1>
         </div>
