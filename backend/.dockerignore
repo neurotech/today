@@ -1,2 +1,5 @@
-target
-.env
+node_modules
+dist
+*.db*
+.git
+README.md

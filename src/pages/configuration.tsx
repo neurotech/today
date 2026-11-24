@@ -17,11 +17,8 @@ export const Configuration = () => {
 
 const ConfigurationForm = ({ config }: { config: ConfigData }) => {
   const { refetch } = use(ConfigContext);
-  const { mutate: updateTown } = useMutation<{ value: string }>(
-    "PUT",
-    "/api/config/town",
-  );
-  const { mutate: updateWeatherApiKey } = useMutation<{ value: string }>(
+  const { mutate: updateTown } = useMutation<string>("PUT", "/api/config/town");
+  const { mutate: updateWeatherApiKey } = useMutation<string>(
     "PUT",
     "/api/config/weatherapikey",
   );
@@ -32,10 +29,7 @@ const ConfigurationForm = ({ config }: { config: ConfigData }) => {
   );
 
   const handleSave = useCallback(async () => {
-    await Promise.all([
-      updateTown({ value: town }),
-      updateWeatherApiKey({ value: weatherAuApiKey }),
-    ]);
+    await Promise.all([updateTown(town), updateWeatherApiKey(weatherAuApiKey)]);
     refetch();
   }, [town, updateTown, weatherAuApiKey, updateWeatherApiKey, refetch]);
 

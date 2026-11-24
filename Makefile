@@ -1,6 +1,6 @@
-.PHONY: all help start restart logs stop clean nuke dev-api dev-web check-api
+.PHONY: all help start restart logs stop clean nuke dev-api dev-web
 
-all: start
+all: help
 
 help: ## Show this help
 	@awk 'BEGIN {FS = ":.*## "} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -23,11 +23,8 @@ clean: ## Remove containers and networks, keep the database volume
 nuke: ## Remove everything including the database volume (DATA LOSS)
 	docker compose down --volumes
 
-dev-api: ## Run the backend locally with cargo (no Docker)
-	cd backend && cargo run
+dev-api: ## Run the backend locally
+	cd backend && pnpm dev
 
-dev-web: ## Run the Vite dev server (no Docker)
+dev-web: ## Run the Vite dev server
 	pnpm dev
-
-check-api: ## Format check, clippy and tests for the backend
-	cd backend && cargo fmt --check && cargo clippy -- -D warnings && cargo test
