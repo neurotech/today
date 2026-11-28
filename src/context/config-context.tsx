@@ -1,11 +1,26 @@
 import { createContext, useState, type ReactNode } from "react";
 import { useFetch } from "../hooks/useFetch";
+import z from "zod";
 
-export type Route = "home" | "configuration";
+export type Route = "home" | "youtube" | "configuration";
+
+export const YouTubeConfigSchema = z.object({
+  channelName: z.string(),
+  channelUrl: z.string(),
+});
+
+export type YouTubeConfig = z.infer<typeof YouTubeConfigSchema>;
+
+export type ConfigResponse = {
+  town: string;
+  weatherapikey: string;
+  youtube?: string;
+};
 
 export type ConfigData = {
   town: string;
   weatherapikey: string;
+  youtube: YouTubeConfig[];
 };
 
 type ConfigContextType = {
@@ -23,6 +38,7 @@ const defaultValues: ConfigContextType = {
   config: {
     town: "",
     weatherapikey: "",
+    youtube: [],
   },
   loading: false,
   refetch: () => {},
@@ -39,13 +55,18 @@ export const ConfigProvider = ({ children }: { children: ReactNode }) => {
     loading: fetching,
     error,
     refetch,
-  } = useFetch<ConfigData>({
+  } = useFetch<ConfigResponse>({
     url: "/api/config",
   });
+
+  const youtube = data?.youtube
+    ? z.array(YouTubeConfigSchema).parse(JSON.parse(data.youtube))
+    : [];
 
   const config: ConfigData = {
     town: data?.town ?? "",
     weatherapikey: data?.weatherapikey ?? "",
+    youtube,
   };
 
   const invalid = config.town === "" || config.weatherapikey === "";

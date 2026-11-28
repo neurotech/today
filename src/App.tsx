@@ -1,7 +1,7 @@
 import Dialog from "./components/ui/dialog";
 import { Home } from "./pages/home";
 import { Sidebar } from "./components/ui/sidebar";
-import { Configuration } from "./pages/configuration";
+import { Configuration } from "./pages/configuration/configuration";
 import { use, type JSX } from "react";
 import {
   ConfigContext,
@@ -9,12 +9,15 @@ import {
   type Route,
 } from "./context/config-context";
 import Lightbox from "./components/ui/lightbox";
+import { YouTube } from "./pages/youtube";
 
 const renderPage = (page: Route, config: ConfigData): JSX.Element => {
   switch (page) {
     case "home":
     default:
       return <Home config={config} />;
+    case "youtube":
+      return <YouTube />;
     case "configuration":
       return <Configuration />;
   }

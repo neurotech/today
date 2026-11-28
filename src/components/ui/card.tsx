@@ -6,6 +6,7 @@ type CardProps = {
   children: ReactNode;
   headerTitle?: string;
   headerIcon?: ReactNode;
+  footer?: ReactNode;
   className?: HTMLAttributes<HTMLElement>["className"];
   containerClassName?: HTMLAttributes<HTMLElement>["className"];
 };
@@ -14,6 +15,7 @@ export const Card = ({
   children,
   headerTitle,
   headerIcon,
+  footer,
   className,
   containerClassName,
 }: CardProps) => (
@@ -32,6 +34,16 @@ export const Card = ({
         <Separator />
       </>
     ) : null}
+
     <main className={cn("p-2", containerClassName)}>{children}</main>
+
+    {footer ? (
+      <>
+        <Separator />
+        <footer className="flex flex-row items-center gap-2 p-2 text-zinc-600">
+          {footer}
+        </footer>
+      </>
+    ) : null}
   </section>
 );

@@ -38,14 +38,7 @@ export const WaygateItem = ({
 
   return (
     <div className="flex w-full items-center justify-between gap-px">
-      <button
-        type="button"
-        className="cursor-pointer rounded-l-sm bg-zinc-700/40 p-1.5 transition-colors hover:bg-rose-500 hover:text-black/90"
-        onClick={handleDelete}
-      >
-        <Trash size={12} />
-      </button>
-      <div className="flex w-full cursor-pointer flex-row items-center gap-2 rounded-r-sm bg-zinc-700/40 p-1 text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white">
+      <div className="flex w-full cursor-pointer flex-row items-center gap-2 rounded-l-sm bg-zinc-700/40 px-1.5 py-1 text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white">
         <a
           className="flex w-full items-center gap-2"
           title={created}
@@ -68,6 +61,13 @@ export const WaygateItem = ({
           </div>
         </a>
       </div>
+      <button
+        type="button"
+        className="cursor-pointer rounded-r-sm bg-zinc-700/40 p-1.5 transition-colors hover:bg-rose-500 hover:text-black/90"
+        onClick={handleDelete}
+      >
+        <Trash size={12} />
+      </button>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import {
   Home,
   PanelLeftClose,
   PanelLeftOpen,
+  TvMinimalPlay,
 } from "lucide-react";
 import { Separator } from "./separator";
 import { cn } from "../../utils/cn";
@@ -19,6 +20,7 @@ type SidebarProps = {
 
 const pages = [
   { id: "home", label: "Home", icon: Home },
+  { id: "youtube", label: "YouTube", icon: TvMinimalPlay },
   { id: "configuration", label: "Configuration", icon: Cog },
 ] as const;
 
@@ -35,8 +37,8 @@ export const Sidebar = ({
   return (
     <div
       className={cn(
-        "flex h-full flex-col items-start gap-2 bg-zinc-950/50 pt-2 pb-3 select-none transition-all",
-        expanded ? "w-60" : "w-10",
+        "flex h-full flex-col items-start gap-2 bg-zinc-950/50 pt-2 pb-3 select-none",
+        expanded ? "w-50" : "w-10",
       )}
     >
       <div
@@ -65,7 +67,7 @@ export const Sidebar = ({
       </div>
       <Separator />
       <nav aria-label="Main" className="flex w-full flex-1">
-        <ul className="flex w-full flex-col justify-between gap-px">
+        <ul className="flex w-full flex-col justify-start gap-px">
           {pages.map(({ id, label, icon: Icon }) => (
             <li key={id}>
               <button
@@ -84,8 +86,9 @@ export const Sidebar = ({
               >
                 <Icon
                   size={16}
+                  aria-current={currentPage === id ? "page" : undefined}
                   className={cn(
-                    currentPage === id && "text-zinc-600",
+                    "aria-[current=page]:text-zinc-500",
                     expanded ? "text-zinc-800" : "text-zinc-400",
                   )}
                 />

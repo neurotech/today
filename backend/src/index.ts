@@ -1,3 +1,4 @@
+import XMLParser from "@nodable/flexible-xml-parser";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -65,6 +66,31 @@ app.get("/weather/:town", async (c) => {
   };
 
   return c.json(weather);
+});
+
+const fetchAndParse = async (url: string) => {
+  const response = await fetch(url);
+  const body = await response.text();
+  const parser = new XMLParser({ skip: { attributes: false } });
+  const xml = parser.parse(body);
+
+  return xml;
+};
+
+app.get("/youtube", async (c) => {
+  const youTubeConfig = getConfigEntry("youtube");
+
+  if (youTubeConfig.length === 0) return c.json([], 200);
+
+  const channels = JSON.parse(youTubeConfig[0].value?.toString() ?? "[]");
+  const promises = channels.map((channel: { channelUrl: string }) =>
+    fetchAndParse(channel.channelUrl),
+  );
+  const results = Promise.all(promises);
+
+  const xml = await results;
+
+  return c.json(xml, 200);
 });
 
 serve(
